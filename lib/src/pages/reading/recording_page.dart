@@ -33,6 +33,8 @@ class _RecordingPageState extends State<RecordingPage> {
   Widget build(BuildContext context) {
     // if (widget.textList == null)
     double c_width = MediaQuery.of(context).size.width * 0.92;
+    widget.errorController =
+        widget.errorController ?? ErrorController(errorCount: 0);
 
     widget.words = [];
     for (var i = 0; i < widget.textList.length; i++) {
@@ -59,7 +61,11 @@ class _RecordingPageState extends State<RecordingPage> {
     }
 
     return baseScaffold(
-      fab: FloatingActionButton(child: Icon(Icons.update), onPressed: () {}),
+      fab: FloatingActionButton(
+          child: Icon(Icons.update),
+          onPressed: () {
+            showRelatorio();
+          }),
       body: ListView(children: [
         Column(
           children: [
@@ -70,7 +76,7 @@ class _RecordingPageState extends State<RecordingPage> {
                 child: Column(
                   children: [
                     Wrap(children: widget.words),
-                    Text(widget.errorController.errorCount.toString())
+                    // Text(widget.errorController.errorCount.toString())
                   ],
                 ),
               ),
@@ -78,6 +84,44 @@ class _RecordingPageState extends State<RecordingPage> {
           ],
         ),
       ]),
+    );
+  }
+
+  void showRelatorio() {
+    showDialog(
+      context: context,
+      barrierColor: Colors.blue.withOpacity(0.8),
+      builder: (context) => ShowUp.tenth(
+        duration: 200,
+        child: AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16)),
+            side: BorderSide(
+              color: Colors.blue,
+              width: 2,
+            ),
+          ),
+          title: Text("Relatorio Intermediário"),
+          content: SingleChildScrollView(
+            child: Column(
+              children: [
+                Text("Erros: " + widget.errorController.errorCount.toString()),
+                Text("Lista de tipos de erros: "),
+                SizedBox(
+                  height: 150,
+                  child: Wrap(
+                    children: [
+                      ...{...widget.errorController.errorList}
+                    ].map((erro) {
+                      return Text(erro + ", ");
+                    }).toList(),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
@@ -107,50 +151,60 @@ class _WordState extends State<Word> {
         ? GestureDetector(
             onLongPress: () {
               refresh(true);
+              widget.errorController.updateErrorCount(1, "Não Especificado");
             },
             onTap: () {
               refresh(true);
               showDialog(
                 context: context,
                 barrierColor: Colors.orange[800].withOpacity(0.8),
-                builder: (context) => ShowUp.tenth(
-                  duration: 200,
-                  child: AlertDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(16)),
-                      side: BorderSide(
-                        color: Colors.orange[800],
-                        width: 2,
-                      ),
-                    ),
-                    title: Text("Tipo de Erro"),
-                    content: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Text("Descreva o tipo de erro cometido"),
-                          TextField(
-                            controller: errorTypeController,
-                          )
-                        ],
-                      ),
-                    ),
-                    actions: [
-                      FlatButton(
-                        child: Text(
-                          "Ok",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.orange,
-                          ),
+                builder: (context) => WillPopScope(
+                  onWillPop: () async {
+                    widget.errorController.updateErrorCount(
+                        1, errorTypeController?.text ?? "Não Especificado");
+                    return true;
+                  },
+                  child: ShowUp.tenth(
+                    duration: 200,
+                    child: AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                        side: BorderSide(
+                          color: Colors.orange[800],
+                          width: 2,
                         ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          print(errorTypeController?.text ?? "Erro vazio");
-                          widget.errorController.updateErrorCount(1,
-                              errorTypeController?.text ?? "Não Especificado");
-                        },
                       ),
-                    ],
+                      title: Text("Tipo de Erro"),
+                      content: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Text("Descreva o tipo de erro cometido"),
+                            TextField(
+                              controller: errorTypeController,
+                            )
+                          ],
+                        ),
+                      ),
+                      actions: [
+                        FlatButton(
+                          child: Text(
+                            "Ok",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange,
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            print(errorTypeController?.text ?? "Erro vazio");
+                            widget.errorController.updateErrorCount(
+                                1,
+                                errorTypeController?.text ??
+                                    "Não Especificado");
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
@@ -165,50 +219,60 @@ class _WordState extends State<Word> {
         : GestureDetector(
             onLongPress: () {
               refresh(true);
+              widget.errorController.updateErrorCount(1, "Não Especificado");
             },
             onTap: () {
               refresh(true);
               showDialog(
                 context: context,
                 barrierColor: Colors.orange[800].withOpacity(0.8),
-                builder: (context) => ShowUp.tenth(
-                  duration: 200,
-                  child: AlertDialog(
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.all(Radius.circular(16)),
-                      side: BorderSide(
-                        color: Colors.orange[800],
-                        width: 2,
-                      ),
-                    ),
-                    title: Text("Tipo de Erro"),
-                    content: SingleChildScrollView(
-                      child: Column(
-                        children: [
-                          Text("Descreva o tipo de erro cometido"),
-                          TextField(
-                            controller: errorTypeController,
-                          )
-                        ],
-                      ),
-                    ),
-                    actions: [
-                      FlatButton(
-                        child: Text(
-                          "Ok",
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.orange,
-                          ),
+                builder: (context) => WillPopScope(
+                  onWillPop: () async {
+                    widget.errorController.updateErrorCount(
+                        1, errorTypeController?.text ?? "Não Especificado");
+                    return true;
+                  },
+                  child: ShowUp.tenth(
+                    duration: 200,
+                    child: AlertDialog(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.all(Radius.circular(16)),
+                        side: BorderSide(
+                          color: Colors.orange[800],
+                          width: 2,
                         ),
-                        onPressed: () {
-                          Navigator.of(context).pop();
-                          print(errorTypeController?.text ?? "Erro vazio");
-                          widget.errorController.updateErrorCount(1,
-                              errorTypeController?.text ?? "Não Especificado");
-                        },
                       ),
-                    ],
+                      title: Text("Tipo de Erro"),
+                      content: SingleChildScrollView(
+                        child: Column(
+                          children: [
+                            Text("Descreva o tipo de erro cometido"),
+                            TextField(
+                              controller: errorTypeController,
+                            )
+                          ],
+                        ),
+                      ),
+                      actions: [
+                        FlatButton(
+                          child: Text(
+                            "Ok",
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.orange,
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            print(errorTypeController?.text ?? "Erro vazio");
+                            widget.errorController.updateErrorCount(
+                                1,
+                                errorTypeController?.text ??
+                                    "Não Especificado");
+                          },
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               );
