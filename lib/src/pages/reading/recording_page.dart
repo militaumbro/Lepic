@@ -105,8 +105,7 @@ class _RecordingPageState extends State<RecordingPage>
       appBar: AppBar(
         shape: appBarBottomShape,
         centerTitle: true,
-        flexibleSpace:
-            gradientAppBar(context),
+        flexibleSpace: gradientAppBar(context),
         // title: AutoSizeText(
         //   title,
         // ),
@@ -230,12 +229,13 @@ class _RecordingPageState extends State<RecordingPage>
             list = await audioDatabase.getReadingList();
             widget.records.sort();
             widget.records = widget.records.reversed.toList();
-            var ppm, pcpm, accuracy;
+            var ppm, pcpm, percentage;
             var currentText = await text;
             ppm = getPpm(currentText.wordCount, duration);
             pcpm = getPcpm(currentText.wordCount, duration,
                 widget.errorController.errorCount);
-            accuracy = getAccuracy(ppm, widget.errorController.errorCount);
+            percentage = getPercentage(
+                currentText.wordCount, widget.errorController.errorCount);
             print(
                 "wordCount:${currentText.wordCount}, duration:$duration\nerrorCount:${widget.errorController.errorCount}\nppm:$ppm\npcpm:$pcpm ");
             Navigator.of(context).pop();
@@ -243,7 +243,7 @@ class _RecordingPageState extends State<RecordingPage>
               return GraphsPage(
                 ppm: ppm,
                 pcpm: pcpm,
-                accuracy: accuracy,
+                percentage: percentage * 100,
                 duration: duration,
                 text: currentText,
               );

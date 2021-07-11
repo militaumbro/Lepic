@@ -5,8 +5,9 @@ double getPpm(int wordCount, int duration) {
   }
 }
 
-double getAccuracy(double ppm, int errorCount) {
-  if (ppm != null && errorCount != null) return (ppm - errorCount) / ppm;
+double getPercentage(int wordCount, int errorCount) {
+  if (wordCount != null && errorCount != null)
+    return (wordCount - errorCount) / wordCount;
 }
 
 double getPcpm(int wordCount, int duration, int errorCount) {

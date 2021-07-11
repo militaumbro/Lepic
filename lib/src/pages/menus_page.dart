@@ -95,7 +95,7 @@ class MenusPageState extends State<MenusPage> {
               ),
               Expanded(
                 child: AutoSizeText(
-                  "O melhor app para medir sua velocidade de Leitura",
+                  "O seu app para medir a velocidade de Leitura",
                   style: appBarTheme.textTheme.subtitle1,
                 ),
               ),

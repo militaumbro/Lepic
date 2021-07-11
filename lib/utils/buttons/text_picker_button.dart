@@ -109,7 +109,7 @@ class TextPickerButtonState extends State<TextPickerButton> {
           });
         });
         _sucessDialog(context, "Seus textos foram carregados com sucesso.");
-        widget.refresh();
+        // widget.refresh();
       }
     });
   }

@@ -11,7 +11,7 @@ class GraphsPage extends StatefulWidget {
   final double zScore;
   final double ppm;
   final double pcpm;
-  final double accuracy;
+  final double percentage;
   final int duration;
   final HiveText text;
   GraphsPage(
@@ -21,7 +21,7 @@ class GraphsPage extends StatefulWidget {
       this.pcpm,
       this.duration,
       this.text,
-      this.accuracy})
+      this.percentage})
       : super(key: key);
 
   @override
@@ -33,15 +33,17 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
   String zScore;
   String ppm;
   String pcpm;
-  String accuracy;
+  String percentage;
   String duration;
   HiveText text;
 
   @override
   void initState() {
     super.initState();
-    accuracy =
-        widget.accuracy != null ? widget.accuracy.toStringAsFixed(3) : "---";
+
+    percentage = widget.percentage != null
+        ? widget.percentage.toStringAsFixed(1)
+        : "---";
     ppm = widget.ppm != null ? widget.ppm.toStringAsFixed(1) : "---";
     pcpm = widget.pcpm != null ? widget.pcpm.toStringAsFixed(1) : "---";
     duration = widget.duration != null ? widget.duration.toString() : "---";
@@ -54,7 +56,8 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    return baseScaffold(context:context,
+    return baseScaffold(
+      context: context,
       title: "Gráficos",
       body: ShowUp.half(
         child: SingleChildScrollView(
@@ -80,9 +83,9 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                           width: width),
                       InfoBox(
                           icon: Icon(Icons.text_fields, color: Colors.red),
-                          text: "Acurácia",
-                          ext: "",
-                          value: accuracy,
+                          text: "Palavras Corretas",
+                          ext: "%",
+                          value: percentage,
                           height: height,
                           width: width),
                       InfoBox(
