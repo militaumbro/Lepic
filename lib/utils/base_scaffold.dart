@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/utils/utils.dart';
 
 Widget baseScaffold(
-    {BuildContext context,Widget body, Color gradient1, Color gradient2, String title = '',FloatingActionButton fab}) {
+    {@required BuildContext context,Widget body, Color gradient1, Color gradient2, String title = '',FloatingActionButton fab}) {
   return Scaffold(
     floatingActionButton: fab,
     appBar: AppBar(

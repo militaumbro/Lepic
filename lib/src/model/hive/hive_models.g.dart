@@ -103,3 +103,103 @@ class HiveReadingAdapter extends TypeAdapter<HiveReading> {
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }
+
+class HiveReaderAdapter extends TypeAdapter<HiveReader> {
+  @override
+  final int typeId = 3;
+
+  @override
+  HiveReader read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return HiveReader(
+      id: fields[0] as int,
+      age: fields[4] as int,
+      birthDate: fields[3] as DateTime,
+      name: fields[1] as String,
+      observation: fields[5] as String,
+      registerData: fields[2] as DateTime,
+      school: fields[7] as HiveSchoolInfo,
+      readings: (fields[6] as List)?.cast<HiveReading>(),
+    )..photoUrl = fields[8] as Uri;
+  }
+
+  @override
+  void write(BinaryWriter writer, HiveReader obj) {
+    writer
+      ..writeByte(9)
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.name)
+      ..writeByte(2)
+      ..write(obj.registerData)
+      ..writeByte(3)
+      ..write(obj.birthDate)
+      ..writeByte(4)
+      ..write(obj.age)
+      ..writeByte(5)
+      ..write(obj.observation)
+      ..writeByte(6)
+      ..write(obj.readings)
+      ..writeByte(7)
+      ..write(obj.school)
+      ..writeByte(8)
+      ..write(obj.photoUrl);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HiveReaderAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class HiveSchoolInfoAdapter extends TypeAdapter<HiveSchoolInfo> {
+  @override
+  final int typeId = 4;
+
+  @override
+  HiveSchoolInfo read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return HiveSchoolInfo(
+      schooling: fields[0] as String,
+      studantYear: fields[1] as String,
+      schoolName: fields[2] as String,
+      schoolCategory: fields[3] as String,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, HiveSchoolInfo obj) {
+    writer
+      ..writeByte(4)
+      ..writeByte(0)
+      ..write(obj.schooling)
+      ..writeByte(1)
+      ..write(obj.studantYear)
+      ..writeByte(2)
+      ..write(obj.schoolName)
+      ..writeByte(3)
+      ..write(obj.schoolCategory);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HiveSchoolInfoAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}

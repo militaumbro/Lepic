@@ -19,9 +19,13 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations: 
+    sdk: flutter
+  image_picker: ^0.6.7+14
   audioplayers: ^0.17.0
   cupertino_icons: ^0.1.2
   flutter_audio_recorder: ^0.5.5
+  flutter_spinkit: ^4.1.2
   google_fonts: ^1.1.1
   auto_size_text: ^2.1.0
   file_picker: ^1.12.0
@@ -31,7 +35,7 @@ dependencies:
   provider: ^5.0.0
   flutter_sound: ^4.0.6
   microphone: ^0.0.3
-  just_audio: ^0.6.15+1
+  # just_audio: ^0.6.15+1
   fl_chart: ^0.36.1
 
 dev_dependencies:
@@ -41,6 +45,8 @@ dev_dependencies:
   hive_generator: ^0.8.1
   build_runner: ^1.10.3
 
+dependency_overrides: 
+  intl: 0.17.0
 
 flutter_icons:
   android: "launcher_icon"

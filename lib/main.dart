@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/src/model/audio_database.dart';
 import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
+import 'package:flutter_smart_course/src/model/reader_database.dart';
 import 'package:flutter_smart_course/src/model/text_database.dart';
 import 'package:flutter_smart_course/src/pages/menus_page.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart' as pathProvider;
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'src/theme/theme.dart';
 
 Future<void> main() async {
@@ -15,6 +17,8 @@ Future<void> main() async {
   Hive.init(appDocumentDir.path);
   Hive.registerAdapter(HiveTextAdapter());
   Hive.registerAdapter(HiveReadingAdapter());
+  Hive.registerAdapter(HiveReaderAdapter());
+  Hive.registerAdapter(HiveSchoolInfoAdapter());
   runApp(MyApp());
 }
 
@@ -64,9 +68,20 @@ class MyApp extends StatelessWidget {
         ),
         Provider<AudioDatabase>(
           create: (_) => AudioDatabase(),
-        )
+        ),
+        Provider<ReadersDatabase>(
+          create: (_) => ReadersDatabase(),
+        ),
       ],
       builder: (context, _) => MaterialApp(
+        localizationsDelegates: [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [
+          const Locale('pt', 'BR'),
+        ],
         title: "Lepic",
         theme: baseTheme,
         home: MenusPage(),

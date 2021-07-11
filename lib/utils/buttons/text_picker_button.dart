@@ -11,6 +11,8 @@ import 'package:provider/provider.dart';
 import 'dart:io';
 import 'dart:async';
 
+import '../dialogs.dart';
+
 class TextPickerButton extends StatefulWidget {
   final bool isFab;
   final Function refresh;
@@ -81,7 +83,7 @@ class TextPickerButtonState extends State<TextPickerButton> {
                   wordCount: textList.length,
                   path: path))
               .then((value) {
-            _sucessDialog(context, "Seu texto foi carregado com sucesso.");
+            successDialog(context, "Seu texto foi carregado com sucesso.");
           });
         });
       else if (paths != null) {
@@ -108,7 +110,7 @@ class TextPickerButtonState extends State<TextPickerButton> {
                 path: value));
           });
         });
-        _sucessDialog(context, "Seus textos foram carregados com sucesso.");
+        successDialog(context, "Seus textos foram carregados com sucesso.");
         // widget.refresh();
       }
     });
@@ -135,39 +137,5 @@ class TextPickerButtonState extends State<TextPickerButton> {
         ),
       );
     }
-  }
-
-  void _sucessDialog(context, string) {
-    showDialog(
-        context: context,
-        barrierColor: Colors.green[800].withOpacity(0.8),
-        builder: (context) {
-          Future.delayed(Duration(seconds: 2), () {
-            Navigator.of(context).pop(true);
-          });
-          return ShowUp.tenth(
-            duration: 200,
-            child: AlertDialog(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.all(Radius.circular(16)),
-                side: BorderSide(
-                  color: Colors.green,
-                  width: 2,
-                ),
-              ),
-              title: Text("Sucesso"),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(string),
-                  Icon(
-                    Icons.check,
-                    color: Colors.green,
-                  )
-                ],
-              ),
-            ),
-          );
-        });
   }
 }

@@ -52,21 +52,19 @@ class HiveReader {
   @HiveField(1)
   String name;
   @HiveField(2)
-  DateTime registerData;
+  DateTime registerData; //publico ou particular
   @HiveField(3)
-  String schoolYear;
+  DateTime birthDate;
   @HiveField(4)
-  String schoolClass;
-  @HiveField(5)
-  String schoolType; //publico ou particular
-  @HiveField(6)
-  String birthDate;
-  @HiveField(7)
   int age;
-  @HiveField(8)
+  @HiveField(5)
   String observation; //observação feita ao registrar o leitor
-  @HiveField(9)
+  @HiveField(6)
   List<HiveReading> readings;
+  @HiveField(7)
+  HiveSchoolInfo school;
+  @HiveField(8)
+  Uri photoUrl;
 
   HiveReader({
     this.id,
@@ -75,9 +73,26 @@ class HiveReader {
     this.name,
     this.observation,
     this.registerData,
-    this.schoolClass,
-    this.schoolType,
-    this.schoolYear,
+    this.school,
     this.readings,
   });
+}
+
+@HiveType(typeId: 4)
+class HiveSchoolInfo {
+  HiveSchoolInfo({
+    this.schooling,
+    this.studantYear,
+    this.schoolName,
+    this.schoolCategory,
+  });
+
+  @HiveField(0)
+  String schooling;
+  @HiveField(1)
+  String studantYear; //publico ou particular
+  @HiveField(2)
+  String schoolName;
+  @HiveField(3)
+  String schoolCategory;
 }
