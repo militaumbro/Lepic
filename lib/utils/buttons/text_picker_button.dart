@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:math';
 
 import 'package:file_picker/file_picker.dart';
@@ -61,7 +62,7 @@ class TextPickerButtonState extends State<TextPickerButton> {
               ? paths.keys.toString()
               : '...';
       if (path != null)
-        File(path).readAsString().then((String data) {
+        File(path).readAsString(encoding: ascii).then((String data) {
           // contents = data;
           var preProcess = data.replaceAll(" \n ", "\n ");
           var textList = preProcess
@@ -88,7 +89,7 @@ class TextPickerButtonState extends State<TextPickerButton> {
         });
       else if (paths != null) {
         paths.forEach((key, value) {
-          File(value).readAsString().then((String data) {
+          File(value).readAsString(encoding: ascii).then((String data) {
             var fileNam = value.split('/').last;
             var preProcess = data.replaceAll(" \n ", "\n ");
             var textList = preProcess

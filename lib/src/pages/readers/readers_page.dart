@@ -68,7 +68,10 @@ class _ReadersPageState extends State<ReadersPage> {
           ),
           onPressed: () {
             Navigator.of(context).push(MaterialPageRoute(
-                builder: (context) => ShowUp(child: NewReaderForm())));
+                builder: (context) => ShowUp(
+                        child: NewReaderForm(
+                      refresh: refresh,
+                    ))));
           }),
       context: context,
       title: "Leitores",
@@ -143,6 +146,7 @@ class _ReadersPageState extends State<ReadersPage> {
         Navigator.of(context).push(MaterialPageRoute(
             builder: (context) => ShowUp(
                     child: NewReaderForm(
+                  refresh: refresh,
                   reader: reader,
                 ))));
       }, // EDIT HIVEREADERPAGE

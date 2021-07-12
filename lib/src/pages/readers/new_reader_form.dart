@@ -11,7 +11,8 @@ import 'package:image_picker/image_picker.dart';
 
 class NewReaderForm extends StatefulWidget {
   final HiveReader reader;
-  NewReaderForm({Key key, this.reader}) : super(key: key);
+  final Function refresh;
+  NewReaderForm({Key key, this.reader, this.refresh}) : super(key: key);
 
   @override
   _NewReaderFormState createState() => _NewReaderFormState();
@@ -71,81 +72,88 @@ class _NewReaderFormState extends State<NewReaderForm> {
   Widget build(BuildContext context) {
     birthDate.text =
         "${selectedDate.day.toString()}/${selectedDate.month.toString()}/${selectedDate.year.toString()}";
-    return baseScaffold(
-        context: context,
-        title: "Novo Leitor",
-        body: Form(
-            key: _formKey,
-            autovalidateMode: AutovalidateMode.always,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: SingleChildScrollView(
-                child: Column(
-                  children: [
-                    myTextFormField(
-                      controller: name,
-                      hintText: "Nome do Leitor",
-                    ),
-                    myTextFormField(
-                      controller: schooling,
-                      hintText: "Escolaridade",
-                      required: false,
-                    ),
-                    myTextFormField(
-                      controller: studantYear,
-                      hintText: "Turma",
-                      required: false,
-                    ),
-                    myTextFormField(
-                      controller: schoolCategory,
-                      hintText:
-                          "Categoria da Escola (Publico, Particular, etc...)",
-                      required: false,
-                    ),
-                    myTextFormField(
-                      controller: schoolName,
-                      hintText: "Nome da Escola",
-                      required: false,
-                    ),
-                    myTextFormField(
-                      readOnly: true,
-                      controller: birthDate,
-                      hintText: "Data de Nascimento",
-                      required: false,
-                    ),
-                    RaisedButton(
-                      onPressed: () => _selectDate(context),
-                      child: Text(
-                        'Data de Nascimento',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSecondary),
+    return WillPopScope(
+      onWillPop: () async {
+        print("hello");
+        if (widget.refresh != null) widget.refresh();
+        return true;
+      },
+      child: baseScaffold(
+          context: context,
+          title: "Novo Leitor",
+          body: Form(
+              key: _formKey,
+              autovalidateMode: AutovalidateMode.always,
+              child: Padding(
+                padding: const EdgeInsets.all(16.0),
+                child: SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      myTextFormField(
+                        controller: name,
+                        hintText: "Nome do Leitor",
                       ),
-                      color: Theme.of(context).colorScheme.secondary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                      myTextFormField(
+                        controller: schooling,
+                        hintText: "Escolaridade",
+                        required: false,
                       ),
-                    ),
-                    myTextFormField(
-                      controller: observation,
-                      hintText: "Observação sobre o Leitor",
-                      required: false,
-                    ),
-                    RaisedButton(
-                      onPressed: () => _saveReader(context),
-                      child: Text(
-                        'Salvar Leitor',
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.onSecondary),
+                      myTextFormField(
+                        controller: studantYear,
+                        hintText: "Turma",
+                        required: false,
                       ),
-                      color: Theme.of(context).colorScheme.secondary,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(20),
+                      myTextFormField(
+                        controller: schoolCategory,
+                        hintText:
+                            "Categoria da Escola (Publico, Particular, etc...)",
+                        required: false,
                       ),
-                    ),
-                  ],
+                      myTextFormField(
+                        controller: schoolName,
+                        hintText: "Nome da Escola",
+                        required: false,
+                      ),
+                      myTextFormField(
+                        readOnly: true,
+                        controller: birthDate,
+                        hintText: "Data de Nascimento",
+                        required: false,
+                      ),
+                      RaisedButton(
+                        onPressed: () => _selectDate(context),
+                        child: Text(
+                          'Data de Nascimento',
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSecondary),
+                        ),
+                        color: Theme.of(context).colorScheme.secondary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                      myTextFormField(
+                        controller: observation,
+                        hintText: "Observação sobre o Leitor",
+                        required: false,
+                      ),
+                      RaisedButton(
+                        onPressed: () => _saveReader(context),
+                        child: Text(
+                          'Salvar Leitor',
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.onSecondary),
+                        ),
+                        color: Theme.of(context).colorScheme.secondary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            )));
+              ))),
+    );
   }
 
   Widget myTextFormField(
@@ -199,7 +207,9 @@ class _NewReaderFormState extends State<NewReaderForm> {
         ),
         readings: [],
       ));
-      Navigator.pop(context);
+      Navigator.of(context).pop();
+      if(widget.refresh!=null)
+        widget.refresh();
       successDialog(context, "Leitor adicionado com sucesso");
     }
   }
