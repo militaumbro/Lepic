@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_smart_course/src/model/audio_database.dart';
+import 'package:flutter_smart_course/src/model/reader_database.dart';
 import 'package:flutter_smart_course/src/pages/graphs/graphs_page.dart';
 import 'package:flutter_smart_course/utils/calculator.dart';
 import 'package:flutter_smart_course/utils/utils.dart';
@@ -18,16 +19,15 @@ import 'package:provider/provider.dart';
 import 'package:uuid/uuid.dart';
 
 class RecordingPage extends StatefulWidget {
-  final String texto;
-  final List<String> textList;
-  final String author;
-  final int textId;
+  final HiveText text;
+  final HiveReader reader;
+  // final int textId;
 
-  List<Widget> words;
-  List<String> records;
-  RecordingPage(
-      {Key key, this.texto, this.textList, this.author = "Pedro", this.textId})
-      : super(key: key);
+  RecordingPage({
+    Key key,
+    @required this.text,
+    @required this.reader,
+  }) : super(key: key);
   ErrorController errorController;
   Directory appDirectory;
   Stream<FileSystemEntity> fileStream;
@@ -38,27 +38,32 @@ class RecordingPage extends StatefulWidget {
 
 class _RecordingPageState extends State<RecordingPage>
     with AutomaticKeepAliveClientMixin {
+  List<Widget> words;
+  List<String> records;
   int maxId = 4294967295;
-  // bool isSaving = false;
   AudioDatabase audioDatabase;
+  ReadersDatabase readersDatabase;
   TextDatabase textDatabase;
   Future<HiveText> text;
+  List<String> textList;
   @override
   void initState() {
+    readersDatabase = Provider.of<ReadersDatabase>(context, listen: false);
     audioDatabase = Provider.of<AudioDatabase>(context, listen: false);
     textDatabase = Provider.of<TextDatabase>(context, listen: false);
-    text = textDatabase.getText(widget.textId);
+    text = textDatabase.getText(widget.text.id);
     super.initState();
-    widget.words = [];
+    words = [];
     widget.errorController = ErrorController(errorCount: 0);
+    textList = widget.text.text;
 
-    widget.records = [];
+    records = [];
     getApplicationDocumentsDirectory().then((value) {
       widget.appDirectory = value;
       widget.appDirectory.list().listen((onData) {
-        widget.records.add(onData.path);
+        records.add(onData.path);
       }).onDone(() {
-        widget.records = widget.records.reversed.toList();
+        records = records.reversed.toList();
         setState(() {});
       });
     });
@@ -71,29 +76,29 @@ class _RecordingPageState extends State<RecordingPage>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    // if (widget.textList == null)
+    // if (textList == null)
     double c_width = MediaQuery.of(context).size.width * 0.92;
     widget.errorController =
         widget.errorController ?? ErrorController(errorCount: 0);
 
-    widget.words = [];
-    for (var i = 0; i < widget.textList.length; i++) {
-      if (i + 1 != widget.textList.length) {
-        if (widget.textList[i + 1].contains("\n")) {
-          widget.words.add(Word(
-            text: widget.textList[i],
+    words = [];
+    for (var i = 0; i < textList.length; i++) {
+      if (i + 1 != textList.length) {
+        if (textList[i + 1].contains("\n")) {
+          words.add(Word(
+            text: textList[i],
             errorController: widget.errorController,
           ));
-          widget.words.add(Container());
+          words.add(Container());
         } else {
           if (i == 0)
-            widget.words.add(Word(
-              text: "  " + widget.textList[i],
+            words.add(Word(
+              text: "  " + textList[i],
               errorController: widget.errorController,
             ));
           else
-            widget.words.add(Word(
-              text: widget.textList[i],
+            words.add(Word(
+              text: textList[i],
               errorController: widget.errorController,
             ));
         }
@@ -133,7 +138,7 @@ class _RecordingPageState extends State<RecordingPage>
               child: SafeArea(
                 child: Column(
                   children: [
-                    Wrap(children: widget.words),
+                    Wrap(children: words),
                     // Text(widget.errorController.errorCount.toString())
                   ],
                 ),
@@ -197,61 +202,71 @@ class _RecordingPageState extends State<RecordingPage>
     );
   }
 
-  void onRecordComplete() async {
-    widget.records.clear();
+  void onRecordComplete(String filePath) async {
+    // records.clear();
     var reading;
     var duration;
     final player = AudioPlayer();
-    List<HiveReading> list = await audioDatabase.getReadingList();
+    // List<HiveReading> list = await audioDatabase.getReadingList();
+
     // widget.appDirectory.listSync();
-    widget.appDirectory.list().listen((onData) async {
-      widget.records.add(onData.path);
-      print("ondata.path: ${onData.path}");
+    // widget.appDirectory.list().listen((onData) async {
+    records.add(filePath);
+    // print("ondata.path: ${onData.path}");
 
-      if (!list.any((element) {
-        // print("${element.uri} == ${onData.path}");
-        return (element.uri == onData.path);
-      })) {
-        if (onData.path.endsWith(".aac")) {
-          player.setUrl(onData.path, isLocal: true);
-          player.onDurationChanged.listen((dura) async {
-            duration = dura.inSeconds;
+    // if (!list.any((element) {
+    //   // print("${element.uri} == ${onData.path}");
+    //   return (element.uri == onData.path);
+    // })) {
+    // if (onData.path.endsWith(".aac")) {
+    player.setUrl(filePath, isLocal: true);
+    player.onDurationChanged.listen(
+      (dura) async {
+        duration = dura.inSeconds;
 
-            print("duration: $duration");
-            reading = HiveReading(
-                id: DateTime.now().microsecondsSinceEpoch % maxId,
-                author: widget.author,
-                data: DateTime.now(),
-                uri: onData.path,
-                duration: duration, //
-                textId: widget.textId);
-            await audioDatabase.addReading(reading);
-            list = await audioDatabase.getReadingList();
-            widget.records.sort();
-            widget.records = widget.records.reversed.toList();
-            var ppm, pcpm, percentage;
-            var currentText = await text;
-            ppm = getPpm(currentText.wordCount, duration);
-            pcpm = getPcpm(currentText.wordCount, duration,
-                widget.errorController.errorCount);
-            percentage = getPercentage(
-                currentText.wordCount, widget.errorController.errorCount);
-            print(
-                "wordCount:${currentText.wordCount}, duration:$duration\nerrorCount:${widget.errorController.errorCount}\nppm:$ppm\npcpm:$pcpm ");
-            Navigator.of(context).pop();
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+        print("duration: $duration");
+        reading = HiveReading(
+            id: DateTime.now().microsecondsSinceEpoch % maxId,
+            reader: widget.reader,
+            data: DateTime.now(),
+            uri: filePath,
+            duration: duration, //
+            textId: widget.text.id);
+        widget.reader.readings.add(reading);
+        await readersDatabase.addReader(widget.reader);
+
+        // await audioDatabase.addReading(reading);
+        // list = await audioDatabase.getReadingList();
+        records.sort();
+        records = records.reversed.toList();
+        var ppm, pcpm, percentage;
+        var currentText = await text;
+        ppm = getPpm(currentText.wordCount, duration);
+        pcpm = getPcpm(
+            currentText.wordCount, duration, widget.errorController.errorCount);
+        percentage = getPercentage(
+            currentText.wordCount, widget.errorController.errorCount);
+        print(widget.reader.readings.toString());
+        print(
+            "wordCount:${currentText.wordCount}, duration:$duration\nerrorCount:${widget.errorController.errorCount}\nppm:$ppm\npcpm:$pcpm ");
+        Navigator.of(context).pop();
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) {
               return GraphsPage(
                 ppm: ppm,
                 pcpm: pcpm,
                 percentage: percentage * 100,
                 duration: duration,
+                reading: reading,
                 text: currentText,
               );
-            }));
-          });
-        }
-      }
-    });
+            },
+          ),
+        );
+      },
+    );
+    //   }
   }
 
   @override

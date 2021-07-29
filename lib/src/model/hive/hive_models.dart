@@ -31,7 +31,7 @@ class HiveReading {
   @HiveField(0)
   int id;
   @HiveField(1)
-  String author;
+  HiveReader reader;
   @HiveField(2)
   DateTime data;
   @HiveField(3)
@@ -42,7 +42,7 @@ class HiveReading {
   int textId;
 
   HiveReading(
-      {this.id, this.author, this.data, this.duration, this.uri, this.textId});
+      {this.id, this.reader, this.data, this.duration, this.uri, this.textId});
 }
 
 @HiveType(typeId: 3)

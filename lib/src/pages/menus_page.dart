@@ -3,7 +3,7 @@ import 'package:flutter_smart_course/src/pages/graphs/graphs_page.dart';
 import 'package:flutter_smart_course/src/pages/new_data/new_data_page.dart';
 import 'package:flutter_smart_course/src/pages/quiz/quiz_page.dart';
 import 'package:flutter_smart_course/src/pages/readers/readers_page.dart';
-import 'package:flutter_smart_course/src/pages/reading/reading_page.dart';
+import 'package:flutter_smart_course/src/pages/reading/text_choose_page.dart';
 import 'package:flutter_smart_course/src/pages/readingHistory/reading_history_page.dart';
 import 'package:flutter_smart_course/utils/no_glow_behavior.dart';
 import 'package:flutter_smart_course/utils/showup.dart';
@@ -164,23 +164,23 @@ class MenusPageState extends State<MenusPage> {
               iconColor: Colors.orange[600],
               enabled: isAndroid,
               onTap: () {
-                _onGraphsTap(context);
+                // _onGraphsTap(context);
               },
             ),
           ),
-          ShowUp(
-            delay: showUpDelay += 100,
-            child: MenuCard(
-              "Histórico leituras",
-              "Verifique seu Histórico de Leituras",
-              Icons.settings_backup_restore,
-              iconColor: Colors.orange[600],
-              enabled: isAndroid,
-              onTap: () {
-                _onReadingHistoryTap(context);
-              },
-            ),
-          ),
+          // ShowUp(
+          //   delay: showUpDelay += 100,
+          //   child: MenuCard(
+          //     "Histórico leituras",
+          //     "Verifique seu Histórico de Leituras",
+          //     Icons.settings_backup_restore,
+          //     iconColor: Colors.orange[600],
+          //     enabled: isAndroid,
+          //     onTap: () {
+          //       _onReadingHistoryTap(context);
+          //     },
+          //   ),
+          // ),
           ShowUp(
             delay: showUpDelay += 100,
             child: MenuCard(
@@ -217,19 +217,19 @@ class MenusPageState extends State<MenusPage> {
   }
 
   void _onReadingTap(BuildContext context) {
-    Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => ShowUp(child: ReadingPage())));
-  }
-
-  void _onGraphsTap(BuildContext context) {
-    Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => ShowUp(child: GraphsPage())));
-  }
-
-  void _onReadingHistoryTap(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => ShowUp(child: ReadingHistoryPage())));
+        builder: (context) => ShowUp(child: TextChoosePage())));
   }
+
+  // void _onGraphsTap(BuildContext context) {
+  //   Navigator.of(context).push(
+  //       MaterialPageRoute(builder: (context) => ShowUp(child: GraphsPage())));
+  // }
+
+  // void _onReadingHistoryTap(BuildContext context) {
+  //   Navigator.of(context).push(MaterialPageRoute(
+  //       builder: (context) => ShowUp(child: ReadingHistoryPage())));
+  // }
 
   void _onQuizTap(BuildContext context) {
     Navigator.of(context).push(

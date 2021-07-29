@@ -6,7 +6,7 @@ import 'package:flutter_smart_course/utils/showup.dart';
 import 'package:path_provider/path_provider.dart';
 
 class RecorderView extends StatefulWidget {
-  final Function onSaved;
+  final Function(String) onSaved;
 
   const RecorderView({Key key, @required this.onSaved}) : super(key: key);
   @override
@@ -27,6 +27,8 @@ class _RecorderViewState extends State<RecorderView> {
   IconData _recordIcon2 = Icons.pause;
   String _recordText = 'Gravar';
   String _recordText2 = 'Pausar';
+  Future<Directory> appDirectory;
+  String filePath;
   RecordingState _recordingState = RecordingState.UnSet;
 
   // Recorder properties
@@ -35,7 +37,8 @@ class _RecorderViewState extends State<RecorderView> {
   @override
   void initState() {
     super.initState();
-
+    filePath = null;
+    appDirectory = getApplicationDocumentsDirectory();
     FlutterAudioRecorder.hasPermissions.then((hasPermision) {
       if (hasPermision) {
         _recordingState = RecordingState.Set;
@@ -168,13 +171,7 @@ class _RecorderViewState extends State<RecorderView> {
     }
   }
 
-  _initRecorder() async {
-    Directory appDirectory = await getApplicationDocumentsDirectory();
-    String filePath = appDirectory.path +
-        '/' +
-        DateTime.now().millisecondsSinceEpoch.toString() +
-        '.aac';
-
+  _initRecorder(String filePath) async {
     audioRecorder =
         FlutterAudioRecorder(filePath, audioFormat: AudioFormat.AAC);
 
@@ -204,14 +201,19 @@ class _RecorderViewState extends State<RecorderView> {
       isSaving = true;
       await audioRecorder.stop();
       print("onSaved");
-      widget.onSaved();
+      widget.onSaved(filePath);
       isSaving = false;
     }
   }
 
   Future<void> _recordVoice() async {
     if (await FlutterAudioRecorder.hasPermissions) {
-      await _initRecorder();
+      var directory = await appDirectory;
+      filePath = (directory.path +
+          '/' +
+          DateTime.now().millisecondsSinceEpoch.toString() +
+          '.aac');
+      await _initRecorder(filePath);
 
       await _startRecording();
       _recordingState = RecordingState.Recording;

@@ -4,7 +4,7 @@ import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
 import 'package:hive/hive.dart';
 
 class AudioDatabase {
-  static const _boxName = 'audios1';
+  static const _boxName = 'audios2';
 
   Future addReading(HiveReading reading) async {
     var box = await Hive.openBox<HiveReading>(_boxName);

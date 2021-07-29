@@ -61,8 +61,10 @@ class TextPickerButtonState extends State<TextPickerButton> {
           : paths != null
               ? paths.keys.toString()
               : '...';
-      if (path != null)
-        File(path).readAsString(encoding: ascii).then((String data) {
+      if (path != null) {
+        // var input = File(path).openRead().transform(utf8.decoder);
+        // print("input: " + input.toString());
+        File(path).readAsString(encoding: latin1).then((String data) {
           // contents = data;
           var preProcess = data.replaceAll(" \n ", "\n ");
           var textList = preProcess
@@ -87,9 +89,11 @@ class TextPickerButtonState extends State<TextPickerButton> {
             successDialog(context, "Seu texto foi carregado com sucesso.");
           });
         });
-      else if (paths != null) {
+      } else if (paths != null) {
         paths.forEach((key, value) {
-          File(value).readAsString(encoding: ascii).then((String data) {
+          // var input = File(value).openRead().transform(utf8.decoder).transform(streamTransformer);
+          // print("input: " + input.toString());
+          File(value).readAsString(encoding: latin1).then((String data) {
             var fileNam = value.split('/').last;
             var preProcess = data.replaceAll(" \n ", "\n ");
             var textList = preProcess

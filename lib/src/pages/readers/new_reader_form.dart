@@ -74,13 +74,12 @@ class _NewReaderFormState extends State<NewReaderForm> {
         "${selectedDate.day.toString()}/${selectedDate.month.toString()}/${selectedDate.year.toString()}";
     return WillPopScope(
       onWillPop: () async {
-        print("hello");
         if (widget.refresh != null) widget.refresh();
         return true;
       },
       child: baseScaffold(
           context: context,
-          title: "Novo Leitor",
+          title: name.text ?? "Novo Leitor",
           body: Form(
               key: _formKey,
               autovalidateMode: AutovalidateMode.always,
@@ -208,8 +207,7 @@ class _NewReaderFormState extends State<NewReaderForm> {
         readings: [],
       ));
       Navigator.of(context).pop();
-      if(widget.refresh!=null)
-        widget.refresh();
+      if (widget.refresh != null) widget.refresh();
       successDialog(context, "Leitor adicionado com sucesso");
     }
   }

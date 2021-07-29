@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
 import 'package:flutter_smart_course/src/model/reader_database.dart';
 import 'package:flutter_smart_course/src/pages/readers/new_reader_form.dart';
+import 'package:flutter_smart_course/src/pages/reading/recording_page.dart';
 import 'package:flutter_smart_course/src/pages/reading/text_choose_page.dart';
-import 'package:flutter_smart_course/src/pages/readingHistory/recorded_list_view.dart';
 import 'package:flutter_smart_course/utils/cards.dart';
 import 'package:flutter_smart_course/utils/base_scaffold.dart';
 import 'package:flutter_smart_course/utils/dialogs.dart';
@@ -11,14 +11,15 @@ import 'package:flutter_smart_course/utils/showup.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class ReadersPage extends StatefulWidget {
-  ReadersPage({Key key}) : super(key: key);
+class ChooseReaderPage extends StatefulWidget {
+  final HiveText text;
+  ChooseReaderPage({Key key, this.text}) : super(key: key);
 
   @override
-  _ReadersPageState createState() => _ReadersPageState();
+  _ChooseReaderPageState createState() => _ChooseReaderPageState();
 }
 
-class _ReadersPageState extends State<ReadersPage> {
+class _ChooseReaderPageState extends State<ChooseReaderPage> {
   // List<HiveReader> readersList;
   Future<List<HiveReader>> futureReadersList;
 
@@ -52,7 +53,7 @@ class _ReadersPageState extends State<ReadersPage> {
                     ))));
           }),
       context: context,
-      title: "Leitores",
+      title: "Selecione um Leitor",
       body: FutureBuilder(
           future: futureReadersList,
           builder: (context, snapshot) {
@@ -70,18 +71,12 @@ class _ReadersPageState extends State<ReadersPage> {
                             children: [
                               readerCard(
                                 context,
-                                onLongPress: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => ShowUp(
-                                              child: NewReaderForm(
-                                            reader: readersList[index],
-                                            refresh: refresh,
-                                          ))));
-                                },
                                 onTap: () {
+                                  Navigator.pop(context);
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => ShowUp(
-                                              child: RecordListView(
+                                              child: RecordingPage(
+                                            text: widget.text,
                                             reader: readersList[index],
                                           ))));
                                 },
@@ -105,18 +100,12 @@ class _ReadersPageState extends State<ReadersPage> {
                             children: [
                               readerCard(
                                 context,
-                                onLongPress: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => ShowUp(
-                                              child: NewReaderForm(
-                                            reader: readersList[index],
-                                            refresh: refresh,
-                                          ))));
-                                },
                                 onTap: () {
+                                  Navigator.pop(context);
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => ShowUp(
-                                              child: RecordListView(
+                                              child: RecordingPage(
+                                            text: widget.text,
                                             reader: readersList[index],
                                           ))));
                                 },

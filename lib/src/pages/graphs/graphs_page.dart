@@ -14,6 +14,7 @@ class GraphsPage extends StatefulWidget {
   final double percentage;
   final int duration;
   final HiveText text;
+  final HiveReading reading;
   GraphsPage(
       {Key key,
       this.zScore,
@@ -21,7 +22,7 @@ class GraphsPage extends StatefulWidget {
       this.pcpm,
       this.duration,
       this.text,
-      this.percentage})
+      this.percentage,@required this.reading})
       : super(key: key);
 
   @override

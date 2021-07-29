@@ -67,7 +67,7 @@ class HiveReadingAdapter extends TypeAdapter<HiveReading> {
     };
     return HiveReading(
       id: fields[0] as int,
-      author: fields[1] as String,
+      reader: fields[1] as HiveReader,
       data: fields[2] as DateTime,
       duration: fields[3] as int,
       uri: fields[4] as String,
@@ -82,7 +82,7 @@ class HiveReadingAdapter extends TypeAdapter<HiveReading> {
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.author)
+      ..write(obj.reader)
       ..writeByte(2)
       ..write(obj.data)
       ..writeByte(3)

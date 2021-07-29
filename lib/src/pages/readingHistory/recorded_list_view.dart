@@ -4,13 +4,16 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/src/model/audio_database.dart';
 import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
+import 'package:flutter_smart_course/utils/base_scaffold.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 class RecordListView extends StatefulWidget {
   // final List<String> records;
+  final HiveReader reader;
   const RecordListView({
     Key key,
+    @required this.reader,
     // this.records,
   }) : super(key: key);
 
@@ -27,13 +30,27 @@ class _RecordListViewState extends State<RecordListView> {
   List<String> records;
   Directory appDirectory;
   AudioDatabase audioDatabase;
-  Future<List<HiveReading>> readings;
+  List<HiveReading> readings;
   @override
   void initState() {
     super.initState();
     // records = [];
-    audioDatabase = Provider.of<AudioDatabase>(context, listen: false);
-    readings = audioDatabase.getReadingList();
+
+    // readings = widget.reader.readings;
+    readings =
+        (widget.reader.readings.isEmpty || widget.reader.readings == null)
+            ? [
+                HiveReading(
+                    reader: widget.reader,
+                    id: 1,
+                    data: DateTime.now(),
+                    uri:
+                        "/data/user/0/com.example.lepic/app_flutter/1625776378957.aac")
+              ]
+            : widget.reader.readings;
+    // audioDatabase = Provider.of<AudioDatabase>(context, listen: false); --------------------
+    // readings = audioDatabase.getReadingList(); ---------------------------------------------
+
     // getApplicationDocumentsDirectory().then((value) {
     //   appDirectory = value;
     //   appDirectory.list().listen((onData) {
@@ -47,92 +64,96 @@ class _RecordListViewState extends State<RecordListView> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: FutureBuilder<Object>(
-          future: readings,
-          builder: (context, snapshot) {
-            if (snapshot.hasData &&
-                snapshot.connectionState == ConnectionState.done) {
-              List<HiveReading> readingsList = snapshot.data;
-              readingsList.sort((a, b) {
-                return b.data.compareTo(a.data);
-              });
+    List<HiveReading> readingsList = readings;
+    return baseScaffold(
+        context: context,
+        title: "Leituras de ${widget.reader.name}",
+        body:
+            // FutureBuilder<Object>(
+            //     future: readings,
+            //     builder: (context, snapshot) {
+            //       if (snapshot.hasData &&
+            //           snapshot.connectionState == ConnectionState.done) {
+            //         List<HiveReading> readingsList = snapshot.data;
+            //         readingsList.sort((a, b) {
+            //           return b.data.compareTo(a.data);
+            //         });
 
-              print(readingsList.toString());
-              return ListView.builder(
-                itemCount: readingsList.length,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext context, int i) {
-                  var currentReading = readingsList.elementAt(i);
-                  String minutes;
-                  if ((currentReading.data.minute / 10) < 0)
-                    minutes = "0" + currentReading.data.minute.toString();
-                  else
-                    minutes = currentReading.data.minute.toString();
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.horizontal(
-                            right: Radius.circular(10.0))),
-                    elevation: _selectedIndex == i ? 5.0 : 0,
-                    child: InkWell(
-                      onTap: () {},
-                      child: ExpansionTile(
-                        title: Text(currentReading.author),
-                        subtitle: Text(
-                            "${_getWeekDay(currentReading.data.weekday)} as ${currentReading.data.hour}:$minutes,  ${currentReading.data.day}/${currentReading.data.month}/${currentReading.data.year}"),
-                        onExpansionChanged: ((newState) {
-                          if (newState) {
-                            setState(() {
-                              _selectedIndex = i;
-                            });
-                          }
-                        }),
-                        children: [
-                          Container(
-                            height: 100,
-                            padding: const EdgeInsets.all(10),
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.horizontal(
-                                      right: Radius.circular(10.0))),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: LinearProgressIndicator(
-                                      minHeight: 5,
-                                      backgroundColor: Colors.black,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          Colors.green),
-                                      value: _selectedIndex == i
-                                          ? _completedPercentage
-                                          : 0,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: _selectedIndex == i
-                                        ? _isPlaying
-                                            ? Icon(Icons.pause)
-                                            : Icon(Icons.play_arrow)
-                                        : Icon(Icons.play_arrow),
-                                    onPressed: () => _onPlay(
-                                        filePath: currentReading.uri, index: i),
-                                  ),
-                                ],
+            //         print(readingsList.toString());
+            //         return
+            ListView.builder(
+          itemCount: readingsList.length,
+          shrinkWrap: true,
+          itemBuilder: (BuildContext context, int i) {
+            var currentReading = readingsList.elementAt(i);
+            String minutes;
+            if ((currentReading.data.minute / 10) < 0)
+              minutes = "0" + currentReading.data.minute.toString();
+            else
+              minutes = currentReading.data.minute.toString();
+            return Card(
+              shape: RoundedRectangleBorder(
+                  borderRadius:
+                      BorderRadius.horizontal(right: Radius.circular(10.0))),
+              elevation: _selectedIndex == i ? 5.0 : 0,
+              child: InkWell(
+                onTap: () {},
+                child: ExpansionTile(
+                  title: Text(currentReading.reader.name ?? "Sem Autor"),
+                  subtitle: Text(
+                      "${_getWeekDay(currentReading.data.weekday)} as ${currentReading.data.hour}:$minutes,  ${currentReading.data.day}/${currentReading.data.month}/${currentReading.data.year}"),
+                  onExpansionChanged: ((newState) {
+                    if (newState) {
+                      setState(() {
+                        _selectedIndex = i;
+                      });
+                    }
+                  }),
+                  children: [
+                    Container(
+                      height: 100,
+                      padding: const EdgeInsets.all(10),
+                      child: Card(
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.horizontal(
+                                right: Radius.circular(10.0))),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: LinearProgressIndicator(
+                                minHeight: 5,
+                                backgroundColor: Colors.black,
+                                valueColor:
+                                    AlwaysStoppedAnimation<Color>(Colors.green),
+                                value: _selectedIndex == i
+                                    ? _completedPercentage
+                                    : 0,
                               ),
                             ),
-                          ),
-                        ],
+                            IconButton(
+                              icon: _selectedIndex == i
+                                  ? _isPlaying
+                                      ? Icon(Icons.pause)
+                                      : Icon(Icons.play_arrow)
+                                  : Icon(Icons.play_arrow),
+                              onPressed: () => _onPlay(
+                                  filePath: currentReading.uri, index: i),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  );
-                },
-              );
-            }
-            return Container();
-          }),
-    );
+                  ],
+                ),
+              ),
+            );
+          },
+        ));
+
+    //   return Container();
+    // }),
   }
 
   Future<void> _onPlay({@required String filePath, @required int index}) async {
