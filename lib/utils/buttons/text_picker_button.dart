@@ -62,11 +62,10 @@ class TextPickerButtonState extends State<TextPickerButton> {
               ? paths.keys.toString()
               : '...';
       if (path != null) {
-        // var input = File(path).openRead().transform(utf8.decoder);
-        // print("input: " + input.toString());
         File(path).readAsString(encoding: latin1).then((String data) {
           // contents = data;
           var preProcess = data.replaceAll(" \n ", "\n ");
+          print(preProcess);
           var textList = preProcess
               .replaceAll(
                 wordPattern,
@@ -74,7 +73,7 @@ class TextPickerButtonState extends State<TextPickerButton> {
               )
               .split(' ');
           print(textList);
-          print(textList.length);
+          print(textList.where((element) => !element.contains("\n")).length);
           var random = Random();
           int id = random.nextInt(1000000000);
           textDB
@@ -96,6 +95,7 @@ class TextPickerButtonState extends State<TextPickerButton> {
           File(value).readAsString(encoding: latin1).then((String data) {
             var fileNam = value.split('/').last;
             var preProcess = data.replaceAll(" \n ", "\n ");
+            print(preProcess);
             var textList = preProcess
                 .replaceAll(
                   wordPattern,
@@ -103,7 +103,10 @@ class TextPickerButtonState extends State<TextPickerButton> {
                 )
                 .split(' ');
             print(textList);
-            print(textList.length);
+
+            var wordCount =
+                textList.where((element) => !element.contains("\n")).length;
+            print(wordCount);
             var random = Random();
             int id = random.nextInt(1000000000);
             textDB.addText(HiveText(
@@ -111,7 +114,7 @@ class TextPickerButtonState extends State<TextPickerButton> {
                 text: textList,
                 originalText: data,
                 name: fileNam.substring(0, fileNam.indexOf('.')),
-                wordCount: textList.length,
+                wordCount: wordCount,
                 path: value));
           });
         });
