@@ -14,7 +14,7 @@ class _NewDataState extends State<NewData> {
   Widget build(BuildContext context) {
     return baseScaffold(
       context: context,
-      title: "Nova Entrada",
+      title: "Importar Áudios",
       body: Center(
         child: TextPickerButton(
           isFab: false,

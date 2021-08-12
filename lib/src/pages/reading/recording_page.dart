@@ -41,17 +41,17 @@ class _RecordingPageState extends State<RecordingPage>
   List<Widget> words;
   List<String> records;
   int maxId = 4294967295;
-  AudioDatabase audioDatabase;
+  // AudioDatabase audioDatabase;
   ReadersDatabase readersDatabase;
   TextDatabase textDatabase;
-  Future<HiveText> text;
+  // Future<HiveText> text;
   List<String> textList;
   @override
   void initState() {
     readersDatabase = Provider.of<ReadersDatabase>(context, listen: false);
-    audioDatabase = Provider.of<AudioDatabase>(context, listen: false);
+    // audioDatabase = Provider.of<AudioDatabase>(context, listen: false);
     textDatabase = Provider.of<TextDatabase>(context, listen: false);
-    text = textDatabase.getText(widget.text.id);
+    // text = textDatabase.getText(widget.text.id);
     super.initState();
     words = [];
     widget.errorController = ErrorController(errorCount: 0);
@@ -224,23 +224,12 @@ class _RecordingPageState extends State<RecordingPage>
       (dura) async {
         duration = dura.inSeconds;
 
-        print("duration: $duration");
-        reading = HiveReading(
-            id: DateTime.now().microsecondsSinceEpoch % maxId,
-            reader: widget.reader,
-            data: DateTime.now(),
-            uri: filePath,
-            duration: duration, //
-            textId: widget.text.id);
-        widget.reader.readings.add(reading);
-        await readersDatabase.addReader(widget.reader);
-
         // await audioDatabase.addReading(reading);
         // list = await audioDatabase.getReadingList();
         records.sort();
         records = records.reversed.toList();
         var ppm, pcpm, percentage;
-        var currentText = await text;
+        var currentText = widget.text;
         ppm = getPpm(currentText.wordCount, duration);
         pcpm = getPcpm(
             currentText.wordCount, duration, widget.errorController.errorCount);
@@ -249,6 +238,20 @@ class _RecordingPageState extends State<RecordingPage>
         print(widget.reader.readings.toString());
         print(
             "wordCount:${currentText.wordCount}, duration:$duration\nerrorCount:${widget.errorController.errorCount}\nppm:$ppm\npcpm:$pcpm ");
+
+        reading = HiveReading(
+          id: DateTime.now().microsecondsSinceEpoch % maxId,
+          reader: widget.reader,
+          data: DateTime.now(),
+          uri: filePath,
+          duration: duration,
+          textId: widget.text.id,
+          readingData: HiveReadingData(
+              ppm: ppm, pcpm: pcpm, percentage: percentage, duration: duration),
+        );
+        widget.reader.readings.add(reading);
+        await readersDatabase.addReader(widget.reader);
+
         Navigator.of(context).pop();
         Navigator.of(context).push(
           MaterialPageRoute(
@@ -258,7 +261,7 @@ class _RecordingPageState extends State<RecordingPage>
                 pcpm: pcpm,
                 percentage: percentage * 100,
                 duration: duration,
-                reading: reading,
+                readings: widget.reader.readings,
                 text: currentText,
               );
             },

@@ -14,7 +14,7 @@ class GraphsPage extends StatefulWidget {
   final double percentage;
   final int duration;
   final HiveText text;
-  final HiveReading reading;
+  final List<HiveReading> readings;
   GraphsPage(
       {Key key,
       this.zScore,
@@ -22,7 +22,8 @@ class GraphsPage extends StatefulWidget {
       this.pcpm,
       this.duration,
       this.text,
-      this.percentage,@required this.reading})
+      this.percentage,
+      @required this.readings})
       : super(key: key);
 
   @override
@@ -163,20 +164,36 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                                   children: [
                                     MyBarChart(
                                       values: [
-                                        60.0,
-                                        65.3,
-                                        76.7,
-                                        99.1,
-                                        // 120,
-                                        190
+                                        ...widget.readings
+                                            .map((reading) =>
+                                                reading.readingData.ppm)
+                                            .toList()
                                       ],
                                     ),
-                                    BarChartSample1(
-                                        title: "Corretas por Minuto"),
+                                    MyBarChart(
+                                      values: [
+                                        ...widget.readings
+                                            .map((reading) =>
+                                                reading.readingData.pcpm)
+                                            .toList()
+                                      ],
+                                    ),
+                                    MyBarChart(
+                                      values: [
+                                        ...widget.readings
+                                            .map((reading) => reading
+                                                .readingData.percentage
+                                                .toDouble())
+                                            .toList()
+                                      ],
+                                    ),
 
-                                    // BarChartSample1(title: "Palavras por Minuto"),
-                                    // BarChartSample1(title: "Duração"),
-                                    BarChartSample2(),
+                                    // BarChartSample1(
+                                    //     title: "Corretas por Minuto"),
+
+                                    // // BarChartSample1(title: "Palavras por Minuto"),
+                                    // // BarChartSample1(title: "Duração"),
+                                    // BarChartSample2(),
                                   ]),
                             ),
                           )

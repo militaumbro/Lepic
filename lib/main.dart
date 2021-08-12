@@ -19,6 +19,7 @@ Future<void> main() async {
   Hive.registerAdapter(HiveReadingAdapter());
   Hive.registerAdapter(HiveReaderAdapter());
   Hive.registerAdapter(HiveSchoolInfoAdapter());
+  Hive.registerAdapter(HiveReadingDataAdapter());
   runApp(MyApp());
 }
 
@@ -66,9 +67,9 @@ class MyApp extends StatelessWidget {
         Provider<TextDatabase>(
           create: (_) => TextDatabase(),
         ),
-        Provider<AudioDatabase>(
-          create: (_) => AudioDatabase(),
-        ),
+        // Provider<AudioDatabase>(
+        //   create: (_) => AudioDatabase(),
+        // ),
         Provider<ReadersDatabase>(
           create: (_) => ReadersDatabase(),
         ),

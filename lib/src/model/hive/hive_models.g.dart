@@ -72,13 +72,14 @@ class HiveReadingAdapter extends TypeAdapter<HiveReading> {
       duration: fields[3] as int,
       uri: fields[4] as String,
       textId: fields[5] as int,
+      readingData: fields[6] as HiveReadingData,
     );
   }
 
   @override
   void write(BinaryWriter writer, HiveReading obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -90,7 +91,9 @@ class HiveReadingAdapter extends TypeAdapter<HiveReading> {
       ..writeByte(4)
       ..write(obj.uri)
       ..writeByte(5)
-      ..write(obj.textId);
+      ..write(obj.textId)
+      ..writeByte(6)
+      ..write(obj.readingData);
   }
 
   @override
@@ -200,6 +203,52 @@ class HiveSchoolInfoAdapter extends TypeAdapter<HiveSchoolInfo> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is HiveSchoolInfoAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class HiveReadingDataAdapter extends TypeAdapter<HiveReadingData> {
+  @override
+  final int typeId = 5;
+
+  @override
+  HiveReadingData read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return HiveReadingData(
+      zScore: fields[0] as double,
+      ppm: fields[1] as double,
+      pcpm: fields[2] as double,
+      percentage: fields[3] as double,
+      duration: fields[4] as int,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, HiveReadingData obj) {
+    writer
+      ..writeByte(5)
+      ..writeByte(0)
+      ..write(obj.zScore)
+      ..writeByte(1)
+      ..write(obj.ppm)
+      ..writeByte(2)
+      ..write(obj.pcpm)
+      ..writeByte(3)
+      ..write(obj.percentage)
+      ..writeByte(4)
+      ..write(obj.duration);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HiveReadingDataAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

@@ -40,9 +40,17 @@ class HiveReading {
   String uri;
   @HiveField(5)
   int textId;
+  @HiveField(6)
+  HiveReadingData readingData;
 
   HiveReading(
-      {this.id, this.reader, this.data, this.duration, this.uri, this.textId});
+      {this.id,
+      this.reader,
+      this.data,
+      this.duration,
+      this.uri,
+      this.textId,
+      this.readingData});
 }
 
 @HiveType(typeId: 3)
@@ -95,4 +103,26 @@ class HiveSchoolInfo {
   String schoolName;
   @HiveField(3)
   String schoolCategory;
+}
+
+@HiveType(typeId: 5)
+class HiveReadingData {
+  @HiveField(0)
+  double zScore;
+  @HiveField(1)
+  double ppm;
+  @HiveField(2)
+  double pcpm;
+  @HiveField(3)
+  double percentage;
+  @HiveField(4)
+  int duration;
+
+  HiveReadingData({
+    this.zScore,
+    this.ppm,
+    this.pcpm,
+    this.percentage,
+    this.duration,
+  });
 }

@@ -132,7 +132,7 @@ class MenusPageState extends State<MenusPage> {
           ShowUp(
             delay: showUpDelay += 100,
             child: MenuCard(
-              "Leitura",
+              "Gravar Leitura",
               "Inicie leituras de textos",
               Icons.read_more,
               iconColor: Colors.orange[600],
@@ -184,7 +184,7 @@ class MenusPageState extends State<MenusPage> {
           ShowUp(
             delay: showUpDelay += 100,
             child: MenuCard(
-              "Nova Entrada",
+              "Importar Áudios",
               "Adicione Textos, Audios, Questionários, etc.",
               Icons.add,
               iconColor: Colors.orange[600],
