@@ -123,6 +123,33 @@ Widget baseCard2(
   );
 }
 
+Widget audioCard(context,
+    {HiveAudio audio,
+    Function(BuildContext, HiveAudio) onAudioTap,
+    Function(BuildContext, HiveAudio) onDelete}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+    child: baseCard2(
+        title: audio?.name ?? 'Audio',
+        subtitle: audio?.description,
+        leading: CircleAvatar(
+            backgroundColor: Colors.transparent,
+            foregroundColor: Colors.blue[400],
+            child: Icon(Icons.audiotrack, size: 32)),
+        context: context,
+        onDelete: onDelete != null
+            ? () {
+                onDelete(context, audio);
+              }
+            : null,
+        onTap: onAudioTap != null
+            ? () {
+                onAudioTap(context ,audio);
+              }
+            : () {}),
+  );
+}
+
 Widget textCard(context,
     {HiveText text,
     Function(BuildContext, HiveText) onTextTap,

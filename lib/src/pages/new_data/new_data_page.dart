@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/utils/base_scaffold.dart';
+import 'package:flutter_smart_course/utils/buttons/audio_picker_button.dart';
 import 'package:flutter_smart_course/utils/buttons/text_picker_button.dart';
 
 class NewData extends StatefulWidget {
@@ -14,11 +15,29 @@ class _NewDataState extends State<NewData> {
   Widget build(BuildContext context) {
     return baseScaffold(
       context: context,
-      title: "Importar Áudios",
-      body: Center(
-        child: TextPickerButton(
-          isFab: false,
-          refresh: refresh(),
+      title: "Importe dados para o app",
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              ListTile(
+                title: Text("Importar Textos"),
+                trailing: TextPickerButton(
+                  isFab: true,
+                  refresh: refresh(),
+                ),
+              ),
+              Divider(),
+              ListTile(
+                title: Text("Importar Áudios"),
+                trailing: AudioPickerButton(
+                  isFab: true,
+                  refresh: refresh(),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

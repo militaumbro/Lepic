@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
 import 'package:flutter_smart_course/utils/showup.dart';
 
 void successDialog(context, string, {Function refresh}) {
@@ -34,6 +35,27 @@ void successDialog(context, string, {Function refresh}) {
           ),
         );
       });
+}
+
+void errorDialog(context, {String title, String text}) {
+  showDialog(
+    context: context,
+    barrierColor: Colors.red[800].withOpacity(0.8),
+    builder: (context) => ShowUp.tenth(
+      duration: 200,
+      child: AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.all(Radius.circular(16)),
+          side: BorderSide(
+            color: Colors.red[800],
+            width: 2,
+          ),
+        ),
+        title: Text(title),
+        content: Text(text ?? "Erro"),
+      ),
+    ),
+  );
 }
 
 void deleteDialog(context, {String title, String text, Function onDelete}) {
@@ -73,3 +95,5 @@ void deleteDialog(context, {String title, String text, Function onDelete}) {
     ),
   );
 }
+
+

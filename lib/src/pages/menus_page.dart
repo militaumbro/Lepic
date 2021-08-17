@@ -13,6 +13,8 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 
+import 'audio/audio_list_page.dart';
+
 class MenusPage extends StatefulWidget {
   @override
   MenusPageState createState() => new MenusPageState();
@@ -168,6 +170,19 @@ class MenusPageState extends State<MenusPage> {
               },
             ),
           ),
+          ShowUp(
+            delay: showUpDelay += 100,
+            child: MenuCard(
+              "Áudios",
+              "Corrija leituras já gravadas e atribua áudios a leitores",
+              Icons.audiotrack,
+              iconColor: Colors.orange[600],
+              enabled: isAndroid,
+              onTap: () {
+                _onAudioTap(context);
+              },
+            ),
+          ),
           // ShowUp(
           //   delay: showUpDelay += 100,
           //   child: MenuCard(
@@ -184,7 +199,7 @@ class MenusPageState extends State<MenusPage> {
           ShowUp(
             delay: showUpDelay += 100,
             child: MenuCard(
-              "Importar Áudios",
+              "Importar Dados",
               "Adicione Textos, Audios, Questionários, etc.",
               Icons.add,
               iconColor: Colors.orange[600],
@@ -218,7 +233,7 @@ class MenusPageState extends State<MenusPage> {
 
   void _onReadingTap(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => ShowUp(child: TextChoosePage())));
+        builder: (context) => ShowUp(child: TextChoosePage(recorded: false,))));
   }
 
   // void _onGraphsTap(BuildContext context) {
@@ -230,6 +245,11 @@ class MenusPageState extends State<MenusPage> {
   //   Navigator.of(context).push(MaterialPageRoute(
   //       builder: (context) => ShowUp(child: ReadingHistoryPage())));
   // }
+
+  void _onAudioTap(BuildContext context) {
+    Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ShowUp(child: AudioListPage())));
+  }
 
   void _onQuizTap(BuildContext context) {
     Navigator.of(context).push(
