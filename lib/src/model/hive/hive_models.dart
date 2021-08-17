@@ -126,3 +126,17 @@ class HiveReadingData {
     this.duration,
   });
 }
+
+@HiveType(typeId: 6)
+class HiveAudio {
+  @HiveField(0)
+  int id;
+  @HiveField(1)
+  String name;
+  @HiveField(2)
+  String path;
+  @HiveField(3)
+  String description;
+
+  HiveAudio({this.id,this.path,this.name,this.description});
+}
