@@ -18,7 +18,10 @@ import 'package:provider/provider.dart';
 import 'choose_reader.dart';
 
 class TextChoosePage extends StatefulWidget {
-  TextChoosePage({Key key}) : super(key: key);
+  final HiveAudio audio;
+  final bool recorded;
+  TextChoosePage({Key key, this.audio, @required this.recorded})
+      : super(key: key);
 
   @override
   _TextChoosePageState createState() => _TextChoosePageState();
@@ -104,7 +107,6 @@ class _TextChoosePageState extends State<TextChoosePage> {
       _refresh();
       Navigator.of(context).pop();
     });
-    
   }
 
   onTextTap(context, text) {
@@ -113,6 +115,8 @@ class _TextChoosePageState extends State<TextChoosePage> {
       MaterialPageRoute(
         builder: (context) => ShowUp(
           child: ChooseReaderPage(
+            audio: widget.audio,
+            recorded: widget.recorded,
             text: text,
           ),
         ),

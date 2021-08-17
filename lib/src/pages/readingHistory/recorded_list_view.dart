@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/src/model/audio_database.dart';
 import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
 import 'package:flutter_smart_course/src/pages/graphs/graphs_page.dart';
+import 'package:flutter_smart_course/utils/audio_player.dart';
 import 'package:flutter_smart_course/utils/base_scaffold.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
@@ -128,40 +129,20 @@ class _RecordListViewState extends State<RecordListView> {
                                 }),
                           ),
                           Container(
-                            height: 100,
-                            padding: const EdgeInsets.all(10),
-                            child: Card(
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.horizontal(
-                                      right: Radius.circular(10.0))),
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: LinearProgressIndicator(
-                                      minHeight: 5,
-                                      backgroundColor: Colors.black,
-                                      valueColor: AlwaysStoppedAnimation<Color>(
-                                          Colors.green),
-                                      value: _selectedIndex == i
-                                          ? _completedPercentage
-                                          : 0,
-                                    ),
-                                  ),
-                                  IconButton(
-                                    icon: _selectedIndex == i
-                                        ? _isPlaying
-                                            ? Icon(Icons.pause)
-                                            : Icon(Icons.play_arrow)
-                                        : Icon(Icons.play_arrow),
-                                    onPressed: () => _onPlay(
-                                        filePath: currentReading.uri, index: i),
-                                  ),
-                                ],
+                            height: 150,
+                            padding: const EdgeInsets.all(4),
+                            child: Container(
+                              height: 80,
+                              width: 800,
+                              child: CustomAudioPlayer(
+                                
+                                filePath: currentReading.uri,
                               ),
                             ),
                           ),
+                          SizedBox(
+                            height: 50,
+                          )
                         ],
                       ),
                     ),
@@ -212,8 +193,6 @@ class _RecordListViewState extends State<RecordListView> {
       });
     } else {
       int result = await audioPlayer.pause();
-
-      print("stop deu result: ${audioPlayer.state}");
       setState(() {
         _isPlaying = false;
         _paused = true;

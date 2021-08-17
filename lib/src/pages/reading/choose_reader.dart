@@ -13,7 +13,10 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class ChooseReaderPage extends StatefulWidget {
   final HiveText text;
-  ChooseReaderPage({Key key, this.text}) : super(key: key);
+  final bool recorded;
+  final HiveAudio audio;
+  ChooseReaderPage({Key key, this.text, @required this.recorded, this.audio})
+      : super(key: key);
 
   @override
   _ChooseReaderPageState createState() => _ChooseReaderPageState();
@@ -76,6 +79,8 @@ class _ChooseReaderPageState extends State<ChooseReaderPage> {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => ShowUp(
                                               child: RecordingPage(
+                                                audio: widget.audio,
+                                            recorded: widget.recorded,
                                             text: widget.text,
                                             reader: readersList[index],
                                           ))));
@@ -105,6 +110,8 @@ class _ChooseReaderPageState extends State<ChooseReaderPage> {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => ShowUp(
                                               child: RecordingPage(
+                                                audio: widget.audio,
+                                            recorded: widget.recorded,
                                             text: widget.text,
                                             reader: readersList[index],
                                           ))));

@@ -3,6 +3,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_smart_course/src/model/audio_database.dart';
 import 'package:flutter_smart_course/src/model/reader_database.dart';
 import 'package:flutter_smart_course/src/pages/graphs/graphs_page.dart';
+import 'package:flutter_smart_course/utils/audio_player.dart';
 import 'package:flutter_smart_course/utils/calculator.dart';
 import 'package:flutter_smart_course/utils/utils.dart';
 import 'package:auto_size_text/auto_size_text.dart';
@@ -21,12 +22,16 @@ import 'package:uuid/uuid.dart';
 class RecordingPage extends StatefulWidget {
   final HiveText text;
   final HiveReader reader;
+  final bool recorded;
+  final HiveAudio audio;
   // final int textId;
 
   RecordingPage({
     Key key,
     @required this.text,
     @required this.reader,
+    @required this.recorded,
+    this.audio,
   }) : super(key: key);
   ErrorController errorController;
   Directory appDirectory;
@@ -48,6 +53,8 @@ class _RecordingPageState extends State<RecordingPage>
   List<String> textList;
   @override
   void initState() {
+    print(
+        "recorded: ${widget.recorded.toString()}, audio: ${widget.audio.toString()}");
     readersDatabase = Provider.of<ReadersDatabase>(context, listen: false);
     // audioDatabase = Provider.of<AudioDatabase>(context, listen: false);
     textDatabase = Provider.of<TextDatabase>(context, listen: false);
@@ -118,8 +125,17 @@ class _RecordingPageState extends State<RecordingPage>
           preferredSize: Size.fromHeight(35),
           child: Column(
             children: [
-              RecorderView(onSaved: onRecordComplete),
-              SizedBox(height: 10),
+              if (widget.recorded) ...{
+                CustomAudioPlayer(
+                  filePath: widget.audio.path,
+                ),
+                SizedBox(
+                  height: 50,
+                )
+              } else ...{
+                RecorderView(onSaved: onRecordComplete),
+                SizedBox(height: 10),
+              }
             ],
           ),
         ),
@@ -207,25 +223,12 @@ class _RecordingPageState extends State<RecordingPage>
     var reading;
     var duration;
     final player = AudioPlayer();
-    // List<HiveReading> list = await audioDatabase.getReadingList();
-
-    // widget.appDirectory.listSync();
-    // widget.appDirectory.list().listen((onData) async {
     records.add(filePath);
-    // print("ondata.path: ${onData.path}");
-
-    // if (!list.any((element) {
-    //   // print("${element.uri} == ${onData.path}");
-    //   return (element.uri == onData.path);
-    // })) {
-    // if (onData.path.endsWith(".aac")) {
     player.setUrl(filePath, isLocal: true);
     player.onDurationChanged.listen(
       (dura) async {
         duration = dura.inSeconds;
 
-        // await audioDatabase.addReading(reading);
-        // list = await audioDatabase.getReadingList();
         records.sort();
         records = records.reversed.toList();
         var ppm, pcpm, percentage;
@@ -301,12 +304,12 @@ class _WordState extends State<Word> {
     // super.build(context);
     return widget.text.contains("\n")
         ? GestureDetector(
-            onLongPress: () {
+            onTap: () {
               if (!error)
                 widget.errorController.updateErrorCount(1, "Não Especificado");
               refresh(true);
             },
-            onTap: () {
+            onLongPress: () {
               showDialog(
                 context: context,
                 barrierColor: Colors.orange[800].withOpacity(0.8),
@@ -338,26 +341,6 @@ class _WordState extends State<Word> {
                           ],
                         ),
                       ),
-                      actions: [
-                        // FlatButton(
-                        //   child: Text(
-                        //     "Ok",
-                        //     style: TextStyle(
-                        //       fontWeight: FontWeight.bold,
-                        //       color: Colors.orange,
-                        //     ),
-                        //   ),
-                        //   onPressed: () {
-                        //     Navigator.of(context).pop(true);
-                        //     print(errorTypeController?.text ?? "Erro vazio");
-                        //     if (!error)
-                        //       widget.errorController.updateErrorCount(
-                        //           1,
-                        //           errorTypeController?.text ??
-                        //               "Não Especificado");
-                        //   },
-                        // ),
-                      ],
                     ),
                   ),
                 ),
@@ -371,12 +354,12 @@ class _WordState extends State<Word> {
 
             )
         : GestureDetector(
-            onLongPress: () {
+            onTap: () {
               if (!error)
                 widget.errorController.updateErrorCount(1, "Não Especificado");
               refresh(true);
             },
-            onTap: () {
+            onLongPress: () {
               showDialog(
                 context: context,
                 barrierColor: Colors.orange[800].withOpacity(0.8),
@@ -408,26 +391,6 @@ class _WordState extends State<Word> {
                           ],
                         ),
                       ),
-                      actions: [
-                        // FlatButton(
-                        //   child: Text(
-                        //     "Ok",
-                        //     style: TextStyle(
-                        //       fontWeight: FontWeight.bold,
-                        //       color: Colors.orange,
-                        //     ),
-                        //   ),
-                        //   onPressed: () {
-                        //     Navigator.of(context).pop(true);
-                        //     print(errorTypeController?.text ?? "Erro vazio");
-                        //     if (!error)
-                        //       widget.errorController.updateErrorCount(
-                        //           1,
-                        //           errorTypeController?.text ??
-                        //               "Não Especificado");
-                        //   },
-                        // ),
-                      ],
                     ),
                   ),
                 ),
@@ -437,10 +400,6 @@ class _WordState extends State<Word> {
               widget.text + " ",
               style: TextStyle(color: error ? Colors.red : Colors.black),
             ));
-    // return Text(
-    //   widget.text,
-    //   style: TextStyle(color: error ? Colors.red : Colors.black),
-    // );
   }
 
   refresh(bool erro) {
@@ -448,7 +407,4 @@ class _WordState extends State<Word> {
       error = erro;
     });
   }
-
-  // @override
-  // bool get wantKeepAlive => true;
 }
