@@ -151,7 +151,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                                 ),
                                 Tab(
                                   child: Text(
-                                    "Duração",
+                                    "Acerto",
                                     style: TextStyle(color: Colors.black),
                                   ),
                                 ),

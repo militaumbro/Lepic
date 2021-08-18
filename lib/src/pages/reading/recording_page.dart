@@ -113,6 +113,12 @@ class _RecordingPageState extends State<RecordingPage>
     }
 
     return Scaffold(
+      bottomNavigationBar: Container(
+        height: 100,
+        child: CustomAudioPlayer(
+          filePath: widget.audio.path,
+        ),
+      ),
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         shape: appBarBottomShape,
@@ -121,24 +127,41 @@ class _RecordingPageState extends State<RecordingPage>
         // title: AutoSizeText(
         //   title,
         // ),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(35),
-          child: Column(
-            children: [
-              if (widget.recorded) ...{
-                CustomAudioPlayer(
-                  filePath: widget.audio.path,
+        bottom: (widget.recorded)
+            ? PreferredSize(
+                preferredSize: Size.fromHeight(35),
+                child: Column(
+                  children: [
+                    TextButton(
+                      style: ButtonStyle(
+                          shape: MaterialStateProperty.resolveWith((states) {
+                            return RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(18.0)));
+                          }),
+                          backgroundColor: MaterialStateProperty.resolveWith(
+                              getButtonColor)),
+                      onPressed: () {
+                        onRecordComplete(widget.audio.path);
+                      },
+                      child: Text(
+                        "Terminar",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                    SizedBox(height: 10),
+                  ],
                 ),
-                SizedBox(
-                  height: 50,
-                )
-              } else ...{
-                RecorderView(onSaved: onRecordComplete),
-                SizedBox(height: 10),
-              }
-            ],
-          ),
-        ),
+              )
+            : PreferredSize(
+                preferredSize: Size.fromHeight(35),
+                child: Column(
+                  children: [
+                    RecorderView(onSaved: onRecordComplete),
+                    SizedBox(height: 10),
+                  ],
+                ),
+              ),
       ),
       floatingActionButton: FloatingActionButton(
           child: Icon(Icons.update),
@@ -407,4 +430,8 @@ class _WordState extends State<Word> {
       error = erro;
     });
   }
+}
+
+Color getButtonColor(Set<MaterialState> states) {
+  return Colors.orange;
 }

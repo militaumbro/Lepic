@@ -32,13 +32,13 @@ class _CustomAudioPlayerState extends State<CustomAudioPlayer> {
   Widget build(BuildContext context) {
     return Container(
       height: 100,
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.fromLTRB(8, 0, 8, 4),
       child: Card(
         shape: RoundedRectangleBorder(
             borderRadius:
                 BorderRadius.horizontal(right: Radius.circular(10.0))),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.start,
           children: [
             // Padding(
             //   padding: const EdgeInsets.all(8.0),
@@ -49,9 +49,9 @@ class _CustomAudioPlayerState extends State<CustomAudioPlayer> {
             //       value: _completedPercentage),
             // ),
             Padding(
-              padding: const EdgeInsets.all(8.0),
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: ProgressBar(
-                baseBarColor: Colors.white,
+                baseBarColor: Colors.grey[300],
                 // bufferedBarColor: Colors.green,
                 thumbColor: Colors.green,
                 progressBarColor: Colors.green,
@@ -63,6 +63,7 @@ class _CustomAudioPlayerState extends State<CustomAudioPlayer> {
               ),
             ),
             IconButton(
+              padding: EdgeInsets.all(0),
               icon: _isPlaying ? Icon(Icons.pause) : Icon(Icons.play_arrow),
               onPressed: () => _onPlay(
                 filePath: widget.filePath,
