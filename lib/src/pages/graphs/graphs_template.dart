@@ -6,7 +6,18 @@ import 'package:flutter/material.dart';
 
 class MyBarChart extends StatefulWidget {
   final List<double> values;
-  MyBarChart({this.values});
+  final double scale;
+  final String title;
+  final String measure;
+  final double interval;
+  final int currentIndex;
+  MyBarChart(
+      {this.values,
+      @required this.scale,
+      @required this.title,
+      @required this.measure,
+      @required this.interval,
+      this.currentIndex});
   @override
   State<StatefulWidget> createState() => MyBarChartState();
 }
@@ -34,16 +45,17 @@ class MyBarChartState extends State<MyBarChart> {
             BarChartData(
               axisTitleData: FlAxisTitleData(
                   topTitle: AxisTitle(
-                      titleText: "Palavras por Minuto",
+                      margin: 30,
+                      titleText: widget.title ?? "Palavras por Minuto",
                       showTitle: true,
                       textStyle: TextStyle(color: Colors.white))),
               alignment: BarChartAlignment.center,
-              maxY: 200,
+              maxY: widget.scale ?? 200,
               minY: 0,
               groupsSpace: 30,
               barTouchData: BarTouchData(
                 touchTooltipData: BarTouchTooltipData(
-                  tooltipBgColor: Colors.white,
+                  tooltipBgColor: Colors.grey[200],
                 ),
                 enabled: true,
               ),
@@ -87,7 +99,7 @@ class MyBarChartState extends State<MyBarChart> {
                     }
                     return '${value.toInt()}';
                   },
-                  interval: 50,
+                  interval: widget.interval ?? 50,
                   margin: 8,
                   reservedSize: 30,
                 ),
@@ -97,12 +109,12 @@ class MyBarChartState extends State<MyBarChart> {
                       const TextStyle(color: Colors.white, fontSize: 10),
                   rotateAngle: 0,
                   getTitles: (double value) {
-                    if (value == 200) {
-                      return 'ppm';
+                    if (value >= (widget.scale - 1)) {
+                      return widget.measure ?? 'ppm';
                     }
                     return '';
                   },
-                  interval: 50,
+                  interval: widget.interval ?? 50,
                   margin: 0,
                   reservedSize: 30,
                 ),
@@ -131,6 +143,9 @@ class MyBarChartState extends State<MyBarChart> {
                     x: current_x,
                     barRods: [
                       BarChartRodData(
+                        colors: (current_x == widget.currentIndex)
+                            ? [Colors.orange]
+                            : [Colors.blue],
                         y: valor,
                         width: barWidth,
                         borderRadius: const BorderRadius.only(

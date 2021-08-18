@@ -4,6 +4,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/src/model/audio_database.dart';
 import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
+import 'package:flutter_smart_course/src/model/text_database.dart';
 import 'package:flutter_smart_course/src/pages/graphs/graphs_page.dart';
 import 'package:flutter_smart_course/utils/audio_player.dart';
 import 'package:flutter_smart_course/utils/base_scaffold.dart';
@@ -116,12 +117,16 @@ class _RecordListViewState extends State<RecordListView> {
                                     MaterialPageRoute(
                                       builder: (context) {
                                         return GraphsPage(
-                                          // ppm: ppm,
-                                          // pcpm: pcpm,
-                                          // percentage: percentage * 100,
-                                          // duration: duration,
+                                          currentReadingId: currentReading.id,
+                                          ppm: currentReading.readingData.ppm,
+                                          pcpm: currentReading.readingData.pcpm,
+                                          percentage: currentReading
+                                                  .readingData.percentage *
+                                              100,
+                                          duration: currentReading
+                                              .readingData.duration,
                                           readings: widget.reader.readings,
-                                          // text: widget.reader.readings.asMap()[_selectedIndex]. ,
+                                          // text: ,
                                         );
                                       },
                                     ),
@@ -135,7 +140,6 @@ class _RecordListViewState extends State<RecordListView> {
                               height: 80,
                               width: 800,
                               child: CustomAudioPlayer(
-                                
                                 filePath: currentReading.uri,
                               ),
                             ),

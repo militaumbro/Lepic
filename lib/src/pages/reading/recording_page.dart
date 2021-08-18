@@ -113,12 +113,14 @@ class _RecordingPageState extends State<RecordingPage>
     }
 
     return Scaffold(
-      bottomNavigationBar: Container(
-        height: 100,
-        child: CustomAudioPlayer(
-          filePath: widget.audio.path,
-        ),
-      ),
+      bottomNavigationBar: widget.recorded
+          ? Container(
+              height: 100,
+              child: CustomAudioPlayer(
+                filePath: widget.audio.path,
+              ),
+            )
+          : null,
       resizeToAvoidBottomInset: true,
       appBar: AppBar(
         shape: appBarBottomShape,
@@ -283,6 +285,7 @@ class _RecordingPageState extends State<RecordingPage>
           MaterialPageRoute(
             builder: (context) {
               return GraphsPage(
+                currentReadingId: reading.id,
                 ppm: ppm,
                 pcpm: pcpm,
                 percentage: percentage * 100,

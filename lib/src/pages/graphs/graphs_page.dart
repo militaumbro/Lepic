@@ -12,6 +12,7 @@ class GraphsPage extends StatefulWidget {
   final double ppm;
   final double pcpm;
   final double percentage;
+  final int currentReadingId;
   final int duration;
   final HiveText text;
   final List<HiveReading> readings;
@@ -23,7 +24,8 @@ class GraphsPage extends StatefulWidget {
       this.duration,
       this.text,
       this.percentage,
-      @required this.readings})
+      @required this.readings,
+      @required this.currentReadingId})
       : super(key: key);
 
   @override
@@ -37,12 +39,14 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
   String pcpm;
   String percentage;
   String duration;
+  int currentIndex;
   HiveText text;
 
   @override
   void initState() {
     super.initState();
-
+    currentIndex = widget.readings.indexOf(widget.readings
+        .firstWhere((reading) => reading.id == widget.currentReadingId));
     percentage = widget.percentage != null
         ? widget.percentage.toStringAsFixed(1)
         : "---";
@@ -163,6 +167,11 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                                   controller: tabController,
                                   children: [
                                     MyBarChart(
+                                      currentIndex: currentIndex,
+                                      scale: 200,
+                                      interval: 50,
+                                      title: 'Palavras por minuto',
+                                      measure: 'ppm',
                                       values: [
                                         ...widget.readings
                                             .map((reading) =>
@@ -171,6 +180,11 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                                       ],
                                     ),
                                     MyBarChart(
+                                      currentIndex: currentIndex,
+                                      scale: 200,
+                                      interval: 50,
+                                      title: 'Corretas por minuto',
+                                      measure: 'pcpm',
                                       values: [
                                         ...widget.readings
                                             .map((reading) =>
@@ -179,11 +193,17 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                                       ],
                                     ),
                                     MyBarChart(
+                                      currentIndex: currentIndex,
+                                      scale: 100,
+                                      interval: 25,
+                                      title: 'Acerto',
+                                      measure: '%',
                                       values: [
                                         ...widget.readings
-                                            .map((reading) => reading
-                                                .readingData.percentage
-                                                .toDouble())
+                                            .map((reading) =>
+                                                reading.readingData.percentage
+                                                    .toDouble() *
+                                                100)
                                             .toList()
                                       ],
                                     ),
