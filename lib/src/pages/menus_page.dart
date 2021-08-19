@@ -160,19 +160,6 @@ class MenusPageState extends State<MenusPage> {
           ShowUp(
             delay: showUpDelay += 100,
             child: MenuCard(
-              "Gráficos",
-              "Visualize seus dados",
-              Icons.graphic_eq_outlined,
-              iconColor: Colors.orange[600],
-              enabled: isAndroid,
-              onTap: () {
-                // _onGraphsTap(context);
-              },
-            ),
-          ),
-          ShowUp(
-            delay: showUpDelay += 100,
-            child: MenuCard(
               "Áudios",
               "Corrija leituras já gravadas e atribua áudios a leitores",
               Icons.audiotrack,
@@ -233,7 +220,10 @@ class MenusPageState extends State<MenusPage> {
 
   void _onReadingTap(BuildContext context) {
     Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => ShowUp(child: TextChoosePage(recorded: false,))));
+        builder: (context) => ShowUp(
+                child: TextChoosePage(
+              recorded: false,
+            ))));
   }
 
   // void _onGraphsTap(BuildContext context) {
