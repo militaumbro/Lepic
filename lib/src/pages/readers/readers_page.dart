@@ -66,66 +66,114 @@ class _ReadersPageState extends State<ReadersPage> {
                       itemCount: readersList.length,
                       itemBuilder: (context, index) {
                         if (index != readersList.length - 1)
-                          return Column(
+                          return Stack(
                             children: [
-                              readerCard(
-                                context,
-                                onLongPress: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => ShowUp(
-                                              child: NewReaderForm(
-                                            reader: readersList[index],
-                                            refresh: refresh,
-                                          ))));
-                                },
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => ShowUp(
-                                              child: RecordListView(
-                                            reader: readersList[index],
-                                          ))));
-                                },
-                                reader: readersList[index],
-                                refresh: refresh,
+                              Column(
+                                children: [
+                                  readerCard(
+                                    context,
+                                    onLongPress: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                              builder: (context) => ShowUp(
+                                                      child: NewReaderForm(
+                                                    reader: readersList[index],
+                                                    refresh: refresh,
+                                                  ))));
+                                    },
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                              builder: (context) => ShowUp(
+                                                      child: RecordListView(
+                                                    reader: readersList[index],
+                                                  ))));
+                                    },
+                                    reader: readersList[index],
+                                    refresh: refresh,
+                                  ),
+                                  ShowUp(
+                                    child: Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 8.0, vertical: 1),
+                                      child: Container(
+                                        height: 0.5,
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  )
+                                ],
                               ),
-                              ShowUp(
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 8.0, vertical: 1),
-                                  child: Container(
-                                    height: 0.5,
-                                    color: Colors.grey,
+                              Positioned(
+                                top: 10,
+                                left: 60,
+                                child: ShowUp(
+                                  child: CircleAvatar(
+                                    radius: 10,
+                                    backgroundColor: Colors.red[300],
+                                    child: Text(
+                                      readersList[index]
+                                          .readings
+                                          .length
+                                          .toString(),
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 11),
+                                    ),
                                   ),
                                 ),
-                              )
+                              ),
                             ],
                           );
                         else
-                          return Column(
+                          return Stack(
                             children: [
-                              readerCard(
-                                context,
-                                onLongPress: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => ShowUp(
-                                              child: NewReaderForm(
-                                            reader: readersList[index],
-                                            refresh: refresh,
-                                          ))));
-                                },
-                                onTap: () {
-                                  Navigator.of(context).push(MaterialPageRoute(
-                                      builder: (context) => ShowUp(
-                                              child: RecordListView(
-                                            reader: readersList[index],
-                                          ))));
-                                },
-                                reader: readersList[index],
-                                refresh: refresh,
+                              Column(
+                                children: [
+                                  readerCard(
+                                    context,
+                                    onLongPress: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                              builder: (context) => ShowUp(
+                                                      child: NewReaderForm(
+                                                    reader: readersList[index],
+                                                    refresh: refresh,
+                                                  ))));
+                                    },
+                                    onTap: () {
+                                      Navigator.of(context)
+                                          .push(MaterialPageRoute(
+                                              builder: (context) => ShowUp(
+                                                      child: RecordListView(
+                                                    reader: readersList[index],
+                                                  ))));
+                                    },
+                                    reader: readersList[index],
+                                    refresh: refresh,
+                                  ),
+                                  SizedBox(
+                                    height: 80,
+                                  ),
+                                ],
                               ),
-                              SizedBox(
-                                height: 80,
-                              )
+                              Positioned(
+                                top: 10,
+                                left: 60,
+                                child: ShowUp(
+                                  child: CircleAvatar(
+                                    radius: 10,
+                                    backgroundColor: Colors.red[300],
+                                    child: Text(
+                                      readersList[index]
+                                          .readings
+                                          .length
+                                          .toString(),
+                                      style: TextStyle(
+                                          color: Colors.white, fontSize: 11),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           );
                       });

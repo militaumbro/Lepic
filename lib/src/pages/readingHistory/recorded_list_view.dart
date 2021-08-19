@@ -194,7 +194,7 @@ class _RecordListViewState extends State<RecordListView> {
               child: ShowUp(
                 child: CircleAvatar(
                   radius: 10,
-                  backgroundColor: Colors.green,
+                  backgroundColor: Colors.red[300],
                   child: Text(
                     readings.length.toString(),
                     style: TextStyle(color: Colors.white, fontSize: 11),
@@ -214,7 +214,8 @@ class _RecordListViewState extends State<RecordListView> {
     return list;
   }
 
-  Widget graphPageTile(HiveReading currentReading, List<HiveReading> readings, HiveText text) {
+  Widget graphPageTile(
+      HiveReading currentReading, List<HiveReading> readings, HiveText text) {
     String minutes;
     if ((currentReading.data.minute / 10) < 0)
       minutes = "0" + currentReading.data.minute.toString();
