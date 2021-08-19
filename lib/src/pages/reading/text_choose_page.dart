@@ -36,7 +36,7 @@ class _TextChoosePageState extends State<TextChoosePage> {
     var texts = textDB.getTextList();
     return baseScaffold(
       context: context,
-      title: "Textos",
+      title: "Selecione um Texto",
       body: FutureBuilder(
         future: texts,
         builder: (context, snapshot) {

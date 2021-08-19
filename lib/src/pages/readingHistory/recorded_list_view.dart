@@ -206,7 +206,7 @@ class _RecordListViewState extends State<RecordListView> {
         ),
         children: [
           ...readings
-              .map((reading) => graphPageTile(reading, readings))
+              .map((reading) => graphPageTile(reading, readings, text))
               .toList()
         ],
       ));
@@ -214,7 +214,7 @@ class _RecordListViewState extends State<RecordListView> {
     return list;
   }
 
-  Widget graphPageTile(HiveReading currentReading, List<HiveReading> readings) {
+  Widget graphPageTile(HiveReading currentReading, List<HiveReading> readings, HiveText text) {
     String minutes;
     if ((currentReading.data.minute / 10) < 0)
       minutes = "0" + currentReading.data.minute.toString();
@@ -249,7 +249,7 @@ class _RecordListViewState extends State<RecordListView> {
                         percentage: currentReading.readingData.percentage * 100,
                         duration: currentReading.readingData.duration,
                         readings: readings,
-                        // text: ,
+                        text: text,
                       );
                     },
                   ),

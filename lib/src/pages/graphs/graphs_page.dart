@@ -1,9 +1,16 @@
+import 'dart:math';
+
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_smart_course/src/model/audio_database.dart';
 import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
+import 'package:flutter_smart_course/src/model/reader_database.dart';
+import 'package:flutter_smart_course/src/pages/reading/recording_page.dart';
 import 'package:flutter_smart_course/utils/base_scaffold.dart';
+import 'package:flutter_smart_course/utils/dialogs.dart';
 import 'package:flutter_smart_course/utils/showup.dart';
 import 'package:flutter_smart_course/utils/utils.dart';
+import 'package:provider/provider.dart';
 
 import 'graphs_template.dart';
 
@@ -40,7 +47,6 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
   String percentage;
   String duration;
   int currentIndex;
-  HiveText text;
 
   @override
   void initState() {
@@ -220,6 +226,68 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                         ],
                       )),
                 ),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  TextButton(
+                    onPressed: () {
+                      try {
+                        HiveReading reading = widget.readings.firstWhere(
+                            (reading) => reading.id == widget.currentReadingId);
+                        Provider.of<ReadersDatabase>(context, listen: false)
+                            .addReader(reading.reader..readings.remove(reading))
+                            .then((value) {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                          successDialog(context, "Leitura Apagada com sucesso");
+                        });
+                      } catch (e) {
+                        errorDialog(context,
+                            title: "Erro", text: "Erro inesperado");
+                      }
+                    },
+                    child: Text("Apagar Leitura"),
+                  ),
+                  TextButton(
+                      onPressed: () {
+                        var random = Random();
+                        var id = random.nextInt(1000000000);
+                        HiveReading reading = widget.readings.firstWhere(
+                            (reading) => reading.id == widget.currentReadingId);
+                        String minutes;
+                        if ((reading.data.minute / 10) < 0)
+                          minutes = "0" + reading.data.minute.toString();
+                        else
+                          minutes = reading.data.minute.toString();
+                        var audio = HiveAudio(
+                          path: reading.uri,
+                          name: reading.reader.name +
+                              "${reading.data.hour}:$minutes, ${reading.data.day}/${reading.data.month}/${reading.data.year}",
+                          id: id,
+                        );
+                        Provider.of<ReadersDatabase>(context, listen: false)
+                            .addReader(
+                                reading.reader..readings.remove(reading));
+                        Provider.of<AudioDatabase>(context, listen: false)
+                            .addAudio(audio)
+                            .then((value) => successDialog(context,
+                                "A leitura antiga foi apagada e o áudio foi adicionado a database do aplicativo, caso queira gravar mais tarde acesse a página de \"Áudios\" no menu principal.",
+                                delay: 4));
+                        Navigator.of(context).pop();
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => RecordingPage(
+                              text: widget.text,
+                              reader: reading.reader,
+                              recorded: true,
+                              audio: audio,
+                            ),
+                          ),
+                        );
+                      },
+                      child: Text("Regravar Leitura")),
+                ],
               ),
             ],
           ),

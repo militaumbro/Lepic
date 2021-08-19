@@ -144,6 +144,8 @@ class _RecordingPageState extends State<RecordingPage>
                           backgroundColor: MaterialStateProperty.resolveWith(
                               getButtonColor)),
                       onPressed: () {
+                        Provider.of<AudioDatabase>(context, listen: false)
+                            .deleteAudio(widget.audio);
                         onRecordComplete(widget.audio.path);
                       },
                       child: Text(
@@ -293,7 +295,7 @@ class _RecordingPageState extends State<RecordingPage>
                 readings: widget.reader.readings
                     .where((reading) => reading.textId == currentText.id)
                     .toList(),
-                // text: currentText,
+                text: currentText,
               );
             },
           ),
