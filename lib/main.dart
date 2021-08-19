@@ -21,6 +21,7 @@ Future<void> main() async {
   Hive.registerAdapter(HiveSchoolInfoAdapter());
   Hive.registerAdapter(HiveReadingDataAdapter());
   Hive.registerAdapter(HiveAudioAdapter());
+  Hive.registerAdapter(HiveQuizzAdapter());
   
   runApp(MyApp());
 }

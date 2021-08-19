@@ -266,9 +266,9 @@ class HiveAudioAdapter extends TypeAdapter<HiveAudio> {
     return HiveAudio(
       id: fields[0] as int,
       path: fields[2] as String,
-    )
-      ..name = fields[1] as String
-      ..description = fields[3] as String;
+      name: fields[1] as String,
+      description: fields[3] as String,
+    );
   }
 
   @override
@@ -292,6 +292,55 @@ class HiveAudioAdapter extends TypeAdapter<HiveAudio> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is HiveAudioAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class HiveQuizzAdapter extends TypeAdapter<HiveQuizz> {
+  @override
+  final int typeId = 7;
+
+  @override
+  HiveQuizz read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return HiveQuizz(
+      id: fields[0] as int,
+      name: fields[1] as String,
+      answers: (fields[3] as List)?.cast<String>(),
+      correctAnswer: fields[2] as int,
+      order: fields[5] as int,
+      question: fields[4] as String,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, HiveQuizz obj) {
+    writer
+      ..writeByte(6)
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.name)
+      ..writeByte(2)
+      ..write(obj.correctAnswer)
+      ..writeByte(3)
+      ..write(obj.answers)
+      ..writeByte(4)
+      ..write(obj.question)
+      ..writeByte(5)
+      ..write(obj.order);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HiveQuizzAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

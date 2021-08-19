@@ -140,3 +140,20 @@ class HiveAudio {
 
   HiveAudio({this.id,this.path,this.name,this.description});
 }
+
+@HiveType(typeId: 7)
+class HiveQuizz {
+  @HiveField(0)
+  int id;
+  @HiveField(1)
+  String name;
+  @HiveField(2)
+  int correctAnswer;
+  @HiveField(3)
+  List<String> answers;
+  @HiveField(4)
+  String question;
+  @HiveField(5)
+  int order;
+  HiveQuizz({this.id,this.name,this.answers,this.correctAnswer,this.order,this.question});
+}
