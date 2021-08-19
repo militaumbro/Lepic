@@ -18,7 +18,7 @@ class TextDatabase {
 
   Future<HiveText> getText(int textId) async {
     var box = await Hive.openBox<HiveText>(_boxName);
-    if (textId != null)return box.get(textId);
+    if (textId != null) return box.get(textId);
   }
 
   Future<List<HiveText>> getTextList() async {

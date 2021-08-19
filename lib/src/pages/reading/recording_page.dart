@@ -290,8 +290,10 @@ class _RecordingPageState extends State<RecordingPage>
                 pcpm: pcpm,
                 percentage: percentage * 100,
                 duration: duration,
-                readings: widget.reader.readings,
-                text: currentText,
+                readings: widget.reader.readings
+                    .where((reading) => reading.textId == currentText.id)
+                    .toList(),
+                // text: currentText,
               );
             },
           ),

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:collection/collection.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/src/model/audio_database.dart';
@@ -8,6 +9,8 @@ import 'package:flutter_smart_course/src/model/text_database.dart';
 import 'package:flutter_smart_course/src/pages/graphs/graphs_page.dart';
 import 'package:flutter_smart_course/utils/audio_player.dart';
 import 'package:flutter_smart_course/utils/base_scaffold.dart';
+import 'package:flutter_smart_course/utils/cards.dart';
+import 'package:flutter_smart_course/utils/showup.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -34,6 +37,7 @@ class _RecordListViewState extends State<RecordListView> {
   List<String> records;
   Directory appDirectory;
   AudioPlayer audioPlayer;
+  Map groups;
   // AudioDatabase audioDatabase;
   List<HiveReading> readings;
   @override
@@ -42,6 +46,7 @@ class _RecordListViewState extends State<RecordListView> {
     // records = [];
     audioPlayer = AudioPlayer();
     // readings = widget.reader.readings;
+
     readings =
         (widget.reader.readings.isEmpty || widget.reader.readings == null)
             ? [
@@ -53,6 +58,12 @@ class _RecordListViewState extends State<RecordListView> {
                 //         "/data/user/0/com.example.lepic/app_flutter/1625776378957.aac")
               ]
             : widget.reader.readings;
+    if (readings != null) {
+      groups = groupBy(readings, (HiveReading reading) => reading.textId);
+      // groups.forEach((key, value) {
+      //   print(value.toString());
+      // });
+    }
     // audioDatabase = Provider.of<AudioDatabase>(context, listen: false); --------------------
     // readings = audioDatabase.getReadingList(); ---------------------------------------------
 
@@ -71,88 +82,22 @@ class _RecordListViewState extends State<RecordListView> {
   Widget build(BuildContext context) {
     List<HiveReading> readingsList = readings;
     return baseScaffold(
-        context: context,
-        title: "Leituras de ${widget.reader.name}",
-        body: readingsList.length == 0
-            ? Center(
-                child: Text(
-                    "Nenhuma Leitura encontrada para ${widget.reader.name}"))
-            : ListView.builder(
-                itemCount: readingsList.length,
-                shrinkWrap: true,
-                itemBuilder: (BuildContext context, int i) {
-                  var currentReading = readingsList.elementAt(i);
-                  String minutes;
-                  if ((currentReading.data.minute / 10) < 0)
-                    minutes = "0" + currentReading.data.minute.toString();
-                  else
-                    minutes = currentReading.data.minute.toString();
-                  return Card(
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.horizontal(
-                            right: Radius.circular(10.0))),
-                    elevation: _selectedIndex == i ? 5.0 : 0,
-                    child: InkWell(
-                      onTap: () {},
-                      child: ExpansionTile(
-                        title: Text(currentReading.reader.name ?? "Sem Autor"),
-                        subtitle: Text(
-                            "${_getWeekDay(currentReading.data.weekday)} as ${currentReading.data.hour}:$minutes,  ${currentReading.data.day}/${currentReading.data.month}/${currentReading.data.year}"),
-                        onExpansionChanged: ((newState) {
-                          if (newState) {
-                            setState(() {
-                              _selectedIndex = i;
-                            });
-                          }
-                        }),
-                        children: [
-                          ListTile(
-                            leading: Icon(Icons.graphic_eq_rounded),
-                            title: Text("Grafico dessa leitura"),
-                            trailing: IconButton(
-                                icon: Icon(Icons.arrow_forward),
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                  Navigator.of(context).push(
-                                    MaterialPageRoute(
-                                      builder: (context) {
-                                        return GraphsPage(
-                                          currentReadingId: currentReading.id,
-                                          ppm: currentReading.readingData.ppm,
-                                          pcpm: currentReading.readingData.pcpm,
-                                          percentage: currentReading
-                                                  .readingData.percentage *
-                                              100,
-                                          duration: currentReading
-                                              .readingData.duration,
-                                          readings: widget.reader.readings,
-                                          // text: ,
-                                        );
-                                      },
-                                    ),
-                                  );
-                                }),
-                          ),
-                          Container(
-                            height: 150,
-                            padding: const EdgeInsets.all(4),
-                            child: Container(
-                              height: 80,
-                              width: 800,
-                              child: CustomAudioPlayer(
-                                filePath: currentReading.uri,
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 50,
-                          )
-                        ],
-                      ),
-                    ),
-                  );
-                },
-              ));
+      context: context,
+      title: "Leituras de ${widget.reader.name}",
+      body: FutureBuilder(
+        future: listAdvancedTextCard(groups),
+        builder: (BuildContext context, AsyncSnapshot snapshot) {
+          if (snapshot.connectionState == ConnectionState.done &&
+              snapshot.data != null) {
+            List widgets = snapshot.data;
+            return ListView(
+              children: [...widgets],
+            );
+          }
+          return Container();
+        },
+      ),
+    );
 
     //   return Container();
     // }),
@@ -204,20 +149,6 @@ class _RecordListViewState extends State<RecordListView> {
     }
   }
 
-  String _getDateFromFilePatah({@required String filePath}) {
-    print("Filepath: " + filePath);
-    // String fromEpoch = filePath.substring(
-    //     filePath.lastIndexOf('/') + 1, filePath.lastIndexOf('.'));
-
-    // DateTime recordedDate =
-    //     DateTime.fromMillisecondsSinceEpoch(int.parse(fromEpoch));
-    // int year = recordedDate.year;
-    // int month = recordedDate.month;
-    // int day = recordedDate.day;
-
-    return ('02/05/2021');
-  }
-
   String _getWeekDay(int weekDay) {
     switch (weekDay) {
       case 1:
@@ -244,5 +175,88 @@ class _RecordListViewState extends State<RecordListView> {
       default:
         return "";
     }
+  }
+
+  Future<List> listAdvancedTextCard(Map groups) async {
+    var list = [];
+    var textDB = Provider.of<TextDatabase>(context);
+    for (var entry in groups.entries) {
+      print(entry.key);
+      List readings = entry.value;
+      var text = await textDB.getText(entry.key);
+      list.add(ExpansionTile(
+        title: Stack(
+          children: [
+            textCard(context, text: text),
+            Positioned(
+              top: 10,
+              left: 45,
+              child: ShowUp(
+                child: CircleAvatar(
+                  radius: 10,
+                  backgroundColor: Colors.green,
+                  child: Text(
+                    readings.length.toString(),
+                    style: TextStyle(color: Colors.white, fontSize: 11),
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+        children: [
+          ...readings
+              .map((reading) => graphPageTile(reading, readings))
+              .toList()
+        ],
+      ));
+    }
+    return list;
+  }
+
+  Widget graphPageTile(HiveReading currentReading, List<HiveReading> readings) {
+    String minutes;
+    if ((currentReading.data.minute / 10) < 0)
+      minutes = "0" + currentReading.data.minute.toString();
+    else
+      minutes = currentReading.data.minute.toString();
+    return Column(
+      children: [
+        Divider(),
+        Align(
+          alignment: Alignment.bottomLeft,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 22.0),
+            child: Text(
+                "${_getWeekDay(currentReading.data.weekday)} as ${currentReading.data.hour}:$minutes,  ${currentReading.data.day}/${currentReading.data.month}/${currentReading.data.year}",
+                style: TextStyle(fontSize: 13)),
+          ),
+        ),
+        ListTile(
+          leading: Icon(Icons.graphic_eq_rounded),
+          title: Text("Gráfico dessa leitura"),
+          trailing: IconButton(
+              icon: Icon(Icons.arrow_forward),
+              onPressed: () {
+                // Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return GraphsPage(
+                        currentReadingId: currentReading.id,
+                        ppm: currentReading.readingData.ppm,
+                        pcpm: currentReading.readingData.pcpm,
+                        percentage: currentReading.readingData.percentage * 100,
+                        duration: currentReading.readingData.duration,
+                        readings: readings,
+                        // text: ,
+                      );
+                    },
+                  ),
+                );
+              }),
+        ),
+      ],
+    );
   }
 }

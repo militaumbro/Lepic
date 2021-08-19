@@ -28,6 +28,7 @@ class MyBarChartState extends State<MyBarChart> {
   @override
   void initState() {
     super.initState();
+    widget.values.map((element) => double.parse(element.toStringAsFixed(2)));
   }
 
   @override
