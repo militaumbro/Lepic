@@ -138,7 +138,7 @@ class HiveAudio {
   @HiveField(3)
   String description;
 
-  HiveAudio({this.id,this.path,this.name,this.description});
+  HiveAudio({this.id, this.path, this.name, this.description});
 }
 
 @HiveType(typeId: 7)
@@ -148,12 +148,20 @@ class HiveQuizz {
   @HiveField(1)
   String name;
   @HiveField(2)
+  List<HiveQuizzQuestion> questions;
+  HiveQuizz({this.id, this.name,this.questions });
+}
+@HiveType(typeId: 8)
+class HiveQuizzQuestion {
+  @HiveField(0)
+  int id;
+  @HiveField(1)
+  String question;
+  @HiveField(2)
   int correctAnswer;
   @HiveField(3)
   List<String> answers;
   @HiveField(4)
-  String question;
-  @HiveField(5)
   int order;
-  HiveQuizz({this.id,this.name,this.answers,this.correctAnswer,this.order,this.question});
+  HiveQuizzQuestion({this.id, this.question,this.correctAnswer,this.answers,this.order});
 }

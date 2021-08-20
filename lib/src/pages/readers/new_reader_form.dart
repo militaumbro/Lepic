@@ -189,8 +189,7 @@ class _NewReaderFormState extends State<NewReaderForm> {
       if (hasReaders)
         id = widget.reader.id;
       else {
-        var random = Random();
-        id = random.nextInt(1000000000);
+        id = randomId();
       }
       Provider.of<ReadersDatabase>(context, listen: false).addReader(HiveReader(
         id: id,

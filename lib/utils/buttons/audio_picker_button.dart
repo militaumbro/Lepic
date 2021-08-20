@@ -13,6 +13,8 @@ import 'package:provider/provider.dart';
 import 'dart:io';
 import 'dart:async';
 
+import '../calculator.dart';
+
 class AudioPickerButton extends StatefulWidget {
   final bool isFab;
   final Function refresh;
@@ -37,7 +39,6 @@ class AudioPickerButtonState extends State<AudioPickerButton> {
 // TODO: MULTIPICK AUDIO. IMPORTAR VARIOS AUDIOS NAO DA O PROMPT DE NOME E DESCRICAO VARIAS VEZES!!
 
   void _openFileExplorer() async {
-    var random = Random();
     setState(() => isLoadingPath = true);
     try {
       if (isMultiPick) {
@@ -72,7 +73,7 @@ class AudioPickerButtonState extends State<AudioPickerButton> {
         requestAudioInfoDialog(
           context,
           HiveAudio(
-            id: random.nextInt(1000000000),
+            id: randomId(),
             name: fileName,
             description: "",
             path: path,
@@ -83,7 +84,7 @@ class AudioPickerButtonState extends State<AudioPickerButton> {
           print("key: $key, value: $value\n");
           audioDatabase.addAudio(
             HiveAudio(
-              id: random.nextInt(1000000000),
+              id: randomId(),
               name: fileName,
               path: value,
             ),

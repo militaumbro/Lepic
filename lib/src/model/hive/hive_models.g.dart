@@ -309,29 +309,20 @@ class HiveQuizzAdapter extends TypeAdapter<HiveQuizz> {
     return HiveQuizz(
       id: fields[0] as int,
       name: fields[1] as String,
-      answers: (fields[3] as List)?.cast<String>(),
-      correctAnswer: fields[2] as int,
-      order: fields[5] as int,
-      question: fields[4] as String,
+      questions: (fields[2] as List)?.cast<HiveQuizzQuestion>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, HiveQuizz obj) {
     writer
-      ..writeByte(6)
+      ..writeByte(3)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.correctAnswer)
-      ..writeByte(3)
-      ..write(obj.answers)
-      ..writeByte(4)
-      ..write(obj.question)
-      ..writeByte(5)
-      ..write(obj.order);
+      ..write(obj.questions);
   }
 
   @override
@@ -341,6 +332,52 @@ class HiveQuizzAdapter extends TypeAdapter<HiveQuizz> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is HiveQuizzAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class HiveQuizzQuestionAdapter extends TypeAdapter<HiveQuizzQuestion> {
+  @override
+  final int typeId = 8;
+
+  @override
+  HiveQuizzQuestion read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return HiveQuizzQuestion(
+      id: fields[0] as int,
+      question: fields[1] as String,
+      correctAnswer: fields[2] as int,
+      answers: (fields[3] as List)?.cast<String>(),
+      order: fields[4] as int,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, HiveQuizzQuestion obj) {
+    writer
+      ..writeByte(5)
+      ..writeByte(0)
+      ..write(obj.id)
+      ..writeByte(1)
+      ..write(obj.question)
+      ..writeByte(2)
+      ..write(obj.correctAnswer)
+      ..writeByte(3)
+      ..write(obj.answers)
+      ..writeByte(4)
+      ..write(obj.order);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HiveQuizzQuestionAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

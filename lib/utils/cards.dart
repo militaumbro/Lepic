@@ -123,6 +123,33 @@ Widget baseCard2(
   );
 }
 
+Widget quizzCard(context,
+    {HiveQuizz quizz,
+    Function(BuildContext, HiveQuizz) onQuizzTap,
+    Function(BuildContext, HiveQuizz) onDelete}) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 2.0),
+    child: baseCard2(
+        title: quizz?.name ?? 'Questionário',
+        subtitle: "${quizz.questions.length} perguntas" ,
+        leading: CircleAvatar(
+            backgroundColor: Colors.transparent,
+            foregroundColor: Colors.blue[400],
+            child: Icon(Icons.message , size: 32)),
+        context: context,
+        onDelete: onDelete != null
+            ? () {
+                onDelete(context, quizz);
+              }
+            : null,
+        onTap: onQuizzTap != null
+            ? () {
+                onQuizzTap(context ,quizz);
+              }
+            : () {}),
+  );
+}
+
 Widget audioCard(context,
     {HiveAudio audio,
     Function(BuildContext, HiveAudio) onAudioTap,

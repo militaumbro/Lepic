@@ -1,9 +1,17 @@
+import 'dart:math';
+
 double getPpm(int wordCount, int duration) {
   if (wordCount != null && duration != null) {
     double durationInMinutes = duration / 60;
     return wordCount / (durationInMinutes);
   }
   return -1;
+}
+
+int randomId() {
+  var random = Random();
+  var id = random.nextInt(1000000000);
+  return id;
 }
 
 double getPercentage(int wordCount, int errorCount) {

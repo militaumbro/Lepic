@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/utils/base_scaffold.dart';
 import 'package:flutter_smart_course/utils/buttons/audio_picker_button.dart';
+import 'package:flutter_smart_course/utils/buttons/quizz_picker_button.dart';
 import 'package:flutter_smart_course/utils/buttons/text_picker_button.dart';
 
 class NewData extends StatefulWidget {
@@ -32,6 +33,14 @@ class _NewDataState extends State<NewData> {
               ListTile(
                 title: Text("Importar Áudios"),
                 trailing: AudioPickerButton(
+                  isFab: true,
+                  refresh: refresh(),
+                ),
+              ),
+              Divider(),
+              ListTile(
+                title: Text("Importar Questionários"),
+                trailing: QuizzPickerButton(
                   isFab: true,
                   refresh: refresh(),
                 ),

@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'dart:io';
 import 'dart:async';
 
+import '../calculator.dart';
 import '../dialogs.dart';
 
 class TextPickerButton extends StatefulWidget {
@@ -74,8 +75,8 @@ class TextPickerButtonState extends State<TextPickerButton> {
               .split(' ');
           print(textList);
           print(textList.where((element) => !element.contains("\n")).length);
-          var random = Random();
-          int id = random.nextInt(1000000000);
+          
+          int id = randomId();
           textDB
               .addText(HiveText(
                   id: id,
@@ -107,8 +108,7 @@ class TextPickerButtonState extends State<TextPickerButton> {
             var wordCount =
                 textList.where((element) => !element.contains("\n")).length;
             print(wordCount);
-            var random = Random();
-            int id = random.nextInt(1000000000);
+            int id = randomId();
             textDB.addText(HiveText(
                 id: id,
                 text: textList,

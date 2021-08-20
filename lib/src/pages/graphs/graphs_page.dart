@@ -7,6 +7,7 @@ import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
 import 'package:flutter_smart_course/src/model/reader_database.dart';
 import 'package:flutter_smart_course/src/pages/reading/recording_page.dart';
 import 'package:flutter_smart_course/utils/base_scaffold.dart';
+import 'package:flutter_smart_course/utils/calculator.dart';
 import 'package:flutter_smart_course/utils/dialogs.dart';
 import 'package:flutter_smart_course/utils/showup.dart';
 import 'package:flutter_smart_course/utils/utils.dart';
@@ -69,6 +70,8 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
     double height = MediaQuery.of(context).size.height;
 
     return baseScaffold(
+      //exportar relatorio final
+      fab: FloatingActionButton(onPressed: () {}),
       context: context,
       title: "Gráficos",
       body: ShowUp.half(
@@ -251,8 +254,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                   ),
                   TextButton(
                       onPressed: () {
-                        var random = Random();
-                        var id = random.nextInt(1000000000);
+                        var id = randomId();
                         HiveReading reading = widget.readings.firstWhere(
                             (reading) => reading.id == widget.currentReadingId);
                         String minutes;

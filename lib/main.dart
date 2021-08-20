@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/src/model/audio_database.dart';
 import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
+import 'package:flutter_smart_course/src/model/quizz_database.dart';
 import 'package:flutter_smart_course/src/model/reader_database.dart';
 import 'package:flutter_smart_course/src/model/text_database.dart';
 import 'package:flutter_smart_course/src/pages/menus_page.dart';
@@ -22,7 +23,8 @@ Future<void> main() async {
   Hive.registerAdapter(HiveReadingDataAdapter());
   Hive.registerAdapter(HiveAudioAdapter());
   Hive.registerAdapter(HiveQuizzAdapter());
-  
+  Hive.registerAdapter(HiveQuizzQuestionAdapter());
+
   runApp(MyApp());
 }
 
@@ -75,6 +77,9 @@ class MyApp extends StatelessWidget {
         ),
         Provider<ReadersDatabase>(
           create: (_) => ReadersDatabase(),
+        ),
+        Provider<QuizzDatabase>(
+          create: (_) => QuizzDatabase(),
         ),
       ],
       builder: (context, _) => MaterialApp(
