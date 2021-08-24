@@ -31,7 +31,7 @@ class HiveReading {
   @HiveField(0)
   int id;
   @HiveField(1)
-  HiveReader reader;
+  int readerId;
   @HiveField(2)
   DateTime data;
   @HiveField(3)
@@ -45,7 +45,7 @@ class HiveReading {
 
   HiveReading(
       {this.id,
-      this.reader,
+      this.readerId,
       this.data,
       this.duration,
       this.uri,
@@ -68,7 +68,7 @@ class HiveReader {
   @HiveField(5)
   String observation; //observação feita ao registrar o leitor
   @HiveField(6)
-  List<HiveReading> readings;
+  HiveReadingsList readings;
   @HiveField(7)
   HiveSchoolInfo school;
   @HiveField(8)
@@ -149,8 +149,9 @@ class HiveQuizz {
   String name;
   @HiveField(2)
   List<HiveQuizzQuestion> questions;
-  HiveQuizz({this.id, this.name,this.questions });
+  HiveQuizz({this.id, this.name, this.questions});
 }
+
 @HiveType(typeId: 8)
 class HiveQuizzQuestion {
   @HiveField(0)
@@ -163,5 +164,13 @@ class HiveQuizzQuestion {
   List<String> answers;
   @HiveField(4)
   int order;
-  HiveQuizzQuestion({this.id, this.question,this.correctAnswer,this.answers,this.order});
+  HiveQuizzQuestion(
+      {this.id, this.question, this.correctAnswer, this.answers, this.order});
+}
+
+@HiveType(typeId: 9)
+class HiveReadingsList {
+  @HiveField(0)
+  List<HiveReading> list;
+  HiveReadingsList({this.list});
 }
