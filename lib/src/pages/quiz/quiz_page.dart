@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
 import 'package:flutter_smart_course/src/model/quizz_database.dart';
+import 'package:flutter_smart_course/src/pages/quiz/quiz.dart';
 import 'package:flutter_smart_course/utils/base_scaffold.dart';
 import 'package:flutter_smart_course/utils/buttons/quizz_picker_button.dart';
 import 'package:flutter_smart_course/utils/cards.dart';
@@ -96,15 +97,14 @@ class _QuizPageState extends State<QuizPage> {
   }
 
   onQuizzTap(context, HiveQuizz quizz) {
-    // Navigator.of(context).push(
-    //   MaterialPageRoute(
-    //     builder: (context) => ShowUp(
-    //       child: TextChoosePage(
-    //         quizz: quizz,
-    //         recorded: true,
-    //       ),
-    //     ),
-    //   ),
-    // );
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ShowUp(
+          child: Quiz(
+            hiveQuizz: quizz,
+          ),
+        ),
+      ),
+    );
   }
 }

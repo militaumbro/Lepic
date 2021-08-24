@@ -11,6 +11,7 @@ import 'package:flutter_smart_course/utils/audio_player.dart';
 import 'package:flutter_smart_course/utils/base_scaffold.dart';
 import 'package:flutter_smart_course/utils/cards.dart';
 import 'package:flutter_smart_course/utils/showup.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
@@ -48,16 +49,9 @@ class _RecordListViewState extends State<RecordListView> {
     // readings = widget.reader.readings;
 
     readings =
-        (widget.reader.readings.isEmpty || widget.reader.readings == null)
-            ? [
-                // HiveReading(
-                //     reader: widget.reader,
-                //     id: 1,
-                //     data: DateTime.now(),
-                //     uri:
-                //         "/data/user/0/com.example.lepic/app_flutter/1625776378957.aac")
-              ]
-            : widget.reader.readings;
+        (widget.reader.readings.list.isEmpty || widget.reader.readings == null)
+            ? []
+            : widget.reader.readings.list;
     if (readings != null) {
       groups = groupBy(readings, (HiveReading reading) => reading.textId);
       // groups.forEach((key, value) {
@@ -90,11 +84,17 @@ class _RecordListViewState extends State<RecordListView> {
           if (snapshot.connectionState == ConnectionState.done &&
               snapshot.data != null) {
             List widgets = snapshot.data;
+            if (widgets.isEmpty)
+              return Center(
+                  child: Text("Nenhuma leitura encontrada para este leitor."));
             return ListView(
               children: [...widgets],
             );
           }
-          return Container();
+          return SpinKitFoldingCube(
+              color: Theme.of(context).colorScheme.primary,
+              size: 50.0,
+            );
         },
       ),
     );
@@ -249,6 +249,7 @@ class _RecordListViewState extends State<RecordListView> {
                         pcpm: currentReading.readingData.pcpm,
                         percentage: currentReading.readingData.percentage * 100,
                         duration: currentReading.readingData.duration,
+                        reader: widget.reader,
                         readings: readings,
                         text: text,
                       );

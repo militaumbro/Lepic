@@ -124,7 +124,7 @@ class MenusPageState extends State<MenusPage> {
               "Leitores",
               "Cheque os Leitores sendo acompanhados",
               Icons.person,
-              iconColor: Colors.orange[600],
+              iconColor: Colors.red[600],
               enabled: isAndroid,
               onTap: () {
                 _onReadersTap(context);
@@ -137,7 +137,7 @@ class MenusPageState extends State<MenusPage> {
               "Gravar Leitura",
               "Inicie leituras de textos",
               Icons.read_more,
-              iconColor: Colors.orange[600],
+              iconColor: Colors.red[600],
               enabled: isAndroid,
               onTap: () {
                 _onReadingTap(context);
@@ -150,7 +150,7 @@ class MenusPageState extends State<MenusPage> {
               "Questionário",
               "Faça um Quiz de perguntas e respostas",
               Icons.question_answer,
-              iconColor: Colors.orange[600],
+              iconColor: Colors.red[600],
               enabled: isAndroid,
               onTap: () {
                 _onQuizTap(context);
@@ -163,7 +163,7 @@ class MenusPageState extends State<MenusPage> {
               "Áudios",
               "Corrija leituras já gravadas e atribua áudios a leitores",
               Icons.audiotrack,
-              iconColor: Colors.orange[600],
+              iconColor: Colors.red[600],
               enabled: isAndroid,
               onTap: () {
                 _onAudioTap(context);
@@ -176,7 +176,7 @@ class MenusPageState extends State<MenusPage> {
           //     "Histórico leituras",
           //     "Verifique seu Histórico de Leituras",
           //     Icons.settings_backup_restore,
-          //     iconColor: Colors.orange[600],
+          //     iconColor: Colors.red[600],
           //     enabled: isAndroid,
           //     onTap: () {
           //       _onReadingHistoryTap(context);
@@ -189,7 +189,7 @@ class MenusPageState extends State<MenusPage> {
               "Importar Dados",
               "Adicione Textos, Audios, Questionários, etc.",
               Icons.add,
-              iconColor: Colors.orange[600],
+              iconColor: Colors.red[600],
               enabled: isAndroid,
               onTap: () {
                 _onNewDataTap(context);

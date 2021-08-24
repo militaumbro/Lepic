@@ -103,13 +103,13 @@ class AudioPickerButtonState extends State<AudioPickerButton> {
     audioDatabase = Provider.of<AudioDatabase>(context, listen: false);
     if (widget.isFab)
       return new FloatingActionButton(
-          backgroundColor: Colors.orange,
+          backgroundColor: Theme.of(context).colorScheme.primary ,
           child: Icon(Icons.add),
           onPressed: () => _openFileExplorer());
     else {
       return new RaisedButton(
         shape: StadiumBorder(),
-        color: Colors.orange,
+        color: Theme.of(context).colorScheme.primary,
         onPressed: () => _openFileExplorer(),
         child: new Text(
           "Upload de áudio",
@@ -146,7 +146,7 @@ class AudioPickerButtonState extends State<AudioPickerButton> {
                     controller: controllerName,
                     decoration: InputDecoration(
                       labelText: "Nome do áudio",
-                      hintText: "Nome do áudio",
+                      // hintText: "Nome do áudio",
                       labelStyle: TextStyle(
                           fontSize: 15, color: Theme.of(context).primaryColor),
                       enabledBorder: UnderlineInputBorder(

@@ -124,9 +124,9 @@ class _NewReaderFormState extends State<NewReaderForm> {
                         child: Text(
                           'Data de Nascimento',
                           style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSecondary),
+                              color: Theme.of(context).colorScheme.onPrimary),
                         ),
-                        color: Theme.of(context).colorScheme.secondary,
+                        color: Theme.of(context).colorScheme.primary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -141,9 +141,9 @@ class _NewReaderFormState extends State<NewReaderForm> {
                         child: Text(
                           'Salvar Leitor',
                           style: TextStyle(
-                              color: Theme.of(context).colorScheme.onSecondary),
+                              color: Theme.of(context).colorScheme.onPrimary),
                         ),
-                        color: Theme.of(context).colorScheme.secondary,
+                        color: Theme.of(context).colorScheme.primary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),
                         ),
@@ -203,7 +203,7 @@ class _NewReaderFormState extends State<NewReaderForm> {
           schoolName: schoolName.text.trim() ?? "",
           studantYear: studantYear.text.trim() ?? "",
         ),
-        readings: [],
+        readings: HiveReadingsList(list: []) ,
       ));
       Navigator.of(context).pop();
       if (widget.refresh != null) widget.refresh();

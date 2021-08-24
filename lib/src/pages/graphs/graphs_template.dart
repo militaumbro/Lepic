@@ -145,7 +145,7 @@ class MyBarChartState extends State<MyBarChart> {
                     barRods: [
                       BarChartRodData(
                         colors: (current_x == widget.currentIndex)
-                            ? [Colors.orange]
+                            ? [Colors.red]
                             : [Colors.blue],
                         y: valor,
                         width: barWidth,

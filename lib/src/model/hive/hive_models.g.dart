@@ -67,7 +67,7 @@ class HiveReadingAdapter extends TypeAdapter<HiveReading> {
     };
     return HiveReading(
       id: fields[0] as int,
-      reader: fields[1] as HiveReader,
+      readerId: fields[1] as int,
       data: fields[2] as DateTime,
       duration: fields[3] as int,
       uri: fields[4] as String,
@@ -83,7 +83,7 @@ class HiveReadingAdapter extends TypeAdapter<HiveReading> {
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
-      ..write(obj.reader)
+      ..write(obj.readerId)
       ..writeByte(2)
       ..write(obj.data)
       ..writeByte(3)
@@ -125,7 +125,7 @@ class HiveReaderAdapter extends TypeAdapter<HiveReader> {
       observation: fields[5] as String,
       registerData: fields[2] as DateTime,
       school: fields[7] as HiveSchoolInfo,
-      readings: (fields[6] as List)?.cast<HiveReading>(),
+      readings: fields[6] as HiveReadingsList,
     )..photoUrl = fields[8] as Uri;
   }
 
@@ -378,6 +378,40 @@ class HiveQuizzQuestionAdapter extends TypeAdapter<HiveQuizzQuestion> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is HiveQuizzQuestionAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class HiveReadingsListAdapter extends TypeAdapter<HiveReadingsList> {
+  @override
+  final int typeId = 9;
+
+  @override
+  HiveReadingsList read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return HiveReadingsList(
+      list: (fields[0] as List)?.cast<HiveReading>(),
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, HiveReadingsList obj) {
+    writer
+      ..writeByte(1)
+      ..writeByte(0)
+      ..write(obj.list);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is HiveReadingsListAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

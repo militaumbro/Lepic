@@ -23,6 +23,7 @@ class GraphsPage extends StatefulWidget {
   final int currentReadingId;
   final int duration;
   final HiveText text;
+  final HiveReader reader;
   final List<HiveReading> readings;
   GraphsPage(
       {Key key,
@@ -33,7 +34,8 @@ class GraphsPage extends StatefulWidget {
       this.text,
       this.percentage,
       @required this.readings,
-      @required this.currentReadingId})
+      @required this.currentReadingId,
+      @required this.reader})
       : super(key: key);
 
   @override
@@ -238,8 +240,11 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                       try {
                         HiveReading reading = widget.readings.firstWhere(
                             (reading) => reading.id == widget.currentReadingId);
+                        widget.reader.readings = HiveReadingsList(
+                            list: widget.reader.readings.list..remove(reading));
+
                         Provider.of<ReadersDatabase>(context, listen: false)
-                            .addReader(reading.reader..readings.remove(reading))
+                            .addReader(widget.reader)
                             .then((value) {
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
@@ -264,13 +269,13 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                           minutes = reading.data.minute.toString();
                         var audio = HiveAudio(
                           path: reading.uri,
-                          name: reading.reader.name +
+                          name: widget.reader.name +
                               "${reading.data.hour}:$minutes, ${reading.data.day}/${reading.data.month}/${reading.data.year}",
                           id: id,
                         );
+                        widget.reader.readings.list.remove(reading);
                         Provider.of<ReadersDatabase>(context, listen: false)
-                            .addReader(
-                                reading.reader..readings.remove(reading));
+                            .addReader(widget.reader);
                         Provider.of<AudioDatabase>(context, listen: false)
                             .addAudio(audio)
                             .then((value) => successDialog(context,
@@ -281,7 +286,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                           MaterialPageRoute(
                             builder: (context) => RecordingPage(
                               text: widget.text,
-                              reader: reading.reader,
+                              reader: widget.reader,
                               recorded: true,
                               audio: audio,
                             ),

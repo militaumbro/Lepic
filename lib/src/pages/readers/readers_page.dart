@@ -40,7 +40,7 @@ class _ReadersPageState extends State<ReadersPage> {
   Widget build(BuildContext context) {
     return baseScaffold(
       fab: FloatingActionButton(
-          backgroundColor: Theme.of(context).colorScheme.secondary,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           child: Icon(
             Icons.add,
           ),
@@ -134,19 +134,23 @@ class _ReadersPageState extends State<ReadersPage> {
                                     onLongPress: () {
                                       Navigator.of(context)
                                           .push(MaterialPageRoute(
-                                              builder: (context) => ShowUp(
-                                                      child: NewReaderForm(
-                                                    reader: readersList[index],
-                                                    refresh: refresh,
-                                                  ))));
+                                        builder: (context) => ShowUp(
+                                          child: NewReaderForm(
+                                            reader: readersList[index],
+                                            refresh: refresh,
+                                          ),
+                                        ),
+                                      ));
                                     },
                                     onTap: () {
                                       Navigator.of(context)
                                           .push(MaterialPageRoute(
-                                              builder: (context) => ShowUp(
-                                                      child: RecordListView(
-                                                    reader: readersList[index],
-                                                  ))));
+                                        builder: (context) => ShowUp(
+                                          child: RecordListView(
+                                            reader: readersList[index],
+                                          ),
+                                        ),
+                                      ));
                                     },
                                     reader: readersList[index],
                                     refresh: refresh,
@@ -166,6 +170,7 @@ class _ReadersPageState extends State<ReadersPage> {
                                     child: Text(
                                       readersList[index]
                                           .readings
+                                          .list
                                           .length
                                           .toString(),
                                       style: TextStyle(
@@ -179,7 +184,7 @@ class _ReadersPageState extends State<ReadersPage> {
                       });
             }
             return SpinKitFoldingCube(
-              color: Theme.of(context).colorScheme.secondary,
+              color: Theme.of(context).colorScheme.primary,
               size: 50.0,
             );
           }),

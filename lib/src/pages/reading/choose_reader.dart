@@ -44,7 +44,7 @@ class _ChooseReaderPageState extends State<ChooseReaderPage> {
   Widget build(BuildContext context) {
     return baseScaffold(
       fab: FloatingActionButton(
-          backgroundColor: Theme.of(context).colorScheme.secondary,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           child: Icon(
             Icons.add,
           ),
@@ -127,7 +127,7 @@ class _ChooseReaderPageState extends State<ChooseReaderPage> {
                       });
             }
             return SpinKitFoldingCube(
-              color: Theme.of(context).colorScheme.secondary,
+              color: Theme.of(context).colorScheme.primary,
               size: 50.0,
             );
           }),

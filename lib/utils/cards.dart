@@ -131,11 +131,11 @@ Widget quizzCard(context,
     padding: const EdgeInsets.symmetric(horizontal: 2.0),
     child: baseCard2(
         title: quizz?.name ?? 'Questionário',
-        subtitle: "${quizz.questions.length} perguntas" ,
+        subtitle: "${quizz.questions.length} perguntas",
         leading: CircleAvatar(
             backgroundColor: Colors.transparent,
             foregroundColor: Colors.blue[400],
-            child: Icon(Icons.message , size: 32)),
+            child: Icon(Icons.message, size: 32)),
         context: context,
         onDelete: onDelete != null
             ? () {
@@ -144,9 +144,61 @@ Widget quizzCard(context,
             : null,
         onTap: onQuizzTap != null
             ? () {
-                onQuizzTap(context ,quizz);
+                onQuizzTap(context, quizz);
               }
             : () {}),
+  );
+}
+
+Widget answerCard(context, Function(String, HiveQuizzQuestion) onTap,
+    String answer, HiveQuizzQuestion question, bool selected) {
+  double width = MediaQuery.of(context).size.width;
+  return Padding(
+    padding: EdgeInsets.all(8),
+    child: Container(
+      child: Card(
+        shape: const RoundedRectangleBorder(
+          borderRadius: const BorderRadius.all(
+            Radius.circular(12),
+          ),
+        ),
+        color: Colors.blue[200],
+        elevation: selected ? 8 : 0,
+        borderOnForeground: false,
+        child: Container(
+          decoration: selected
+              ? BoxDecoration(
+                  color: Colors.white,
+                  // shape: BoxShape.rectangle,
+                  borderRadius: const BorderRadius.all(
+                    Radius.circular(12),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                        blurRadius: 2, color: Colors.blue, spreadRadius: 0.5)
+                  ],
+                )
+              : null,
+          child: InkWell(
+            borderRadius: const BorderRadius.all(
+              Radius.circular(12),
+            ),
+            onTap: () {
+              onTap(answer, question);
+            },
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Center(
+                child: Text(
+                  answer,
+                  style: TextStyle(fontSize: 18),
+                ),
+              ),
+            ),
+          ),
+        ),
+      ),
+    ),
   );
 }
 
@@ -171,7 +223,7 @@ Widget audioCard(context,
             : null,
         onTap: onAudioTap != null
             ? () {
-                onAudioTap(context ,audio);
+                onAudioTap(context, audio);
               }
             : () {}),
   );

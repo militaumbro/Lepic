@@ -130,14 +130,14 @@ class QuizzPickerButtonState extends State<QuizzPickerButton> {
     TextEditingController textEditingController = TextEditingController();
     showDialog(
       context: context,
-      barrierColor: Colors.orange.withOpacity(0.8),
+      barrierColor: Theme.of(context).colorScheme.primary.withOpacity(0.8),
       builder: (context) => ShowUp.tenth(
         duration: 200,
         child: AlertDialog(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(16)),
             side: BorderSide(
-              color: Colors.orange,
+              color: Theme.of(context).colorScheme.secondary,
               width: 2,
             ),
           ),
@@ -148,8 +148,7 @@ class QuizzPickerButtonState extends State<QuizzPickerButton> {
                 TextField(
                   controller: textEditingController,
                   decoration: InputDecoration(
-                    // labelText: "Nome do questionário",
-                    hintText: "Nome do questionário",
+                    labelText: "Nome do questionário",
                     labelStyle: TextStyle(
                       fontSize: 15,
                     ),
@@ -167,7 +166,7 @@ class QuizzPickerButtonState extends State<QuizzPickerButton> {
                 "Ok",
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
-                  color: Colors.orange,
+                  color: Theme.of(context).colorScheme.secondary,
                 ),
               ),
               onPressed: () {
@@ -195,13 +194,13 @@ class QuizzPickerButtonState extends State<QuizzPickerButton> {
     if (widget.isFab)
       return new FloatingActionButton(
           heroTag: "tagQuizz",
-          backgroundColor: Colors.orange,
+          backgroundColor: Theme.of(context).colorScheme.primary,
           child: Icon(Icons.add),
           onPressed: () => _openFileExplorer());
     else {
       return new RaisedButton(
         shape: StadiumBorder(),
-        color: Colors.orange,
+        color: Theme.of(context).colorScheme.primary,
         onPressed: () => _openFileExplorer(),
         child: new Text(
           "Importar questionarios",

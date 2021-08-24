@@ -42,7 +42,7 @@ class RecordingPage extends StatefulWidget {
 }
 
 class _RecordingPageState extends State<RecordingPage>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   List<Widget> words;
   List<String> records;
   int maxId = 4294967295;
@@ -51,6 +51,7 @@ class _RecordingPageState extends State<RecordingPage>
   TextDatabase textDatabase;
   // Future<HiveText> text;
   List<String> textList;
+  TabController tabController;
   @override
   void initState() {
     print(
@@ -82,8 +83,8 @@ class _RecordingPageState extends State<RecordingPage>
 
   @override
   Widget build(BuildContext context) {
+    tabController = TabController(length: 2, vsync: this);
     super.build(context);
-    // if (textList == null)
     double c_width = MediaQuery.of(context).size.width * 0.92;
     widget.errorController =
         widget.errorController ?? ErrorController(errorCount: 0);
@@ -158,11 +159,33 @@ class _RecordingPageState extends State<RecordingPage>
                 ),
               )
             : PreferredSize(
-                preferredSize: Size.fromHeight(35),
+                preferredSize: Size.fromHeight(43),
                 child: Column(
                   children: [
                     RecorderView(onSaved: onRecordComplete),
-                    SizedBox(height: 10),
+                    TabBar(
+                        indicator:
+                            CircleTabIndicator(color: Colors.yellow, radius: 4),
+                        indicatorSize: TabBarIndicatorSize.tab,
+                        isScrollable: true,
+                        controller: tabController,
+                        labelStyle: Theme.of(context)
+                            .primaryTextTheme
+                            .bodyText1
+                            .copyWith(fontWeight: FontWeight.bold),
+                        unselectedLabelStyle: Theme.of(context)
+                            .primaryTextTheme
+                            .bodyText1
+                            .copyWith(fontWeight: FontWeight.normal),
+                        unselectedLabelColor: Colors.white.withOpacity(0.6),
+                        tabs: [
+                          Tab(
+                            child: Text("Marcação de Erros"),
+                          ),
+                          Tab(
+                            child: Text("Texto pontuado"),
+                          )
+                        ]),
                   ],
                 ),
               ),
@@ -172,23 +195,29 @@ class _RecordingPageState extends State<RecordingPage>
           onPressed: () {
             showRelatorio();
           }),
-      body: ListView(children: [
-        Column(
-          children: [
-            Container(
-              width: c_width,
-              padding: const EdgeInsets.all(12.0),
-              child: SafeArea(
-                child: Column(
-                  children: [
-                    Wrap(children: words),
-                    // Text(widget.errorController.errorCount.toString())
-                  ],
+      body: TabBarView(controller: tabController, children: [
+        ListView(children: [
+          Column(
+            children: [
+              Container(
+                width: c_width,
+                padding: const EdgeInsets.all(12.0),
+                child: SafeArea(
+                  child: Column(
+                    children: [
+                      Wrap(children: words),
+                      // Text(widget.errorController.errorCount.toString())
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ]),
+        Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Text(widget.text.originalText),
+        )
       ]),
     );
   }
@@ -271,7 +300,7 @@ class _RecordingPageState extends State<RecordingPage>
 
         reading = HiveReading(
           id: DateTime.now().microsecondsSinceEpoch % maxId,
-          reader: widget.reader,
+          readerId: widget.reader.id,
           data: DateTime.now(),
           uri: filePath,
           duration: duration,
@@ -279,9 +308,11 @@ class _RecordingPageState extends State<RecordingPage>
           readingData: HiveReadingData(
               ppm: ppm, pcpm: pcpm, percentage: percentage, duration: duration),
         );
-        widget.reader.readings.add(reading);
-        await readersDatabase.addReader(widget.reader);
+        widget.reader.readings =
+            HiveReadingsList(list: widget.reader.readings.list..add(reading));
 
+        await readersDatabase.addReader(widget.reader);
+        var teste = await readersDatabase.getReader(widget.reader.id);
         Navigator.of(context).pop();
         Navigator.of(context).push(
           MaterialPageRoute(
@@ -292,7 +323,8 @@ class _RecordingPageState extends State<RecordingPage>
                 pcpm: pcpm,
                 percentage: percentage * 100,
                 duration: duration,
-                readings: widget.reader.readings
+                reader: widget.reader,
+                readings: widget.reader.readings.list
                     .where((reading) => reading.textId == currentText.id)
                     .toList(),
                 text: currentText,
