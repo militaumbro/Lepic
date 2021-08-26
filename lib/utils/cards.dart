@@ -232,13 +232,17 @@ Widget audioCard(context,
 Widget textCard(context,
     {HiveText text,
     Function(BuildContext, HiveText) onTextTap,
-    Function(BuildContext, HiveText) onDelete}) {
+    Function(BuildContext, HiveText) onDelete,
+    bool enableDescription}) {
   var description;
-  try {
-    description = "\"${text.originalText.substring(0, 100)}...\"";
-  } catch (e) {
-    description = "\"...\"";
-  }
+  if (enableDescription)
+    try {
+      description = "\"${text.originalText.substring(0, 100)}...\"";
+    } catch (e) {
+      description = "\"...\"";
+    }
+  else
+    description = null;
 
   return Padding(
     padding: const EdgeInsets.symmetric(horizontal: 2.0),

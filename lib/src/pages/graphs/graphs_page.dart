@@ -9,6 +9,7 @@ import 'package:flutter_smart_course/src/pages/reading/recording_page.dart';
 import 'package:flutter_smart_course/utils/base_scaffold.dart';
 import 'package:flutter_smart_course/utils/calculator.dart';
 import 'package:flutter_smart_course/utils/dialogs.dart';
+import 'package:flutter_smart_course/utils/info_box.dart';
 import 'package:flutter_smart_course/utils/showup.dart';
 import 'package:flutter_smart_course/utils/utils.dart';
 import 'package:provider/provider.dart';
@@ -96,29 +97,29 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                           text: "Palavras por Minuto",
                           ext: "/m",
                           value: ppm,
-                          height: height,
-                          width: width),
+                          // height: height,
+                          width: width* 0.35),
                       InfoBox(
                           icon: Icon(Icons.text_fields, color: Colors.red),
                           text: "Palavras Corretas",
                           ext: "%",
                           value: percentage,
-                          height: height,
-                          width: width),
+                          // // height: height,
+                          width: width* 0.35),
                       InfoBox(
                           icon: Icon(Icons.text_fields, color: Colors.red),
                           text: "Corretas por Minuto",
                           ext: "/m",
                           value: pcpm,
-                          height: height,
-                          width: width),
+                          // // height: height,
+                          width: width* 0.35),
                       InfoBox(
                           icon: Icon(Icons.timer, color: Colors.red),
                           text: "Duração",
                           ext: "s",
                           value: duration,
-                          height: height,
-                          width: width),
+                          // // height: height,
+                          width: width* 0.35),
                     ],
                   ),
                 ),
@@ -296,6 +297,9 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                       child: Text("Regravar Leitura")),
                 ],
               ),
+              SizedBox(
+                height: 10,
+              )
             ],
           ),
         ),
@@ -304,66 +308,4 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
   }
 }
 
-class InfoBox extends StatelessWidget {
-  final String value, text, ext;
-  final double width, height;
-  final Icon icon;
-  InfoBox(
-      {this.value, this.width, this.height, this.text, this.icon, this.ext});
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: width * 0.35,
-      height: width * 0.35,
-      child: Card(
-        shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(18.0))),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              icon != null
-                  ? icon
-                  : Icon(
-                      Icons.score,
-                      color: Colors.red,
-                    ),
-              SizedBox(height: 10),
-              AutoSizeText(
-                text,
-                style: TextStyle(
-                    color: Colors.black,
-                    // fontWeight: FontWeight.bold,
-                    fontSize: 16),
-              ),
-              SizedBox(height: 6),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    value,
-                    style: TextStyle(
-                        color: Colors.black,
-                        // fontWeight: FontWeight.bold,
-                        fontSize: 30),
-                  ),
-                  ext != null
-                      ? Text(
-                          ext,
-                          style: TextStyle(
-                              color: Colors.black45,
-                              // fontWeight: FontWeight.bold,
-                              fontSize: 23),
-                        )
-                      : Container(),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
+

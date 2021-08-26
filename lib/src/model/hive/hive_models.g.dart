@@ -73,13 +73,13 @@ class HiveReadingAdapter extends TypeAdapter<HiveReading> {
       uri: fields[4] as String,
       textId: fields[5] as int,
       readingData: fields[6] as HiveReadingData,
-    );
+    )..quizz = fields[7] as HiveQuizz;
   }
 
   @override
   void write(BinaryWriter writer, HiveReading obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
@@ -93,7 +93,9 @@ class HiveReadingAdapter extends TypeAdapter<HiveReading> {
       ..writeByte(5)
       ..write(obj.textId)
       ..writeByte(6)
-      ..write(obj.readingData);
+      ..write(obj.readingData)
+      ..writeByte(7)
+      ..write(obj.quizz);
   }
 
   @override

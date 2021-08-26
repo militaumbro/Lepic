@@ -42,6 +42,8 @@ class HiveReading {
   int textId;
   @HiveField(6)
   HiveReadingData readingData;
+  @HiveField(7)
+  HiveQuizz quizz;
 
   HiveReading(
       {this.id,

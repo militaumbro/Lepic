@@ -10,6 +10,7 @@ import 'package:flutter_smart_course/src/pages/graphs/graphs_page.dart';
 import 'package:flutter_smart_course/utils/audio_player.dart';
 import 'package:flutter_smart_course/utils/base_scaffold.dart';
 import 'package:flutter_smart_course/utils/cards.dart';
+import 'package:flutter_smart_course/utils/info_box.dart';
 import 'package:flutter_smart_course/utils/showup.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:path_provider/path_provider.dart';
@@ -92,9 +93,9 @@ class _RecordListViewState extends State<RecordListView> {
             );
           }
           return SpinKitFoldingCube(
-              color: Theme.of(context).colorScheme.primary,
-              size: 50.0,
-            );
+            color: Theme.of(context).colorScheme.primary,
+            size: 50.0,
+          );
         },
       ),
     );
@@ -187,7 +188,7 @@ class _RecordListViewState extends State<RecordListView> {
       list.add(ExpansionTile(
         title: Stack(
           children: [
-            textCard(context, text: text),
+            textCard(context, text: text, enableDescription: false),
             Positioned(
               top: 10,
               left: 45,
@@ -206,21 +207,44 @@ class _RecordListViewState extends State<RecordListView> {
         ),
         children: [
           ...readings
-              .map((reading) => graphPageTile(reading, readings, text))
+              .map((reading) => readingCard(reading, readings, text))
+              .toList()
+              .reversed
               .toList()
         ],
       ));
     }
+
     return list;
   }
 
-  Widget graphPageTile(
+  Widget readingCard(
       HiveReading currentReading, List<HiveReading> readings, HiveText text) {
     String minutes;
+    // String zScore;
+    String ppm;
+    String pcpm;
+    String percentage;
+    String duration;
+
     if ((currentReading.data.minute / 10) < 0)
       minutes = "0" + currentReading.data.minute.toString();
     else
       minutes = currentReading.data.minute.toString();
+
+    percentage = currentReading.readingData.percentage != null
+        ? (currentReading.readingData.percentage * 100).toStringAsFixed(1)
+        : "---";
+    ppm = currentReading.readingData.ppm != null
+        ? currentReading.readingData.ppm.toStringAsFixed(1)
+        : "---";
+    pcpm = currentReading.readingData.pcpm != null
+        ? currentReading.readingData.pcpm.toStringAsFixed(1)
+        : "---";
+    duration = currentReading.readingData.duration != null
+        ? currentReading.readingData.duration.toString()
+        : "---";
+    // zScore = currentReading.readingData.zScore != null ? currentReading.readingData.zScore.toStringAsFixed(3) : "---";
     return Column(
       children: [
         Divider(),
@@ -232,6 +256,29 @@ class _RecordListViewState extends State<RecordListView> {
                 "${_getWeekDay(currentReading.data.weekday)} as ${currentReading.data.hour}:$minutes,  ${currentReading.data.day}/${currentReading.data.month}/${currentReading.data.year}",
                 style: TextStyle(fontSize: 13)),
           ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            MiniInfoBox(
+              text: "Ppm",
+              value: ppm,
+            ),
+            MiniInfoBox(
+              text: "Pcpm",
+              value: pcpm,
+            ),
+            MiniInfoBox(
+              text: "Acertos",
+              value: percentage,
+              ext: "%",
+            ),
+            MiniInfoBox(
+              text: "Duração",
+              value: duration,
+              ext: "s",
+            ),
+          ],
         ),
         ListTile(
           leading: Icon(Icons.graphic_eq_rounded),

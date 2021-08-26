@@ -18,6 +18,7 @@ class _QuizState extends State<Quiz> with TickerProviderStateMixin {
   int lenght;
   ColorScheme colorScheme;
   List<Answer> selectedList;
+  bool canEnd;
   @override
   void initState() {
     // TODO: implement initState
@@ -30,8 +31,8 @@ class _QuizState extends State<Quiz> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     colorScheme = Theme.of(context).colorScheme;
-    
-    
+    canEnd = (selectedList.length == lenght);
+
     return Scaffold(
       appBar: AppBar(
         shape: appBarBottomShape,
@@ -47,6 +48,18 @@ class _QuizState extends State<Quiz> with TickerProviderStateMixin {
           ),
         ),
       ),
+      floatingActionButton: canEnd
+          ? RaisedButton(
+              shape: StadiumBorder(),
+              color: Theme.of(context).colorScheme.primary,
+              onPressed: () {
+                
+              },
+              child: Text(
+                "Finalizar",
+                style: TextStyle(fontSize: 18),
+              ))
+          : null,
       body: Column(
         children: [
           TabBar(
@@ -116,7 +129,7 @@ class _QuizState extends State<Quiz> with TickerProviderStateMixin {
                                     question,
                                     answerCheck(question, answer)))
                                 .toList(),
-                            SizedBox(height: 10),
+                            SizedBox(height: 50),
                           ],
                         ),
                       ))

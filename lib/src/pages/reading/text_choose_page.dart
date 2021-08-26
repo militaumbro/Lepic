@@ -65,6 +65,7 @@ class _TextChoosePageState extends State<TextChoosePage> {
                                   onDelete: onTextDelete,
                                   onTextTap: onTextTap,
                                   text: textList[index],
+                                  enableDescription: true,
                                 );
                               else {
                                 return Column(
@@ -74,6 +75,7 @@ class _TextChoosePageState extends State<TextChoosePage> {
                                       onDelete: onTextDelete,
                                       onTextTap: onTextTap,
                                       text: textList[index],
+                                      enableDescription: true,
                                     ),
                                     SizedBox(
                                       height: 80,

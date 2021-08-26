@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:flutter_smart_course/src/pages/graphs/graphs_page.dart';
 import 'package:flutter_smart_course/src/pages/new_data/new_data_page.dart';
-import 'package:flutter_smart_course/src/pages/quiz/quiz_page.dart';
+import 'package:flutter_smart_course/src/pages/quiz/choose_quiz_page.dart';
 import 'package:flutter_smart_course/src/pages/readers/readers_page.dart';
 import 'package:flutter_smart_course/src/pages/reading/text_choose_page.dart';
 import 'package:flutter_smart_course/src/pages/readingHistory/reading_history_page.dart';
@@ -144,19 +144,19 @@ class MenusPageState extends State<MenusPage> {
               },
             ),
           ),
-          ShowUp(
-            delay: showUpDelay += 100,
-            child: MenuCard(
-              "Questionário",
-              "Faça um Quiz de perguntas e respostas",
-              Icons.question_answer,
-              iconColor: Colors.red[600],
-              enabled: isAndroid,
-              onTap: () {
-                _onQuizTap(context);
-              },
-            ),
-          ),
+          // ShowUp(
+          //   delay: showUpDelay += 100,
+          //   child: MenuCard(
+          //     "Questionário",
+          //     "Faça um Quiz de perguntas e respostas",
+          //     Icons.question_answer,
+          //     iconColor: Colors.red[600],
+          //     enabled: isAndroid,
+          //     onTap: () {
+          //       _onQuizTap(context);
+          //     },
+          //   ),
+          // ),
           ShowUp(
             delay: showUpDelay += 100,
             child: MenuCard(
@@ -241,10 +241,10 @@ class MenusPageState extends State<MenusPage> {
         builder: (context) => ShowUp(child: AudioListPage())));
   }
 
-  void _onQuizTap(BuildContext context) {
-    Navigator.of(context).push(
-        MaterialPageRoute(builder: (context) => ShowUp(child: QuizPage())));
-  }
+  // void _onQuizTap(BuildContext context) {
+  //   Navigator.of(context).push(
+  //       MaterialPageRoute(builder: (context) => ShowUp(child: QuizPage())));
+  // }
 
   void _onNewDataTap(BuildContext context) {
     Navigator.of(context).push(
