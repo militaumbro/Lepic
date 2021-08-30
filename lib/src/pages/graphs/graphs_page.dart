@@ -60,7 +60,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
   @override
   void initState() {
     hasQuiz = widget.reading.quizz != null;
-    if (hasQuiz){
+    if (hasQuiz) {
       quizAcertos = getAcertos();
     }
     super.initState();
@@ -361,13 +361,61 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
             ? SingleChildScrollView(
                 child: Column(
                   children: [
-                    InfoBox(
-                        icon: Icon(Icons.star_outline, color: Colors.red),
-                        text: "Acertos",
-                        ext: "/${widget.reading.quizz.questions.length}",
-                        value: duration,
-                        // // height: height,
-                        width: width * 0.35),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        InfoBox(
+                            icon: Icon(Icons.star_outline, color: Colors.red),
+                            text: "Acertos",
+                            ext: "/${widget.reading.quizz.questions.length}",
+                            value: quizAcertos.toString(),
+                            // // height: height,
+                            width: width * 0.35),
+                        InfoBox(
+                            icon: Icon(Icons.star_outline, color: Colors.red),
+                            text: "Porcentagem",
+                            ext: "%",
+                            value: (100 *
+                                    quizAcertos /
+                                    widget.reading.quizz.questions.length)
+                                .toString(),
+                            // // height: height,
+                            width: width * 0.35),
+                      ],
+                    ),
+                    ...widget.reading.quizz.questions
+                        .map((question) => Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  vertical: 8.0, horizontal: 20),
+                              child: Card(
+                                elevation: 2,
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(18.0))),
+                                child: Container(
+                                  width: width * 0.9,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Q${question.order + 1}: " +
+                                              question.question +
+                                              "\n",
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.w600),
+                                        ),
+                                        getAnswer(question),
+                                        getCorrectAnswer(question)
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ))
+                        .toList()
                   ],
                 ),
               )
@@ -376,19 +424,63 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
     );
   }
 
+  Widget getAnswer(HiveQuizzQuestion question) {
+    int questionIndex = question.order;
+    bool correct = false;
+    String answer = widget.reading.quizz.selectedAnswers
+        .firstWhere((element) => element.questionIndex == questionIndex)
+        .answer;
+    correct = isCorrect(question);
+    return Row(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        correct
+            ? Icon(Icons.check, color: Colors.green)
+            : Icon(Icons.priority_high, color: Colors.red),
+        Expanded(
+          child: Wrap(
+            children: [
+              Text(
+                "  Resposta: ${answer}\n",
+                style: TextStyle(color: correct ? Colors.green : Colors.red),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+  bool isCorrect(HiveQuizzQuestion question) {
+    return widget.reading.quizz.selectedAnswers
+            .firstWhere((element) => element.questionIndex == question.order)
+            .answerIndex ==
+        question.correctAnswer;
+  }
+
+  Widget getCorrectAnswer(HiveQuizzQuestion question) {
+    return isCorrect(question)
+        ? Container()
+        : Text(
+            "  Correta: ${question.answers.asMap()[question.correctAnswer]}\n",
+            style: TextStyle(color: Colors.green));
+  }
+
   int getAcertos() {
     int acertos = 0;
-    widget.reading.quizz.questions.forEach((question) {
-      widget.reading.quizz.selectedAnswers.where((selectedAnswer) {
-        if (selectedAnswer.question == question &&
-            selectedAnswer.answerIndex == question.correctAnswer) {
-          acertos++;
+    widget.reading.quizz.selectedAnswers.forEach((selectedAnswer) {
+      var acertou =
+          selectedAnswer.answerIndex == selectedAnswer.question.correctAnswer;
+      print(
+          "Pergunta : ${selectedAnswer.question.order}, Selecionado: ${selectedAnswer.answerIndex}, Correto: ${selectedAnswer.question.correctAnswer}, Acertou?: $acertou");
+      if (acertou) {
+        acertos += 1;
 
-          return true;
-        }
-        return false;
-      });
+        return true;
+      }
+      return false;
     });
+
     return acertos;
   }
 }

@@ -247,14 +247,17 @@ class _RecordListViewState extends State<RecordListView> {
     // zScore = currentReading.readingData.zScore != null ? currentReading.readingData.zScore.toStringAsFixed(3) : "---";
     return Column(
       children: [
-        Divider(),
+        Divider(
+          color: Colors.orange[300].withAlpha(100),
+          thickness: 1.5,
+        ),
         Align(
           alignment: Alignment.bottomLeft,
           child: Padding(
             padding: const EdgeInsets.only(left: 22.0),
             child: Text(
                 "${_getWeekDay(currentReading.data.weekday)} as ${currentReading.data.hour}:$minutes,  ${currentReading.data.day}/${currentReading.data.month}/${currentReading.data.year}",
-                style: TextStyle(fontSize: 13)),
+                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
           ),
         ),
         Row(

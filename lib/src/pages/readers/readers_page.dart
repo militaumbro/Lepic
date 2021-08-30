@@ -114,6 +114,7 @@ class _ReadersPageState extends State<ReadersPage> {
                                     child: Text(
                                       readersList[index]
                                           .readings
+                                          .list
                                           .length
                                           .toString(),
                                       style: TextStyle(

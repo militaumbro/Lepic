@@ -21,13 +21,15 @@ class NewReaderForm extends StatefulWidget {
 class _NewReaderFormState extends State<NewReaderForm> {
   final _formKey = GlobalKey<FormState>();
 
+  List<String> schoolingList;
   TextEditingController name;
-  TextEditingController schooling;
+  // TextEditingController schooling;
   TextEditingController studantYear;
   TextEditingController schoolCategory;
   TextEditingController schoolName;
   TextEditingController observation;
   TextEditingController birthDate;
+  String selectedSchooling;
 
   DateTime selectedDate;
 
@@ -48,10 +50,27 @@ class _NewReaderFormState extends State<NewReaderForm> {
   @override
   void initState() {
     super.initState();
+    schoolingList = [
+      '1º ano Fundamental',
+      '2º ano Fundamental',
+      '3º ano Fundamental',
+      '4º ano Fundamental',
+      '5º ano Fundamental',
+      '6º ano Fundamental',
+      '7º ano Fundamental',
+      '8º ano Fundamental',
+      '9º ano Fundamental',
+      '1º ano Ensino Médio',
+      '2º ano Ensino Médio',
+      '3º ano Ensino Médio',
+      'Ensino Superior',
+    ];
+
     hasReaders = widget.reader != null;
+    selectedSchooling = hasReaders ? widget.reader.school.schooling : null;
     name = TextEditingController(text: hasReaders ? widget.reader.name : null);
-    schooling = TextEditingController(
-        text: hasReaders ? widget.reader.school.schooling : null);
+    // schooling = TextEditingController(
+    //     text: hasReaders ? widget.reader.school.schooling : null);
     studantYear = TextEditingController(
         text: hasReaders ? widget.reader.school.studantYear : null);
     schoolCategory = TextEditingController(
@@ -92,10 +111,29 @@ class _NewReaderFormState extends State<NewReaderForm> {
                         controller: name,
                         hintText: "Nome do Leitor",
                       ),
-                      myTextFormField(
-                        controller: schooling,
-                        hintText: "Escolaridade",
-                        required: false,
+                      // myTextFormField(
+                      //   controller: schooling,
+                      //   hintText: "Escolaridade",
+                      //   required: false,
+                      // ),
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: DropdownButton<String>(
+                          isExpanded: true,
+                          hint: Text("Escolaridade"),
+                          value: selectedSchooling,
+                          items: schoolingList.map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: new Text(value),
+                            );
+                          }).toList(),
+                          onChanged: (value) {
+                            setState(() {
+                              selectedSchooling = value;
+                            });
+                          },
+                        ),
                       ),
                       myTextFormField(
                         controller: studantYear,
@@ -198,12 +236,13 @@ class _NewReaderFormState extends State<NewReaderForm> {
         birthDate: selectedDate,
         registerData: DateTime.now(),
         school: HiveSchoolInfo(
-          schooling: schooling.text.trim() ?? "",
+          schooling: selectedSchooling,
           schoolCategory: schoolCategory.text.trim() ?? "",
           schoolName: schoolName.text.trim() ?? "",
           studantYear: studantYear.text.trim() ?? "",
         ),
-        readings: HiveReadingsList(list: []) ,
+        observation: observation.text.trim() ?? "",
+        readings: HiveReadingsList(list: []),
       ));
       Navigator.of(context).pop();
       if (widget.refresh != null) widget.refresh();

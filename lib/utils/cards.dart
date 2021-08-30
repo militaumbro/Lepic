@@ -150,8 +150,8 @@ Widget quizzCard(context,
   );
 }
 
-Widget answerCard(context, Function(String, HiveQuizzQuestion) onTap,
-    String answer, HiveQuizzQuestion question, bool selected) {
+Widget answerCard(context, Function(String,int, HiveQuizzQuestion) onTap,
+    String answer, HiveQuizzQuestion question, bool selected,int index) {
   double width = MediaQuery.of(context).size.width;
   return Padding(
     padding: EdgeInsets.all(8),
@@ -184,14 +184,17 @@ Widget answerCard(context, Function(String, HiveQuizzQuestion) onTap,
               Radius.circular(12),
             ),
             onTap: () {
-              onTap(answer, question);
+              onTap(answer,index, question);
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Center(
                 child: Text(
                   answer,
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(
+                      fontSize: 18,
+                      color: selected?Colors.black:Colors.white,
+                      fontWeight: FontWeight.w600),
                 ),
               ),
             ),

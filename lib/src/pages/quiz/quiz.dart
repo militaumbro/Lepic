@@ -41,6 +41,10 @@ class _QuizState extends State<Quiz> with TickerProviderStateMixin {
     tabController = TabController(length: lenght, vsync: this);
     super.initState();
     selectedList = [];
+    print("Respostas:");
+    widget.hiveQuizz.questions.forEach((element) {
+      print(element.correctAnswer + 1);
+    });
   }
 
   @override
@@ -70,6 +74,7 @@ class _QuizState extends State<Quiz> with TickerProviderStateMixin {
               onPressed: () {
                 widget.hiveQuizz.selectedAnswers = selectedList;
                 widget.reading.quizz = widget.hiveQuizz;
+
                 widget.reader.readings.list
                     .firstWhere((reading) => reading == reading)
                     .quizz = widget.hiveQuizz;
@@ -164,7 +169,8 @@ class _QuizState extends State<Quiz> with TickerProviderStateMixin {
                                     onTap,
                                     answer,
                                     question,
-                                    answerCheck(question, answer)))
+                                    answerCheck(question, answer),
+                                    question.answers.indexOf(answer)))
                                 .toList(),
                             SizedBox(height: 50),
                           ],
@@ -188,13 +194,15 @@ class _QuizState extends State<Quiz> with TickerProviderStateMixin {
     return false;
   }
 
-  onTap(String answer, HiveQuizzQuestion question) {
+  onTap(String answer, int indexAnswer, HiveQuizzQuestion question) {
     int indexQuestion = widget.hiveQuizz.questions.indexOf(question);
-    int indexAnswer = widget.hiveQuizz.questions
-        .firstWhere((question) => question == question)
-        .answers
-        .indexOf(answer);
+    // int indexAnswer = widget.hiveQuizz.questions
+    //     .firstWhere((question) => question == question)
+    //     .answers
+    //     .indexOf(answer);
 
+    print("indexAnswer: $indexAnswer, resposta: $answer ,");
+    print("question: $indexQuestion, ${question.question}");
     if (selectedList.any((element) => element.question == question)) {
       setState(() {
         var foundAnswer =
@@ -211,7 +219,5 @@ class _QuizState extends State<Quiz> with TickerProviderStateMixin {
             question: question,
             questionIndex: indexQuestion));
       });
-
-    print(selectedList);
   }
 }
