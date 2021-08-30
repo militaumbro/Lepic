@@ -73,7 +73,8 @@ class HiveReadingAdapter extends TypeAdapter<HiveReading> {
       uri: fields[4] as String,
       textId: fields[5] as int,
       readingData: fields[6] as HiveReadingData,
-    )..quizz = fields[7] as HiveQuizz;
+      quizz: fields[7] as HiveQuizz,
+    );
   }
 
   @override
@@ -220,6 +221,8 @@ class HiveReadingDataAdapter extends TypeAdapter<HiveReadingData> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return HiveReadingData(
+      errorList: (fields[6] as List)?.cast<String>(),
+      errorCount: fields[5] as int,
       zScore: fields[0] as double,
       ppm: fields[1] as double,
       pcpm: fields[2] as double,
@@ -231,7 +234,7 @@ class HiveReadingDataAdapter extends TypeAdapter<HiveReadingData> {
   @override
   void write(BinaryWriter writer, HiveReadingData obj) {
     writer
-      ..writeByte(5)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.zScore)
       ..writeByte(1)
@@ -241,7 +244,11 @@ class HiveReadingDataAdapter extends TypeAdapter<HiveReadingData> {
       ..writeByte(3)
       ..write(obj.percentage)
       ..writeByte(4)
-      ..write(obj.duration);
+      ..write(obj.duration)
+      ..writeByte(5)
+      ..write(obj.errorCount)
+      ..writeByte(6)
+      ..write(obj.errorList);
   }
 
   @override
@@ -312,19 +319,22 @@ class HiveQuizzAdapter extends TypeAdapter<HiveQuizz> {
       id: fields[0] as int,
       name: fields[1] as String,
       questions: (fields[2] as List)?.cast<HiveQuizzQuestion>(),
+      selectedAnswers: (fields[3] as List)?.cast<Answer>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, HiveQuizz obj) {
     writer
-      ..writeByte(3)
+      ..writeByte(4)
       ..writeByte(0)
       ..write(obj.id)
       ..writeByte(1)
       ..write(obj.name)
       ..writeByte(2)
-      ..write(obj.questions);
+      ..write(obj.questions)
+      ..writeByte(3)
+      ..write(obj.selectedAnswers);
   }
 
   @override
@@ -414,6 +424,49 @@ class HiveReadingsListAdapter extends TypeAdapter<HiveReadingsList> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is HiveReadingsListAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class AnswerAdapter extends TypeAdapter<Answer> {
+  @override
+  final int typeId = 10;
+
+  @override
+  Answer read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return Answer(
+      answerIndex: fields[0] as int,
+      questionIndex: fields[1] as int,
+      answer: fields[2] as String,
+      question: fields[3] as HiveQuizzQuestion,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, Answer obj) {
+    writer
+      ..writeByte(4)
+      ..writeByte(0)
+      ..write(obj.answerIndex)
+      ..writeByte(1)
+      ..write(obj.questionIndex)
+      ..writeByte(2)
+      ..write(obj.answer)
+      ..writeByte(3)
+      ..write(obj.question);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is AnswerAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

@@ -3,6 +3,7 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_smart_course/src/model/audio_database.dart';
 import 'package:flutter_smart_course/src/model/reader_database.dart';
 import 'package:flutter_smart_course/src/pages/graphs/graphs_page.dart';
+import 'package:flutter_smart_course/src/pages/quiz/choose_quiz_page.dart';
 import 'package:flutter_smart_course/utils/audio_player.dart';
 import 'package:flutter_smart_course/utils/calculator.dart';
 import 'package:flutter_smart_course/utils/utils.dart';
@@ -306,27 +307,32 @@ class _RecordingPageState extends State<RecordingPage>
           duration: duration,
           textId: widget.text.id,
           readingData: HiveReadingData(
-              ppm: ppm, pcpm: pcpm, percentage: percentage, duration: duration),
+              ppm: ppm,
+              pcpm: pcpm,
+              percentage: percentage,
+              duration: duration,
+              errorCount: widget.errorController.errorCount,
+              errorList: widget.errorController.errorList),
         );
         widget.reader.readings =
             HiveReadingsList(list: widget.reader.readings.list..add(reading));
 
         await readersDatabase.addReader(widget.reader);
-        var teste = await readersDatabase.getReader(widget.reader.id);
         Navigator.of(context).pop();
         Navigator.of(context).push(
           MaterialPageRoute(
             builder: (context) {
-              return GraphsPage(
-                currentReadingId: reading.id,
-                ppm: ppm,
-                pcpm: pcpm,
-                percentage: percentage * 100,
-                duration: duration,
+              return ChooseQuizPage(
+                reading: reading,
+                // currentReadingId: reading.id,
+                // ppm: ppm,
+                // pcpm: pcpm,
+                // percentage: percentage * 100,
+                // duration: duration,
                 reader: widget.reader,
-                readings: widget.reader.readings.list
-                    .where((reading) => reading.textId == currentText.id)
-                    .toList(),
+                // readings: widget.reader.readings.list
+                //     .where((reading) => reading.textId == currentText.id)
+                //     .toList(),
                 text: currentText,
               );
             },

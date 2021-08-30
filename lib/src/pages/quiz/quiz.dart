@@ -1,13 +1,28 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
+import 'package:flutter_smart_course/src/model/reader_database.dart';
+import 'package:flutter_smart_course/src/pages/graphs/graphs_page.dart';
 import 'package:flutter_smart_course/utils/base_scaffold.dart';
 import 'package:flutter_smart_course/utils/cards.dart';
+import 'package:flutter_smart_course/utils/showup.dart';
 import 'package:flutter_smart_course/utils/utils.dart';
+import 'package:provider/provider.dart';
+
+import 'awnser.dart';
 
 class Quiz extends StatefulWidget {
   final HiveQuizz hiveQuizz;
-  Quiz({Key key, this.hiveQuizz}) : super(key: key);
+  final HiveReader reader;
+  final HiveReading reading;
+  final HiveText text;
+  Quiz(
+      {Key key,
+      this.hiveQuizz,
+      @required this.reader,
+      @required this.reading,
+      @required this.text})
+      : super(key: key);
 
   @override
   _QuizState createState() => _QuizState();
@@ -53,7 +68,29 @@ class _QuizState extends State<Quiz> with TickerProviderStateMixin {
               shape: StadiumBorder(),
               color: Theme.of(context).colorScheme.primary,
               onPressed: () {
-                
+                widget.hiveQuizz.selectedAnswers = selectedList;
+                widget.reading.quizz = widget.hiveQuizz;
+                widget.reader.readings.list
+                    .firstWhere((reading) => reading == reading)
+                    .quizz = widget.hiveQuizz;
+                Provider.of<ReadersDatabase>(context, listen: false)
+                    .addReader(widget.reader);
+
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => ShowUp(
+                      child: GraphsPage(
+                        reader: widget.reader,
+                        readings: widget.reader.readings.list
+                            .where(
+                                (reading) => reading.textId == widget.text.id)
+                            .toList(),
+                        reading: widget.reading,
+                        text: widget.text,
+                      ),
+                    ),
+                  ),
+                );
               },
               child: Text(
                 "Finalizar",
@@ -177,11 +214,4 @@ class _QuizState extends State<Quiz> with TickerProviderStateMixin {
 
     print(selectedList);
   }
-}
-
-class Answer {
-  int answerIndex, questionIndex;
-  String answer;
-  HiveQuizzQuestion question;
-  Answer({this.answerIndex, this.questionIndex, this.answer, this.question});
 }

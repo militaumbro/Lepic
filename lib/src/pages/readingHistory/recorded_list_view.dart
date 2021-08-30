@@ -291,11 +291,12 @@ class _RecordListViewState extends State<RecordListView> {
                   MaterialPageRoute(
                     builder: (context) {
                       return GraphsPage(
-                        currentReadingId: currentReading.id,
-                        ppm: currentReading.readingData.ppm,
-                        pcpm: currentReading.readingData.pcpm,
-                        percentage: currentReading.readingData.percentage * 100,
-                        duration: currentReading.readingData.duration,
+                        reading: currentReading,
+                        // currentReadingId: currentReading.id,
+                        // ppm: currentReading.readingData.ppm,
+                        // pcpm: currentReading.readingData.pcpm,
+                        // percentage: currentReading.readingData.percentage * 100,
+                        // duration: currentReading.readingData.duration,
                         reader: widget.reader,
                         readings: readings,
                         text: text,

@@ -78,7 +78,7 @@ class QuizzPickerButtonState extends State<QuizzPickerButton> {
 
           split.forEach((question) {
             var hiveQuestion =
-                HiveQuizzQuestion(id: randomId(), order: order, answers: []);
+                HiveQuizzQuestion(id: randomId(), order: order, answers: [],);
             order = order + 1;
             var lines = question.split("\n");
             lines.forEach((line) {

@@ -51,7 +51,6 @@ class _NewDataState extends State<NewData> {
       ),
     );
   }
-
   refresh() {
     setState(() {});
   }

@@ -1,3 +1,5 @@
+import 'package:flutter_smart_course/src/pages/quiz/awnser.dart';
+import 'package:flutter_smart_course/src/pages/reading/error_controller.dart';
 import 'package:hive/hive.dart';
 
 part 'hive_models.g.dart';
@@ -52,7 +54,8 @@ class HiveReading {
       this.duration,
       this.uri,
       this.textId,
-      this.readingData});
+      this.readingData,
+      this.quizz});
 }
 
 @HiveType(typeId: 3)
@@ -119,8 +122,14 @@ class HiveReadingData {
   double percentage;
   @HiveField(4)
   int duration;
+  @HiveField(5)
+  int errorCount;
+  @HiveField(6)
+  List<String> errorList;
 
   HiveReadingData({
+    this.errorList,
+    this.errorCount,
     this.zScore,
     this.ppm,
     this.pcpm,
@@ -151,7 +160,9 @@ class HiveQuizz {
   String name;
   @HiveField(2)
   List<HiveQuizzQuestion> questions;
-  HiveQuizz({this.id, this.name, this.questions});
+  @HiveField(3)
+  List<Answer> selectedAnswers;
+  HiveQuizz({this.id, this.name, this.questions, this.selectedAnswers});
 }
 
 @HiveType(typeId: 8)
@@ -175,4 +186,17 @@ class HiveReadingsList {
   @HiveField(0)
   List<HiveReading> list;
   HiveReadingsList({this.list});
+}
+
+@HiveType(typeId: 10)
+class Answer {
+  @HiveField(0)
+  int answerIndex;
+  @HiveField(1)
+  int questionIndex;
+  @HiveField(2)
+  String answer;
+  @HiveField(3)
+  HiveQuizzQuestion question;
+  Answer({this.answerIndex, this.questionIndex, this.answer, this.question});
 }

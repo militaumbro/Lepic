@@ -17,26 +17,28 @@ import 'package:provider/provider.dart';
 import 'graphs_template.dart';
 
 class GraphsPage extends StatefulWidget {
-  final double zScore;
-  final double ppm;
-  final double pcpm;
-  final double percentage;
-  final int currentReadingId;
-  final int duration;
+  final HiveReading reading;
+  // final double zScore;
+  // final double ppm;
+  // final double pcpm;
+  // final double percentage;
+  // final int currentReadingId;
+  // final int duration;
   final HiveText text;
   final HiveReader reader;
   final List<HiveReading> readings;
   GraphsPage(
       {Key key,
-      this.zScore,
-      this.ppm,
-      this.pcpm,
-      this.duration,
+      // this.zScore,
+      // this.ppm,
+      // this.pcpm,
+      // this.duration,
       this.text,
-      this.percentage,
+      // this.percentage,
       @required this.readings,
-      @required this.currentReadingId,
-      @required this.reader})
+      // @required this.currentReadingId,
+      @required this.reader,
+      @required this.reading})
       : super(key: key);
 
   @override
@@ -44,41 +46,95 @@ class GraphsPage extends StatefulWidget {
 }
 
 class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
-  TabController tabController;
+  TabController graphTabController;
+  TabController pageTabController;
   String zScore;
   String ppm;
   String pcpm;
   String percentage;
   String duration;
   int currentIndex;
+  int quizAcertos;
+  bool hasQuiz;
 
   @override
   void initState() {
+    hasQuiz = widget.reading.quizz != null;
+    if (hasQuiz){
+      quizAcertos = getAcertos();
+    }
     super.initState();
-    currentIndex = widget.readings.indexOf(widget.readings
-        .firstWhere((reading) => reading.id == widget.currentReadingId));
-    percentage = widget.percentage != null
-        ? widget.percentage.toStringAsFixed(1)
+    currentIndex = widget.readings.indexOf(widget.reading);
+    percentage = widget.reading.readingData.percentage != null
+        ? (widget.reading.readingData.percentage * 100).toStringAsFixed(1)
         : "---";
-    ppm = widget.ppm != null ? widget.ppm.toStringAsFixed(1) : "---";
-    pcpm = widget.pcpm != null ? widget.pcpm.toStringAsFixed(1) : "---";
-    duration = widget.duration != null ? widget.duration.toString() : "---";
-    zScore = widget.zScore != null ? widget.zScore.toStringAsFixed(3) : "---";
+    ppm = widget.reading.readingData.ppm != null
+        ? widget.reading.readingData.ppm.toStringAsFixed(1)
+        : "---";
+    pcpm = widget.reading.readingData.pcpm != null
+        ? widget.reading.readingData.pcpm.toStringAsFixed(1)
+        : "---";
+    duration = widget.reading.readingData.duration != null
+        ? widget.reading.readingData.duration.toString()
+        : "---";
+    zScore = widget.reading.readingData.zScore != null
+        ? widget.reading.readingData.zScore.toStringAsFixed(3)
+        : "---";
   }
 
   @override
   Widget build(BuildContext context) {
-    tabController = TabController(length: 3, vsync: this);
+    graphTabController = TabController(length: 3, vsync: this);
+    pageTabController = TabController(length: hasQuiz ? 2 : 1, vsync: this);
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
 
-    return baseScaffold(
+    return Scaffold(
       //exportar relatorio final
-      fab: FloatingActionButton(onPressed: () {}),
-      context: context,
-      title: "Gráficos",
-      body: ShowUp.half(
-        child: SingleChildScrollView(
+      floatingActionButton: FloatingActionButton(onPressed: () {}),
+      appBar: AppBar(
+        shape: appBarBottomShape,
+        centerTitle: true,
+        flexibleSpace: gradientAppBar(context),
+        title: AutoSizeText("Gráficos"),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(20),
+          child: TabBar(
+            indicator: CircleTabIndicator(
+                color: Theme.of(context).colorScheme.secondary, radius: 4),
+            indicatorSize: TabBarIndicatorSize.tab,
+            isScrollable: true,
+            controller: pageTabController,
+            labelStyle: Theme.of(context)
+                .primaryTextTheme
+                .bodyText1
+                .copyWith(fontWeight: FontWeight.bold),
+            unselectedLabelStyle: Theme.of(context)
+                .primaryTextTheme
+                .bodyText1
+                .copyWith(fontWeight: FontWeight.normal),
+            unselectedLabelColor: Colors.white.withOpacity(0.6),
+            tabs: [
+              Tab(
+                child: Text(
+                  "Gráfico",
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                ),
+              ),
+              Tab(
+                child: Text(
+                  "Quiz",
+                  style:
+                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      body: TabBarView(controller: pageTabController, children: [
+        SingleChildScrollView(
           child: Column(
             children: [
               ShowUp(
@@ -98,28 +154,28 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                           ext: "/m",
                           value: ppm,
                           // height: height,
-                          width: width* 0.35),
+                          width: width * 0.35),
                       InfoBox(
                           icon: Icon(Icons.text_fields, color: Colors.red),
                           text: "Palavras Corretas",
                           ext: "%",
                           value: percentage,
                           // // height: height,
-                          width: width* 0.35),
+                          width: width * 0.35),
                       InfoBox(
                           icon: Icon(Icons.text_fields, color: Colors.red),
                           text: "Corretas por Minuto",
                           ext: "/m",
                           value: pcpm,
                           // // height: height,
-                          width: width* 0.35),
+                          width: width * 0.35),
                       InfoBox(
                           icon: Icon(Icons.timer, color: Colors.red),
                           text: "Duração",
                           ext: "s",
                           value: duration,
                           // // height: height,
-                          width: width* 0.35),
+                          width: width * 0.35),
                     ],
                   ),
                 ),
@@ -141,7 +197,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                                   color: Colors.yellow, radius: 4),
                               indicatorSize: TabBarIndicatorSize.tab,
                               isScrollable: true,
-                              controller: tabController,
+                              controller: graphTabController,
                               labelStyle: Theme.of(context)
                                   .primaryTextTheme
                                   .bodyText1
@@ -176,7 +232,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                             child: Padding(
                               padding: EdgeInsets.all(4),
                               child: TabBarView(
-                                  controller: tabController,
+                                  controller: graphTabController,
                                   children: [
                                     MyBarChart(
                                       currentIndex: currentIndex,
@@ -239,8 +295,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                   TextButton(
                     onPressed: () {
                       try {
-                        HiveReading reading = widget.readings.firstWhere(
-                            (reading) => reading.id == widget.currentReadingId);
+                        HiveReading reading = widget.reading;
                         widget.reader.readings = HiveReadingsList(
                             list: widget.reader.readings.list..remove(reading));
 
@@ -261,8 +316,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                   TextButton(
                       onPressed: () {
                         var id = randomId();
-                        HiveReading reading = widget.readings.firstWhere(
-                            (reading) => reading.id == widget.currentReadingId);
+                        HiveReading reading = widget.reading;
                         String minutes;
                         if ((reading.data.minute / 10) < 0)
                           minutes = "0" + reading.data.minute.toString();
@@ -303,9 +357,38 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
             ],
           ),
         ),
-      ),
+        hasQuiz
+            ? SingleChildScrollView(
+                child: Column(
+                  children: [
+                    InfoBox(
+                        icon: Icon(Icons.star_outline, color: Colors.red),
+                        text: "Acertos",
+                        ext: "/${widget.reading.quizz.questions.length}",
+                        value: duration,
+                        // // height: height,
+                        width: width * 0.35),
+                  ],
+                ),
+              )
+            : Container()
+      ]),
     );
   }
+
+  int getAcertos() {
+    int acertos = 0;
+    widget.reading.quizz.questions.forEach((question) {
+      widget.reading.quizz.selectedAnswers.where((selectedAnswer) {
+        if (selectedAnswer.question == question &&
+            selectedAnswer.answerIndex == question.correctAnswer) {
+          acertos++;
+
+          return true;
+        }
+        return false;
+      });
+    });
+    return acertos;
+  }
 }
-
-
