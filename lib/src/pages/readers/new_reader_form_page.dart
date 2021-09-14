@@ -174,17 +174,41 @@ class _NewReaderFormState extends State<NewReaderForm> {
                         hintText: "Observação sobre o Leitor",
                         required: false,
                       ),
-                      RaisedButton(
-                        onPressed: () => _saveReader(context),
-                        child: Text(
-                          'Salvar Leitor',
-                          style: TextStyle(
-                              color: Theme.of(context).colorScheme.onPrimary),
-                        ),
-                        color: Theme.of(context).colorScheme.primary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+                      Row(
+                        mainAxisAlignment: hasReaders
+                            ? MainAxisAlignment.spaceAround
+                            : MainAxisAlignment.center,
+                        children: [
+                          RaisedButton(
+                            onPressed: () => _saveReader(context),
+                            child: Text(
+                              'Salvar Leitor',
+                              style: TextStyle(
+                                  color:
+                                      Theme.of(context).colorScheme.onPrimary),
+                            ),
+                            color: Theme.of(context).colorScheme.primary,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                          ),
+                          hasReaders
+                              ? RaisedButton(
+                                  onPressed: () => _deleteReader(context),
+                                  child: Text(
+                                    'Apagar Leitor',
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .onPrimary),
+                                  ),
+                                  color: Theme.of(context).colorScheme.primary,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                )
+                              : Container(),
+                        ],
                       ),
                     ],
                   ),
@@ -219,6 +243,14 @@ class _NewReaderFormState extends State<NewReaderForm> {
         ),
       ),
     );
+  }
+
+  _deleteReader(context) {
+    Provider.of<ReadersDatabase>(context, listen: false)
+        .deleteReader(widget.reader);
+    Navigator.of(context).pop();
+    successDialog(context, "Leitor apagado com sucesso");
+    if (widget.refresh != null) widget.refresh();
   }
 
   _saveReader(context) {

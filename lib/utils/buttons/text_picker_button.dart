@@ -75,7 +75,7 @@ class TextPickerButtonState extends State<TextPickerButton> {
               .split(' ');
           print(textList);
           print(textList.where((element) => !element.contains("\n")).length);
-          
+
           int id = randomId();
           textDB
               .addText(HiveText(

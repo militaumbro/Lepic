@@ -221,20 +221,21 @@ class HiveReadingDataAdapter extends TypeAdapter<HiveReadingData> {
       for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
     };
     return HiveReadingData(
-      errorList: (fields[6] as List)?.cast<String>(),
+      errorController: fields[6] as ErrorController,
       errorCount: fields[5] as int,
       zScore: fields[0] as double,
       ppm: fields[1] as double,
       pcpm: fields[2] as double,
       percentage: fields[3] as double,
       duration: fields[4] as int,
+      words: (fields[7] as List)?.cast<Word>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, HiveReadingData obj) {
     writer
-      ..writeByte(7)
+      ..writeByte(8)
       ..writeByte(0)
       ..write(obj.zScore)
       ..writeByte(1)
@@ -248,7 +249,9 @@ class HiveReadingDataAdapter extends TypeAdapter<HiveReadingData> {
       ..writeByte(5)
       ..write(obj.errorCount)
       ..writeByte(6)
-      ..write(obj.errorList);
+      ..write(obj.errorController)
+      ..writeByte(7)
+      ..write(obj.words);
   }
 
   @override

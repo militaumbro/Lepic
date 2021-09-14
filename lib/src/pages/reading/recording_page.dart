@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
 import 'package:flutter_smart_course/src/model/text_database.dart';
 import 'package:flutter_smart_course/src/pages/reading/error_controller.dart';
-import 'package:flutter_smart_course/src/pages/reading/test_recording_page.dart';
+import 'package:flutter_smart_course/src/pages/reading/recorder_view.dart';
 import 'package:flutter_smart_course/src/pages/readingHistory/recorded_list_view.dart';
 import 'package:flutter_smart_course/utils/base_scaffold.dart';
 import 'package:flutter_smart_course/utils/showup.dart';
@@ -307,12 +307,14 @@ class _RecordingPageState extends State<RecordingPage>
           duration: duration,
           textId: widget.text.id,
           readingData: HiveReadingData(
-              ppm: ppm,
-              pcpm: pcpm,
-              percentage: percentage,
-              duration: duration,
-              errorCount: widget.errorController.errorCount,
-              errorList: widget.errorController.errorList),
+            ppm: ppm,
+            pcpm: pcpm,
+            percentage: percentage,
+            duration: duration,
+            errorCount: widget.errorController.errorCount,
+            errorController: widget.errorController,
+            words: words,
+          ),
         );
         widget.reader.readings =
             HiveReadingsList(list: widget.reader.readings.list..add(reading));
@@ -361,10 +363,12 @@ class Word extends StatefulWidget {
 class _WordState extends State<Word> {
   final errorTypeController = TextEditingController();
   bool error = false;
+  String errorType;
   @override
   void initState() {
     super.initState();
     error = false;
+    errorType = "Não Especificado";
   }
 
   @override
@@ -373,9 +377,15 @@ class _WordState extends State<Word> {
     return widget.text.contains("\n")
         ? GestureDetector(
             onTap: () {
-              if (!error)
+              if (!error) {
                 widget.errorController.updateErrorCount(1, "Não Especificado");
-              refresh(true);
+                refresh(true);
+              } else {
+                refresh(false);
+                widget.errorController.removeError(errorType ??
+                    errorTypeController.text ??
+                    "Não Especificado");
+              }
             },
             onLongPress: () {
               showDialog(
@@ -423,9 +433,15 @@ class _WordState extends State<Word> {
             )
         : GestureDetector(
             onTap: () {
-              if (!error)
+              if (!error) {
                 widget.errorController.updateErrorCount(1, "Não Especificado");
-              refresh(true);
+                refresh(true);
+              } else {
+                refresh(false);
+                widget.errorController.removeError(errorType ??
+                    errorTypeController.text ??
+                    "Não Especificado");
+              }
             },
             onLongPress: () {
               showDialog(
@@ -472,6 +488,7 @@ class _WordState extends State<Word> {
 
   refresh(bool erro) {
     setState(() {
+      errorType = errorTypeController.text ?? "Não Especificado";
       error = erro;
     });
   }

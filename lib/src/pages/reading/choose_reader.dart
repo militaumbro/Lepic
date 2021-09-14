@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
 import 'package:flutter_smart_course/src/model/reader_database.dart';
-import 'package:flutter_smart_course/src/pages/readers/new_reader_form.dart';
+import 'package:flutter_smart_course/src/pages/readers/new_reader_form_page.dart';
 import 'package:flutter_smart_course/src/pages/reading/recording_page.dart';
 import 'package:flutter_smart_course/src/pages/reading/text_choose_page.dart';
 import 'package:flutter_smart_course/utils/cards.dart';

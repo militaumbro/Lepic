@@ -29,14 +29,8 @@ class GraphsPage extends StatefulWidget {
   final List<HiveReading> readings;
   GraphsPage(
       {Key key,
-      // this.zScore,
-      // this.ppm,
-      // this.pcpm,
-      // this.duration,
       this.text,
-      // this.percentage,
       @required this.readings,
-      // @required this.currentReadingId,
       @required this.reader,
       @required this.reading})
       : super(key: key);

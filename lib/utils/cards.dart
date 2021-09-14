@@ -3,7 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
 import 'package:flutter_smart_course/src/model/reader_database.dart';
-import 'package:flutter_smart_course/src/pages/readers/new_reader_form.dart';
+import 'package:flutter_smart_course/src/pages/readers/new_reader_form_page.dart';
 import 'package:flutter_smart_course/src/pages/reading/recording_page.dart';
 import 'package:flutter_smart_course/utils/showup.dart';
 import 'package:provider/provider.dart';
@@ -150,8 +150,8 @@ Widget quizzCard(context,
   );
 }
 
-Widget answerCard(context, Function(String,int, HiveQuizzQuestion) onTap,
-    String answer, HiveQuizzQuestion question, bool selected,int index) {
+Widget answerCard(context, Function(String, int, HiveQuizzQuestion) onTap,
+    String answer, HiveQuizzQuestion question, bool selected, int index) {
   double width = MediaQuery.of(context).size.width;
   return Padding(
     padding: EdgeInsets.all(8),
@@ -184,7 +184,7 @@ Widget answerCard(context, Function(String,int, HiveQuizzQuestion) onTap,
               Radius.circular(12),
             ),
             onTap: () {
-              onTap(answer,index, question);
+              onTap(answer, index, question);
             },
             child: Padding(
               padding: const EdgeInsets.all(8.0),
@@ -193,7 +193,7 @@ Widget answerCard(context, Function(String,int, HiveQuizzQuestion) onTap,
                   answer,
                   style: TextStyle(
                       fontSize: 18,
-                      color: selected?Colors.black:Colors.white,
+                      color: selected ? Colors.black : Colors.white,
                       fontWeight: FontWeight.w600),
                 ),
               ),
@@ -277,38 +277,87 @@ Widget readerCard(context,
     Function refresh,
     Function onTap,
     Function onLongPress}) {
-  return baseCard2(
-    padding: EdgeInsets.all(8),
-    leading: CircleAvatar(
-      radius: 30,
-      backgroundColor: Colors.orange[400],
-      foregroundColor: Colors.white,
-      child: Icon(
-        Icons.person,
-        size: 30,
+  var schooling = (reader.school.studantYear != null &&
+          reader.school.studantYear.trim() != "")
+      ? "${reader.school.schooling}, ${reader.school.studantYear}"
+      : (reader.school.schooling != null &&
+              reader.school.schooling.trim() != "" &&
+              reader.school.schooling.trim() != "null")
+          ? "${reader.school.schooling} "
+          : null;
+  var subtitle = (reader.school.schoolName != null &&
+          reader.school.schoolName.trim() != "")
+      ? "${reader.age} anos, ${reader.school.schoolName}"
+      : reader.age != 0
+          ? "${reader.age} anos "
+          : "";
+  return ShowUp(
+    child: InkWell(
+      borderRadius: const BorderRadius.all(
+        Radius.circular(12),
+      ),
+      onLongPress: onLongPress,
+      onTap: onTap ??
+          () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => ShowUp(
+                        child: NewReaderForm(
+                      refresh: refresh,
+                      reader: reader,
+                    ))));
+          }, // EDIT HIVEREADERPAGE
+
+      child: Padding(
+        padding: EdgeInsets.all(8),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            ListTile(
+              leading: CircleAvatar(
+                radius: 30,
+                backgroundColor: Colors.orange[400],
+                foregroundColor: Colors.white,
+                child: Icon(
+                  Icons.person,
+                  size: 30,
+                ),
+              ),
+              title: Text(
+                reader.name ?? "Título",
+                style: TextStyle(fontSize: 18),
+              ),
+              subtitle: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  schooling != null
+                      ? Text(
+                          schooling,
+                          style: TextStyle(fontSize: 14),
+                        )
+                      : Container(),
+                  Text(
+                    subtitle,
+                    style: TextStyle(fontSize: 12),
+                  ),
+                ],
+              ),
+              // trailing: IconButton(
+              //   icon: Icon(Icons.delete),
+              //   onPressed: () {
+              //     deleteDialog(context, title: "Removendo Leitor",
+              //         onDelete: () {
+              //       Provider.of<ReadersDatabase>(context, listen: false)
+              //           .deleteReader(reader);
+              //       refresh();
+              //       Navigator.of(context).pop();
+              //     });
+              //   },
+              // ),
+            )
+          ],
+        ),
       ),
     ),
-    onLongPress: onLongPress,
-    onTap: onTap ??
-        () {
-          Navigator.of(context).push(MaterialPageRoute(
-              builder: (context) => ShowUp(
-                      child: NewReaderForm(
-                    refresh: refresh,
-                    reader: reader,
-                  ))));
-        }, // EDIT HIVEREADERPAGE
-    onDelete: () {
-      deleteDialog(context, title: "Removendo Leitor", onDelete: () {
-        Provider.of<ReadersDatabase>(context, listen: false)
-            .deleteReader(reader);
-        refresh();
-        Navigator.of(context).pop();
-      });
-    },
-    context: context,
-    title: reader.name,
-    subtitle: "${reader.age} anos ",
-    // description: "",
   );
 }

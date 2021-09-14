@@ -1,5 +1,6 @@
 import 'package:flutter_smart_course/src/pages/quiz/awnser.dart';
 import 'package:flutter_smart_course/src/pages/reading/error_controller.dart';
+import 'package:flutter_smart_course/src/pages/reading/recording_page.dart';
 import 'package:hive/hive.dart';
 
 part 'hive_models.g.dart';
@@ -47,15 +48,16 @@ class HiveReading {
   @HiveField(7)
   HiveQuizz quizz;
 
-  HiveReading(
-      {this.id,
-      this.readerId,
-      this.data,
-      this.duration,
-      this.uri,
-      this.textId,
-      this.readingData,
-      this.quizz});
+  HiveReading({
+    this.id,
+    this.readerId,
+    this.data,
+    this.duration,
+    this.uri,
+    this.textId,
+    this.readingData,
+    this.quizz,
+  });
 }
 
 @HiveType(typeId: 3)
@@ -125,17 +127,19 @@ class HiveReadingData {
   @HiveField(5)
   int errorCount;
   @HiveField(6)
-  List<String> errorList;
+  ErrorController errorController;
+  @HiveField(7)
+  List<Word> words;
 
-  HiveReadingData({
-    this.errorList,
-    this.errorCount,
-    this.zScore,
-    this.ppm,
-    this.pcpm,
-    this.percentage,
-    this.duration,
-  });
+  HiveReadingData(
+      {this.errorController,
+      this.errorCount,
+      this.zScore,
+      this.ppm,
+      this.pcpm,
+      this.percentage,
+      this.duration,
+      this.words});
 }
 
 @HiveType(typeId: 6)
