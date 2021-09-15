@@ -118,10 +118,54 @@ class TextPickerButtonState extends State<TextPickerButton> {
                 path: value));
           });
         });
+
         successDialog(context, "Seus textos foram carregados com sucesso.");
         // widget.refresh();
       }
     });
+  }
+  // get numero de palavras
+  void inputDialog(context, {String title, String text, int count}) {
+    TextEditingController controller = TextEditingController(text: count.toString());
+    showDialog(
+      context: context,
+      barrierColor: Colors.orange[800].withOpacity(0.8),
+      builder: (context) => ShowUp.tenth(
+        duration: 200,
+        child: AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.all(Radius.circular(16)),
+            side: BorderSide(
+              color: Colors.orange[800],
+              width: 2,
+            ),
+          ),
+          title: Text(title),
+          content: Column(
+            children: [
+              Text("O número de palavras calculado para este texto foi de: " +
+                  count.toString() +
+                  ", caso este número esteja incorreto favor inserir o valor correto abaixo."),
+              TextField(controller: controller,),
+            ],
+          ),
+          actions: [
+            FlatButton(
+            child: Text(
+              "Ok",
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Colors.orange,
+              ),
+            ),
+            onPressed: (){
+
+            },
+          ),
+          ],
+        ),
+      ),
+    );
   }
 
   @override

@@ -468,7 +468,24 @@ class _WordState extends State<Word> {
                             Text("Descreva o tipo de erro cometido"),
                             TextField(
                               controller: errorTypeController,
-                            )
+                            ),
+                            // TODO ADICIONAR VALOR DE CONTRIBUIÇÃO, JÁ ESTÁ IMPLEMENTADO NO ERRORCONTROLLER + OU -
+                            // DropdownButton<String>(
+                            //   isExpanded: true,
+                            //   hint: Text(""),
+                            //   value: selectedSchooling,
+                            //   items: schoolingList.map((String value) {
+                            //     return DropdownMenuItem<String>(
+                            //       value: value,
+                            //       child: new Text(value),
+                            //     );
+                            //   }).toList(),
+                            //   onChanged: (value) {
+                            //     setState(() {
+                            //       selectedSchooling = value;
+                            //     });
+                            //   },
+                            // ),
                           ],
                         ),
                       ),
