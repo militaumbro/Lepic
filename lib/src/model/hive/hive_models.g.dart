@@ -228,14 +228,13 @@ class HiveReadingDataAdapter extends TypeAdapter<HiveReadingData> {
       pcpm: fields[2] as double,
       percentage: fields[3] as double,
       duration: fields[4] as int,
-      words: (fields[7] as List)?.cast<Word>(),
     );
   }
 
   @override
   void write(BinaryWriter writer, HiveReadingData obj) {
     writer
-      ..writeByte(8)
+      ..writeByte(7)
       ..writeByte(0)
       ..write(obj.zScore)
       ..writeByte(1)
@@ -249,9 +248,7 @@ class HiveReadingDataAdapter extends TypeAdapter<HiveReadingData> {
       ..writeByte(5)
       ..write(obj.errorCount)
       ..writeByte(6)
-      ..write(obj.errorController)
-      ..writeByte(7)
-      ..write(obj.words);
+      ..write(obj.errorController);
   }
 
   @override
@@ -470,6 +467,85 @@ class AnswerAdapter extends TypeAdapter<Answer> {
   bool operator ==(Object other) =>
       identical(this, other) ||
       other is AnswerAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class ErrorControllerAdapter extends TypeAdapter<ErrorController> {
+  @override
+  final int typeId = 11;
+
+  @override
+  ErrorController read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return ErrorController(
+      errorCount: fields[0] as int,
+    )..errorList = (fields[1] as List)?.cast<ReadingError>();
+  }
+
+  @override
+  void write(BinaryWriter writer, ErrorController obj) {
+    writer
+      ..writeByte(2)
+      ..writeByte(0)
+      ..write(obj.errorCount)
+      ..writeByte(1)
+      ..write(obj.errorList);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ErrorControllerAdapter &&
+          runtimeType == other.runtimeType &&
+          typeId == other.typeId;
+}
+
+class ReadingErrorAdapter extends TypeAdapter<ReadingError> {
+  @override
+  final int typeId = 12;
+
+  @override
+  ReadingError read(BinaryReader reader) {
+    final numOfFields = reader.readByte();
+    final fields = <int, dynamic>{
+      for (int i = 0; i < numOfFields; i++) reader.readByte(): reader.read(),
+    };
+    return ReadingError(
+      errorType: fields[0] as String,
+      contribution: fields[3] as int,
+      index: fields[2] as int,
+      word: fields[1] as String,
+    );
+  }
+
+  @override
+  void write(BinaryWriter writer, ReadingError obj) {
+    writer
+      ..writeByte(4)
+      ..writeByte(0)
+      ..write(obj.errorType)
+      ..writeByte(1)
+      ..write(obj.word)
+      ..writeByte(2)
+      ..write(obj.index)
+      ..writeByte(3)
+      ..write(obj.contribution);
+  }
+
+  @override
+  int get hashCode => typeId.hashCode;
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ReadingErrorAdapter &&
           runtimeType == other.runtimeType &&
           typeId == other.typeId;
 }

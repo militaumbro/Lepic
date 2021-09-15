@@ -4,7 +4,7 @@ import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
 import 'package:hive/hive.dart';
 
 class ReadersDatabase {
-  static const _boxName = 'readers7';
+  static const _boxName = 'readers8';
 
   Future addReader(HiveReader reader) async {
     var box = await Hive.openBox<HiveReader>(_boxName);

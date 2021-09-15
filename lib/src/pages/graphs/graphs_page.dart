@@ -18,12 +18,6 @@ import 'graphs_template.dart';
 
 class GraphsPage extends StatefulWidget {
   final HiveReading reading;
-  // final double zScore;
-  // final double ppm;
-  // final double pcpm;
-  // final double percentage;
-  // final int currentReadingId;
-  // final int duration;
   final HiveText text;
   final HiveReader reader;
   final List<HiveReading> readings;
@@ -116,13 +110,14 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                       TextStyle(color: Theme.of(context).colorScheme.onPrimary),
                 ),
               ),
-              Tab(
-                child: Text(
-                  "Quiz",
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-                ),
-              ),
+              if (hasQuiz)
+                Tab(
+                  child: Text(
+                    "Quiz",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.onPrimary),
+                  ),
+                )
             ],
           ),
         ),
@@ -351,69 +346,67 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
             ],
           ),
         ),
-        hasQuiz
-            ? SingleChildScrollView(
-                child: Column(
+        if (hasQuiz)
+          SingleChildScrollView(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        InfoBox(
-                            icon: Icon(Icons.star_outline, color: Colors.red),
-                            text: "Acertos",
-                            ext: "/${widget.reading.quizz.questions.length}",
-                            value: quizAcertos.toString(),
-                            // // height: height,
-                            width: width * 0.35),
-                        InfoBox(
-                            icon: Icon(Icons.star_outline, color: Colors.red),
-                            text: "Porcentagem",
-                            ext: "%",
-                            value: (100 *
-                                    quizAcertos /
-                                    widget.reading.quizz.questions.length)
-                                .toString(),
-                            // // height: height,
-                            width: width * 0.35),
-                      ],
-                    ),
-                    ...widget.reading.quizz.questions
-                        .map((question) => Padding(
-                              padding: const EdgeInsets.symmetric(
-                                  vertical: 8.0, horizontal: 20),
-                              child: Card(
-                                elevation: 2,
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(18.0))),
-                                child: Container(
-                                  width: width * 0.9,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          "Q${question.order + 1}: " +
-                                              question.question +
-                                              "\n",
-                                          style: TextStyle(
-                                              fontWeight: FontWeight.w600),
-                                        ),
-                                        getAnswer(question),
-                                        getCorrectAnswer(question)
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ))
-                        .toList()
+                    InfoBox(
+                        icon: Icon(Icons.star_outline, color: Colors.red),
+                        text: "Acertos",
+                        ext: "/${widget.reading.quizz.questions.length}",
+                        value: quizAcertos.toString(),
+                        // // height: height,
+                        width: width * 0.35),
+                    InfoBox(
+                        icon: Icon(Icons.star_outline, color: Colors.red),
+                        text: "Porcentagem",
+                        ext: "%",
+                        value: (100 *
+                                quizAcertos /
+                                widget.reading.quizz.questions.length)
+                            .toString(),
+                        // // height: height,
+                        width: width * 0.35),
                   ],
                 ),
-              )
-            : Container()
+                ...widget.reading.quizz.questions
+                    .map((question) => Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8.0, horizontal: 20),
+                          child: Card(
+                            elevation: 2,
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(18.0))),
+                            child: Container(
+                              width: width * 0.9,
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      "Q${question.order + 1}: " +
+                                          question.question +
+                                          "\n",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.w600),
+                                    ),
+                                    getAnswer(question),
+                                    getCorrectAnswer(question)
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ))
+                    .toList()
+              ],
+            ),
+          )
       ]),
     );
   }

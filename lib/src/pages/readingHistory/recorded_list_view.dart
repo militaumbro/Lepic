@@ -5,11 +5,15 @@ import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/src/model/audio_database.dart';
 import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
+import 'package:flutter_smart_course/src/model/reader_database.dart';
 import 'package:flutter_smart_course/src/model/text_database.dart';
 import 'package:flutter_smart_course/src/pages/graphs/graphs_page.dart';
+import 'package:flutter_smart_course/src/pages/reading/recording_page.dart';
 import 'package:flutter_smart_course/utils/audio_player.dart';
 import 'package:flutter_smart_course/utils/base_scaffold.dart';
+import 'package:flutter_smart_course/utils/calculator.dart';
 import 'package:flutter_smart_course/utils/cards.dart';
+import 'package:flutter_smart_course/utils/dialogs.dart';
 import 'package:flutter_smart_course/utils/info_box.dart';
 import 'package:flutter_smart_course/utils/showup.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -245,71 +249,96 @@ class _RecordListViewState extends State<RecordListView> {
         ? currentReading.readingData.duration.toString()
         : "---";
     // zScore = currentReading.readingData.zScore != null ? currentReading.readingData.zScore.toStringAsFixed(3) : "---";
-    return Column(
-      children: [
-        Divider(
-          color: Colors.orange[300].withAlpha(100),
-          thickness: 1.5,
-        ),
-        Align(
-          alignment: Alignment.bottomLeft,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 22.0),
-            child: Text(
-                "${_getWeekDay(currentReading.data.weekday)} as ${currentReading.data.hour}:$minutes,  ${currentReading.data.day}/${currentReading.data.month}/${currentReading.data.year}",
-                style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
+    return InkWell(
+      onTap: () {
+        var id = randomId();
+        HiveReading reading = currentReading;
+        String minutes;
+        if ((reading.data.minute / 10) < 0)
+          minutes = "0" + reading.data.minute.toString();
+        else
+          minutes = reading.data.minute.toString();
+        var audio = HiveAudio(
+          path: reading.uri,
+          name: widget.reader.name +
+              "${reading.data.hour}:$minutes, ${reading.data.day}/${reading.data.month}/${reading.data.year}",
+          id: id,
+        );
+        Navigator.of(context).pop();
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (context) => RecordingPage(
+              text: text,
+              reader: widget.reader,
+              recorded: true,
+              audio: audio,
+              recordedErrorController: reading.readingData.errorController,
+              reading: reading,
+            ),
           ),
-        ),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            MiniInfoBox(
-              text: "Ppm",
-              value: ppm,
+        );
+      },
+      child: Column(
+        children: [
+          Divider(
+            color: Colors.orange[300].withAlpha(100),
+            thickness: 1.5,
+          ),
+          Align(
+            alignment: Alignment.bottomLeft,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 22.0),
+              child: Text(
+                  "${_getWeekDay(currentReading.data.weekday)} as ${currentReading.data.hour}:$minutes,  ${currentReading.data.day}/${currentReading.data.month}/${currentReading.data.year}",
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
             ),
-            MiniInfoBox(
-              text: "Pcpm",
-              value: pcpm,
-            ),
-            MiniInfoBox(
-              text: "Acertos",
-              value: percentage,
-              ext: "%",
-            ),
-            MiniInfoBox(
-              text: "Duração",
-              value: duration,
-              ext: "s",
-            ),
-          ],
-        ),
-        ListTile(
-          leading: Icon(Icons.graphic_eq_rounded),
-          title: Text("Gráfico dessa leitura"),
-          trailing: IconButton(
-              icon: Icon(Icons.arrow_forward),
-              onPressed: () {
-                // Navigator.of(context).pop();
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) {
-                      return GraphsPage(
-                        reading: currentReading,
-                        // currentReadingId: currentReading.id,
-                        // ppm: currentReading.readingData.ppm,
-                        // pcpm: currentReading.readingData.pcpm,
-                        // percentage: currentReading.readingData.percentage * 100,
-                        // duration: currentReading.readingData.duration,
-                        reader: widget.reader,
-                        readings: readings,
-                        text: text,
-                      );
-                    },
-                  ),
-                );
-              }),
-        ),
-      ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              MiniInfoBox(
+                text: "Ppm",
+                value: ppm,
+              ),
+              MiniInfoBox(
+                text: "Pcpm",
+                value: pcpm,
+              ),
+              MiniInfoBox(
+                text: "Acertos",
+                value: percentage,
+                ext: "%",
+              ),
+              MiniInfoBox(
+                text: "Duração",
+                value: duration,
+                ext: "s",
+              ),
+            ],
+          ),
+          ListTile(
+            leading: Icon(Icons.graphic_eq_rounded),
+            title: Text("Gráfico dessa leitura"),
+            trailing: IconButton(
+                icon: Icon(Icons.arrow_forward),
+                onPressed: () {
+                  // Navigator.of(context).pop();
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return GraphsPage(
+                          reading: currentReading,
+                          reader: widget.reader,
+                          readings: readings,
+                          text: text,
+                        );
+                      },
+                    ),
+                  );
+                }),
+          ),
+        ],
+      ),
     );
   }
 }

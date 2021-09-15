@@ -274,7 +274,8 @@ class _NewReaderFormState extends State<NewReaderForm> {
           studantYear: studantYear.text.trim() ?? "",
         ),
         observation: observation.text.trim() ?? "",
-        readings: HiveReadingsList(list: []),
+        readings:
+            hasReaders ? widget.reader.readings : HiveReadingsList(list: []),
       ));
       Navigator.of(context).pop();
       if (widget.refresh != null) widget.refresh();

@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/src/pages/quiz/awnser.dart';
 import 'package:flutter_smart_course/src/pages/reading/error_controller.dart';
 import 'package:flutter_smart_course/src/pages/reading/recording_page.dart';
@@ -128,18 +129,16 @@ class HiveReadingData {
   int errorCount;
   @HiveField(6)
   ErrorController errorController;
-  @HiveField(7)
-  List<Word> words;
 
-  HiveReadingData(
-      {this.errorController,
-      this.errorCount,
-      this.zScore,
-      this.ppm,
-      this.pcpm,
-      this.percentage,
-      this.duration,
-      this.words});
+  HiveReadingData({
+    this.errorController,
+    this.errorCount,
+    this.zScore,
+    this.ppm,
+    this.pcpm,
+    this.percentage,
+    this.duration,
+  });
 }
 
 @HiveType(typeId: 6)
@@ -203,4 +202,38 @@ class Answer {
   @HiveField(3)
   HiveQuizzQuestion question;
   Answer({this.answerIndex, this.questionIndex, this.answer, this.question});
+}
+
+@HiveType(typeId: 11)
+class ErrorController {
+  @HiveField(0)
+  int errorCount;
+  @HiveField(1)
+  List<ReadingError> errorList = [];
+
+  ErrorController({this.errorCount = 0});
+
+  void removeError(int index) {
+    errorCount = errorCount - 1;
+    errorList.removeWhere((error) => error.index == index);
+  }
+
+  void updateErrorCount(ReadingError error) {
+    this.errorCount += error.contribution;
+    if (error.errorType == "") error.errorType = "Não Especificado";
+    errorList.add(error);
+  }
+}
+@HiveType(typeId: 12)
+class ReadingError {
+  @HiveField(0)
+  String errorType;
+  @HiveField(1)
+  String word;
+  @HiveField(2)
+  int index;
+  @HiveField(3)
+  int contribution;
+
+  ReadingError({this.errorType, this.contribution, this.index, this.word});
 }

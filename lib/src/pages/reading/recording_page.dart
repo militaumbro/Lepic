@@ -4,6 +4,7 @@ import 'package:flutter_smart_course/src/model/audio_database.dart';
 import 'package:flutter_smart_course/src/model/reader_database.dart';
 import 'package:flutter_smart_course/src/pages/graphs/graphs_page.dart';
 import 'package:flutter_smart_course/src/pages/quiz/choose_quiz_page.dart';
+import 'package:flutter_smart_course/src/pages/reading/reading_data_page.dart';
 import 'package:flutter_smart_course/utils/audio_player.dart';
 import 'package:flutter_smart_course/utils/calculator.dart';
 import 'package:flutter_smart_course/utils/utils.dart';
@@ -25,6 +26,8 @@ class RecordingPage extends StatefulWidget {
   final HiveReader reader;
   final bool recorded;
   final HiveAudio audio;
+  final HiveReading reading;
+  final ErrorController recordedErrorController;
   // final int textId;
 
   RecordingPage({
@@ -33,6 +36,8 @@ class RecordingPage extends StatefulWidget {
     @required this.reader,
     @required this.recorded,
     this.audio,
+    this.recordedErrorController,
+    this.reading,
   }) : super(key: key);
   ErrorController errorController;
   Directory appDirectory;
@@ -50,6 +55,7 @@ class _RecordingPageState extends State<RecordingPage>
   // AudioDatabase audioDatabase;
   ReadersDatabase readersDatabase;
   TextDatabase textDatabase;
+  bool preMarkedErrors;
   // Future<HiveText> text;
   List<String> textList;
   TabController tabController;
@@ -58,12 +64,17 @@ class _RecordingPageState extends State<RecordingPage>
     print(
         "recorded: ${widget.recorded.toString()}, audio: ${widget.audio.toString()}");
     readersDatabase = Provider.of<ReadersDatabase>(context, listen: false);
+
     // audioDatabase = Provider.of<AudioDatabase>(context, listen: false);
     textDatabase = Provider.of<TextDatabase>(context, listen: false);
     // text = textDatabase.getText(widget.text.id);
     super.initState();
-    words = [];
-    widget.errorController = ErrorController(errorCount: 0);
+    preMarkedErrors = false;
+    if (widget.recordedErrorController != null) {
+      widget.errorController = widget.recordedErrorController;
+      preMarkedErrors = true;
+    } else
+      widget.errorController = ErrorController(errorCount: 0);
     textList = widget.text.text;
 
     records = [];
@@ -87,28 +98,35 @@ class _RecordingPageState extends State<RecordingPage>
     tabController = TabController(length: 2, vsync: this);
     super.build(context);
     double c_width = MediaQuery.of(context).size.width * 0.92;
-    widget.errorController =
-        widget.errorController ?? ErrorController(errorCount: 0);
+    List<ReadingError> errorList;
 
     words = [];
+
+    if (preMarkedErrors) errorList = widget.errorController.errorList;
     for (var i = 0; i < textList.length; i++) {
       if (i + 1 != textList.length) {
         if (textList[i + 1].contains("\n")) {
           words.add(Word(
+            error: preMarkedErrors? (errorList.any((element) => element.index == i)):false,
             text: textList[i],
             errorController: widget.errorController,
+            index: i,
           ));
           words.add(Container());
         } else {
           if (i == 0)
             words.add(Word(
+              error: preMarkedErrors? (errorList.any((element) => element.index == i)):false,
               text: "  " + textList[i],
               errorController: widget.errorController,
+              index: i,
             ));
           else
             words.add(Word(
+              error: preMarkedErrors? (errorList.any((element) => element.index == i)):false,
               text: textList[i],
               errorController: widget.errorController,
+              index: i,
             ));
         }
       }
@@ -248,8 +266,8 @@ class _RecordingPageState extends State<RecordingPage>
                   child: Wrap(
                     children: [
                       ...{...widget.errorController.errorList}
-                    ].map((erro) {
-                      return Text(erro + ", ");
+                    ].map((error) {
+                      return Text(error.errorType + ", ");
                     }).toList(),
                   ),
                 )
@@ -277,7 +295,7 @@ class _RecordingPageState extends State<RecordingPage>
 
   void onRecordComplete(String filePath) async {
     // records.clear();
-    var reading;
+    HiveReading reading;
     var duration;
     final player = AudioPlayer();
     records.add(filePath);
@@ -298,24 +316,40 @@ class _RecordingPageState extends State<RecordingPage>
         print(widget.reader.readings.toString());
         print(
             "wordCount:${currentText.wordCount}, duration:$duration\nerrorCount:${widget.errorController.errorCount}\nppm:$ppm\npcpm:$pcpm ");
-
-        reading = HiveReading(
-          id: DateTime.now().microsecondsSinceEpoch % maxId,
-          readerId: widget.reader.id,
-          data: DateTime.now(),
-          uri: filePath,
-          duration: duration,
-          textId: widget.text.id,
-          readingData: HiveReadingData(
+        if (preMarkedErrors) {
+          reading = widget.reading;
+          reading.readingData = HiveReadingData(
             ppm: ppm,
             pcpm: pcpm,
             percentage: percentage,
             duration: duration,
             errorCount: widget.errorController.errorCount,
             errorController: widget.errorController,
-            words: words,
-          ),
-        );
+          );
+        } else
+          reading = HiveReading(
+            id: DateTime.now().microsecondsSinceEpoch % maxId,
+            readerId: widget.reader.id,
+            data: DateTime.now(),
+            uri: filePath,
+            duration: duration,
+            textId: widget.text.id,
+            readingData: HiveReadingData(
+              ppm: ppm,
+              pcpm: pcpm,
+              percentage: percentage,
+              duration: duration,
+              errorCount: widget.errorController.errorCount,
+              errorController: widget.errorController,
+            ),
+          );
+
+        //se a leitura ja existe na lista do leitor com o mesmo id, substitua
+        if (widget.reader.readings.list
+            .any((element) => element.id == reading.id))
+          widget.reader.readings.list
+              .removeWhere((element) => element.id == reading.id);
+
         widget.reader.readings =
             HiveReadingsList(list: widget.reader.readings.list..add(reading));
 
@@ -351,10 +385,17 @@ class _RecordingPageState extends State<RecordingPage>
 
 class Word extends StatefulWidget {
   final String text;
+  final int index;
+  final bool error;
 
   final ErrorController errorController;
-  Word({Key key, @required this.text, @required this.errorController})
-      : super(key: key);
+  Word({
+    Key key,
+    @required this.text,
+    @required this.errorController,
+    @required this.index,
+    @required this.error,
+  }) : super(key: key);
 
   @override
   _WordState createState() => _WordState();
@@ -367,7 +408,7 @@ class _WordState extends State<Word> {
   @override
   void initState() {
     super.initState();
-    error = false;
+    error = widget.error;
     errorType = "Não Especificado";
   }
 
@@ -378,13 +419,18 @@ class _WordState extends State<Word> {
         ? GestureDetector(
             onTap: () {
               if (!error) {
-                widget.errorController.updateErrorCount(1, "Não Especificado");
+                widget.errorController.updateErrorCount(
+                  ReadingError(
+                    contribution: 1,
+                    errorType: "Não Especificado",
+                    word: widget.text,
+                    index: widget.index,
+                  ),
+                );
                 refresh(true);
               } else {
                 refresh(false);
-                widget.errorController.removeError(errorType ??
-                    errorTypeController.text ??
-                    "Não Especificado");
+                widget.errorController.removeError(widget.index);
               }
             },
             onLongPress: () {
@@ -395,7 +441,14 @@ class _WordState extends State<Word> {
                   onWillPop: () async {
                     if (!error)
                       widget.errorController.updateErrorCount(
-                          1, errorTypeController?.text ?? "Não Especificado");
+                        ReadingError(
+                          contribution: 1,
+                          errorType:
+                              errorTypeController?.text ?? "Não Especificado",
+                          index: widget.index,
+                          word: widget.text,
+                        ),
+                      );
                     return true;
                   },
                   child: ShowUp.tenth(
@@ -434,13 +487,18 @@ class _WordState extends State<Word> {
         : GestureDetector(
             onTap: () {
               if (!error) {
-                widget.errorController.updateErrorCount(1, "Não Especificado");
+                widget.errorController.updateErrorCount(
+                  ReadingError(
+                    contribution: 1,
+                    errorType: "Não Especificado",
+                    word: widget.text,
+                    index: widget.index,
+                  ),
+                );
                 refresh(true);
               } else {
                 refresh(false);
-                widget.errorController.removeError(errorType ??
-                    errorTypeController.text ??
-                    "Não Especificado");
+                widget.errorController.removeError(widget.index);
               }
             },
             onLongPress: () {
@@ -451,7 +509,14 @@ class _WordState extends State<Word> {
                   onWillPop: () async {
                     if (!error)
                       widget.errorController.updateErrorCount(
-                          1, errorTypeController?.text ?? "Não Especificado");
+                        ReadingError(
+                          contribution: 1,
+                          errorType:
+                              errorTypeController?.text ?? "Não Especificado",
+                          index: widget.index,
+                          word: widget.text,
+                        ),
+                      );
                     return true;
                   },
                   child: ShowUp.tenth(
