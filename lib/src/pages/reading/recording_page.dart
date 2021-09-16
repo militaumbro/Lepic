@@ -95,7 +95,7 @@ class _RecordingPageState extends State<RecordingPage>
 
   @override
   Widget build(BuildContext context) {
-    tabController = TabController(length: 2, vsync: this);
+    tabController = TabController(length: 1, vsync: this);
     super.build(context);
     double c_width = MediaQuery.of(context).size.width * 0.92;
     List<ReadingError> errorList;
@@ -107,7 +107,9 @@ class _RecordingPageState extends State<RecordingPage>
       if (i + 1 != textList.length) {
         if (textList[i + 1].contains("\n")) {
           words.add(Word(
-            error: preMarkedErrors? (errorList.any((element) => element.index == i)):false,
+            error: preMarkedErrors
+                ? (errorList.any((element) => element.index == i))
+                : false,
             text: textList[i],
             errorController: widget.errorController,
             index: i,
@@ -116,14 +118,18 @@ class _RecordingPageState extends State<RecordingPage>
         } else {
           if (i == 0)
             words.add(Word(
-              error: preMarkedErrors? (errorList.any((element) => element.index == i)):false,
+              error: preMarkedErrors
+                  ? (errorList.any((element) => element.index == i))
+                  : false,
               text: "  " + textList[i],
               errorController: widget.errorController,
               index: i,
             ));
           else
             words.add(Word(
-              error: preMarkedErrors? (errorList.any((element) => element.index == i)):false,
+              error: preMarkedErrors
+                  ? (errorList.any((element) => element.index == i))
+                  : false,
               text: textList[i],
               errorController: widget.errorController,
               index: i,
@@ -201,9 +207,9 @@ class _RecordingPageState extends State<RecordingPage>
                           Tab(
                             child: Text("Marcação de Erros"),
                           ),
-                          Tab(
-                            child: Text("Texto pontuado"),
-                          )
+                          // Tab(
+                          //   child: Text("Texto pontuado"),
+                          // )
                         ]),
                   ],
                 ),
@@ -225,7 +231,9 @@ class _RecordingPageState extends State<RecordingPage>
                   child: Column(
                     children: [
                       Wrap(children: words),
-                      // Text(widget.errorController.errorCount.toString())
+                      SizedBox(
+                        height: 60,
+                      )
                     ],
                   ),
                 ),
@@ -233,10 +241,10 @@ class _RecordingPageState extends State<RecordingPage>
             ],
           ),
         ]),
-        Padding(
-          padding: const EdgeInsets.all(12.0),
-          child: Text(widget.text.originalText),
-        )
+        // Padding(
+        //   padding: const EdgeInsets.all(12.0),
+        //   child: Text(widget.text.originalText),
+        // )
       ]),
     );
   }

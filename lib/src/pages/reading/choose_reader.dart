@@ -56,7 +56,11 @@ class _ChooseReaderPageState extends State<ChooseReaderPage> {
                     ))));
           }),
       context: context,
-      title: "Selecione um Leitor",
+      title: "Leitores",
+      bottom: Text(
+        "Selecione um Leitor para começar a gravar uma leitura",
+        style: TextStyle(color: Colors.white70, fontSize: 13),
+      ),
       body: FutureBuilder(
           future: futureReadersList,
           builder: (context, snapshot) {
@@ -79,7 +83,7 @@ class _ChooseReaderPageState extends State<ChooseReaderPage> {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => ShowUp(
                                               child: RecordingPage(
-                                                audio: widget.audio,
+                                            audio: widget.audio,
                                             recorded: widget.recorded,
                                             text: widget.text,
                                             reader: readersList[index],
@@ -110,7 +114,7 @@ class _ChooseReaderPageState extends State<ChooseReaderPage> {
                                   Navigator.of(context).push(MaterialPageRoute(
                                       builder: (context) => ShowUp(
                                               child: RecordingPage(
-                                                audio: widget.audio,
+                                            audio: widget.audio,
                                             recorded: widget.recorded,
                                             text: widget.text,
                                             reader: readersList[index],

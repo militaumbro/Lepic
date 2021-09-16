@@ -83,6 +83,10 @@ class _RecordListViewState extends State<RecordListView> {
     return baseScaffold(
       context: context,
       title: "Leituras de ${widget.reader.name}",
+      bottom: Text(
+        "Clique em uma leitura para ouví-la novamente",
+        style: TextStyle(color: Colors.white70, fontSize: 13),
+      ),
       body: FutureBuilder(
         future: listAdvancedTextCard(groups),
         builder: (BuildContext context, AsyncSnapshot snapshot) {
@@ -189,24 +193,37 @@ class _RecordListViewState extends State<RecordListView> {
       print(entry.key);
       List readings = entry.value;
       var text = await textDB.getText(entry.key);
+
       list.add(ExpansionTile(
         title: Stack(
           children: [
-            textCard(context, text: text, enableDescription: false),
-            Positioned(
-              top: 10,
-              left: 45,
-              child: ShowUp(
-                child: CircleAvatar(
-                  radius: 10,
-                  backgroundColor: Colors.red[300],
-                  child: Text(
-                    readings.length.toString(),
-                    style: TextStyle(color: Colors.white, fontSize: 11),
+            (text != null)
+                ? textCard(context, text: text, enableDescription: false)
+                : ListTile(
+                    leading: Icon(
+                      Icons.error,
+                      size: 35,
+                      color: Colors.red,
+                    ),
+                    title: Text("Texto apagado",
+                        style: TextStyle(color: Colors.red)),
                   ),
-                ),
-              ),
-            ),
+            (text != null)
+                ? Positioned(
+                    top: 10,
+                    left: 45,
+                    child: ShowUp(
+                      child: CircleAvatar(
+                        radius: 10,
+                        backgroundColor: Colors.red[300],
+                        child: Text(
+                          readings.length.toString(),
+                          style: TextStyle(color: Colors.white, fontSize: 11),
+                        ),
+                      ),
+                    ),
+                  )
+                : Container(),
           ],
         ),
         children: [
@@ -250,34 +267,37 @@ class _RecordListViewState extends State<RecordListView> {
         : "---";
     // zScore = currentReading.readingData.zScore != null ? currentReading.readingData.zScore.toStringAsFixed(3) : "---";
     return InkWell(
-      onTap: () {
-        var id = randomId();
-        HiveReading reading = currentReading;
-        String minutes;
-        if ((reading.data.minute / 10) < 0)
-          minutes = "0" + reading.data.minute.toString();
-        else
-          minutes = reading.data.minute.toString();
-        var audio = HiveAudio(
-          path: reading.uri,
-          name: widget.reader.name +
-              "${reading.data.hour}:$minutes, ${reading.data.day}/${reading.data.month}/${reading.data.year}",
-          id: id,
-        );
-        Navigator.of(context).pop();
-        Navigator.of(context).push(
-          MaterialPageRoute(
-            builder: (context) => RecordingPage(
-              text: text,
-              reader: widget.reader,
-              recorded: true,
-              audio: audio,
-              recordedErrorController: reading.readingData.errorController,
-              reading: reading,
-            ),
-          ),
-        );
-      },
+      onTap: (text != null)
+          ? () {
+              var id = randomId();
+              HiveReading reading = currentReading;
+              String minutes;
+              if ((reading.data.minute / 10) < 0)
+                minutes = "0" + reading.data.minute.toString();
+              else
+                minutes = reading.data.minute.toString();
+              var audio = HiveAudio(
+                path: reading.uri,
+                name: widget.reader.name +
+                    "${reading.data.hour}:$minutes, ${reading.data.day}/${reading.data.month}/${reading.data.year}",
+                id: id,
+              );
+              Navigator.of(context).pop();
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder: (context) => RecordingPage(
+                    text: text,
+                    reader: widget.reader,
+                    recorded: true,
+                    audio: audio,
+                    recordedErrorController:
+                        reading.readingData.errorController,
+                    reading: reading,
+                  ),
+                ),
+              );
+            }
+          : () {},
       child: Column(
         children: [
           Divider(

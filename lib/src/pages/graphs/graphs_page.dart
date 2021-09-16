@@ -138,33 +138,33 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                       //     height: height,
                       //     width: width),
                       InfoBox(
-                          icon: Icon(Icons.text_fields, color: Colors.red),
+                          icon: Icon(Icons.mic, color: Colors.red),
                           text: "Palavras por Minuto",
                           ext: "/m",
                           value: ppm,
                           // height: height,
-                          width: width * 0.35),
+                          width: width * 0.37),
                       InfoBox(
-                          icon: Icon(Icons.text_fields, color: Colors.red),
+                          icon: Icon(Icons.check, color: Colors.red),
                           text: "Palavras Corretas",
                           ext: "%",
                           value: percentage,
                           // // height: height,
-                          width: width * 0.35),
+                          width: width * 0.37),
                       InfoBox(
-                          icon: Icon(Icons.text_fields, color: Colors.red),
+                          icon: Icon(Icons.alarm_on, color: Colors.red),
                           text: "Corretas por Minuto",
                           ext: "/m",
                           value: pcpm,
                           // // height: height,
-                          width: width * 0.35),
+                          width: width * 0.37),
                       InfoBox(
                           icon: Icon(Icons.timer, color: Colors.red),
                           text: "Duração",
                           ext: "s",
                           value: duration,
                           // // height: height,
-                          width: width * 0.35),
+                          width: width * 0.37),
                     ],
                   ),
                 ),
@@ -279,7 +279,9 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                 ),
               ),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                mainAxisAlignment: (widget.text != null)
+                    ? MainAxisAlignment.spaceEvenly
+                    : MainAxisAlignment.center,
                 children: [
                   TextButton(
                     onPressed: () {
@@ -302,42 +304,44 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                     },
                     child: Text("Apagar Leitura"),
                   ),
-                  TextButton(
-                      onPressed: () {
-                        var id = randomId();
-                        HiveReading reading = widget.reading;
-                        String minutes;
-                        if ((reading.data.minute / 10) < 0)
-                          minutes = "0" + reading.data.minute.toString();
-                        else
-                          minutes = reading.data.minute.toString();
-                        var audio = HiveAudio(
-                          path: reading.uri,
-                          name: widget.reader.name +
-                              "${reading.data.hour}:$minutes, ${reading.data.day}/${reading.data.month}/${reading.data.year}",
-                          id: id,
-                        );
-                        widget.reader.readings.list.remove(reading);
-                        Provider.of<ReadersDatabase>(context, listen: false)
-                            .addReader(widget.reader);
-                        Provider.of<AudioDatabase>(context, listen: false)
-                            .addAudio(audio)
-                            .then((value) => successDialog(context,
-                                "A leitura antiga foi apagada e o áudio foi adicionado a database do aplicativo, caso queira gravar mais tarde acesse a página de \"Áudios\" no menu principal.",
-                                delay: 4));
-                        Navigator.of(context).pop();
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => RecordingPage(
-                              text: widget.text,
-                              reader: widget.reader,
-                              recorded: true,
-                              audio: audio,
-                            ),
-                          ),
-                        );
-                      },
-                      child: Text("Regravar Leitura")),
+                  (widget.text != null)
+                      ? TextButton(
+                          onPressed: () {
+                            var id = randomId();
+                            HiveReading reading = widget.reading;
+                            String minutes;
+                            if ((reading.data.minute / 10) < 0)
+                              minutes = "0" + reading.data.minute.toString();
+                            else
+                              minutes = reading.data.minute.toString();
+                            var audio = HiveAudio(
+                              path: reading.uri,
+                              name: widget.reader.name +
+                                  "${reading.data.hour}:$minutes, ${reading.data.day}/${reading.data.month}/${reading.data.year}",
+                              id: id,
+                            );
+                            widget.reader.readings.list.remove(reading);
+                            Provider.of<ReadersDatabase>(context, listen: false)
+                                .addReader(widget.reader);
+                            Provider.of<AudioDatabase>(context, listen: false)
+                                .addAudio(audio)
+                                .then((value) => successDialog(context,
+                                    "A leitura antiga foi apagada e o áudio foi adicionado a database do aplicativo, caso queira gravar mais tarde acesse a página de \"Áudios\" no menu principal.",
+                                    delay: 4));
+                            Navigator.of(context).pop();
+                            Navigator.of(context).push(
+                              MaterialPageRoute(
+                                builder: (context) => RecordingPage(
+                                  text: widget.text,
+                                  reader: widget.reader,
+                                  recorded: true,
+                                  audio: audio,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text("Regravar Leitura"))
+                      : Container(),
                 ],
               ),
               SizedBox(

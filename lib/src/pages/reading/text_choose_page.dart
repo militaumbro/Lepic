@@ -36,7 +36,11 @@ class _TextChoosePageState extends State<TextChoosePage> {
     var texts = textDB.getTextList();
     return baseScaffold(
       context: context,
-      title: "Selecione um Texto",
+      title: "Textos",
+      bottom: Text(
+        "Selecione em um Texto para fazer uma leitura",
+        style: TextStyle(color: Colors.white70, fontSize: 13),
+      ),
       body: FutureBuilder(
         future: texts,
         builder: (context, snapshot) {
@@ -112,7 +116,7 @@ class _TextChoosePageState extends State<TextChoosePage> {
   }
 
   onTextTap(context, text) {
-    // Navigator.pop(context);
+    Navigator.pop(context);
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => ShowUp(

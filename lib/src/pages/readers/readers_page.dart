@@ -53,6 +53,10 @@ class _ReadersPageState extends State<ReadersPage> {
           }),
       context: context,
       title: "Leitores",
+      bottom: Text(
+        "Selecione um leitor para acompanhar suas leituras",
+        style: TextStyle(color: Colors.white70, fontSize: 13),
+      ),
       body: FutureBuilder(
           future: futureReadersList,
           builder: (context, snapshot) {

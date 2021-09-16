@@ -122,7 +122,7 @@ class MenusPageState extends State<MenusPage> {
             delay: showUpDelay += 100,
             child: MenuCard(
               "Leitores",
-              "Cheque os Leitores sendo acompanhados",
+              "Acompanhe os históricos de leituras e gráficos",
               Icons.person,
               iconColor: Colors.red[600],
               enabled: isAndroid,

@@ -35,6 +35,7 @@ class TextPickerButtonState extends State<TextPickerButton> {
   String contents;
   RegExp wordPattern = RegExp(r"[^\w|ç|Á-ü|\n]+");
   TextDatabase textDB;
+  TextEditingController wordCountController, nameController;
 
   void _openFileExplorer() async {
     setState(() => isLoadingPath = true);
@@ -77,13 +78,16 @@ class TextPickerButtonState extends State<TextPickerButton> {
           print(textList.where((element) => !element.contains("\n")).length);
 
           int id = randomId();
+          String name = fileName.substring(0, fileName.indexOf('.'));
+          // inputDialog(context, name: name, count: textList.length);
           textDB
               .addText(HiveText(
                   id: id,
                   text: textList,
                   originalText: data,
-                  name: fileName.substring(0, fileName.indexOf('.')),
-                  wordCount: textList.length,
+                  name: nameController.text ?? name,
+                  wordCount:
+                      int.parse(wordCountController.text) ?? textList.length,
                   path: path))
               .then((value) {
             successDialog(context, "Seu texto foi carregado com sucesso.");
@@ -105,15 +109,17 @@ class TextPickerButtonState extends State<TextPickerButton> {
                 .split(' ');
             print(textList);
 
-            var wordCount =
-                textList.where((element) => !element.contains("\n")).length;
+            var wordCount = textList.length;
             print(wordCount);
             int id = randomId();
+            String name = fileNam.substring(0, fileNam.indexOf('.'));
+            // inputDialog(context, name: name, count: wordCount);
+
             textDB.addText(HiveText(
                 id: id,
                 text: textList,
                 originalText: data,
-                name: fileNam.substring(0, fileNam.indexOf('.')),
+                name: name,
                 wordCount: wordCount,
                 path: value));
           });
@@ -124,9 +130,11 @@ class TextPickerButtonState extends State<TextPickerButton> {
       }
     });
   }
+
   // get numero de palavras
-  void inputDialog(context, {String title, String text, int count}) {
-    TextEditingController controller = TextEditingController(text: count.toString());
+  void inputDialog(context, {String name, int count}) {
+    nameController = TextEditingController(text: name);
+    wordCountController = TextEditingController(text: count.toString());
     showDialog(
       context: context,
       barrierColor: Colors.orange[800].withOpacity(0.8),
@@ -140,28 +148,54 @@ class TextPickerButtonState extends State<TextPickerButton> {
               width: 2,
             ),
           ),
-          title: Text(title),
+          title: Text(name),
           content: Column(
             children: [
               Text("O número de palavras calculado para este texto foi de: " +
                   count.toString() +
                   ", caso este número esteja incorreto favor inserir o valor correto abaixo."),
-              TextField(controller: controller,),
+              SizedBox(
+                height: 12,
+              ),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: "Nome do texto",
+                  // hintText: "Nome do áudio",
+                  labelStyle: TextStyle(
+                      fontSize: 15, color: Theme.of(context).primaryColor),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFE3E3E6)),
+                  ),
+                ),
+                controller: nameController,
+              ),
+              TextField(
+                decoration: InputDecoration(
+                  labelText: "Número de Palavras",
+                  // hintText: "Nome do áudio",
+                  labelStyle: TextStyle(
+                      fontSize: 15, color: Theme.of(context).primaryColor),
+                  enabledBorder: UnderlineInputBorder(
+                    borderSide: BorderSide(color: Color(0xFFE3E3E6)),
+                  ),
+                ),
+                controller: wordCountController,
+              ),
             ],
           ),
           actions: [
             FlatButton(
-            child: Text(
-              "Ok",
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.orange,
+              child: Text(
+                "Ok",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.orange,
+                ),
               ),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
             ),
-            onPressed: (){
-
-            },
-          ),
           ],
         ),
       ),

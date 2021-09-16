@@ -35,8 +35,8 @@ class InfoBox extends StatelessWidget {
                     fontSize: 16),
               ),
               SizedBox(height: 6),
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.end,
                 children: [
                   Text(
                     value,

@@ -30,6 +30,10 @@ class _AudioListPageState extends State<AudioListPage> {
       ),
       context: context,
       title: "Audios",
+      bottom: Text(
+        "Selecione um áudio para iniciar uma nova leitura",
+        style: TextStyle(color: Colors.white70, fontSize: 13),
+      ),
       body: FutureBuilder(
         future: audios,
         builder: (context, snapshot) {

@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/utils/utils.dart';
 
 Widget baseScaffold(
-    {@required BuildContext context,Widget body, Color gradient1, Color gradient2, String title = '',Widget fab}) {
+    {@required BuildContext context,Widget body,Widget bottom, Color gradient1, Color gradient2, String title = '',Widget fab}) {
   return Scaffold(
     floatingActionButton: fab,
     appBar: AppBar(
@@ -16,8 +16,13 @@ Widget baseScaffold(
       ),
       bottom: PreferredSize(
         preferredSize: Size.fromHeight(10),
-        child: SizedBox(
-          height: 10,
+        child: Column(
+          children: [
+            bottom!=null?bottom:Container(),
+            SizedBox(
+              height: 10,
+            ),
+          ],
         ),
       ),
     ),
