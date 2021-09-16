@@ -98,7 +98,9 @@ class _NewReaderFormState extends State<NewReaderForm> {
       },
       child: baseScaffold(
           context: context,
-          title: name.text ?? "Novo Leitor",
+          title: (name.text != null && name.text.trim() != "")
+              ? name.text
+              : "Novo Leitor",
           body: Form(
               key: _formKey,
               autovalidateMode: AutovalidateMode.always,

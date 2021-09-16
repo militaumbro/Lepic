@@ -135,7 +135,7 @@ class MenusPageState extends State<MenusPage> {
             delay: showUpDelay += 100,
             child: MenuCard(
               "Gravar Leitura",
-              "Inicie leituras de textos",
+              "Inicie novas leituras",
               Icons.read_more,
               iconColor: Colors.red[600],
               enabled: isAndroid,
@@ -161,7 +161,7 @@ class MenusPageState extends State<MenusPage> {
             delay: showUpDelay += 100,
             child: MenuCard(
               "Áudios",
-              "Corrija leituras já gravadas e atribua áudios a leitores",
+              "Corrija leituras já gravadas ",
               Icons.audiotrack,
               iconColor: Colors.red[600],
               enabled: isAndroid,

@@ -38,7 +38,7 @@ class _TextChoosePageState extends State<TextChoosePage> {
       context: context,
       title: "Textos",
       bottom: Text(
-        "Selecione em um Texto para fazer uma leitura",
+        "Selecione um texto para fazer uma leitura",
         style: TextStyle(color: Colors.white70, fontSize: 13),
       ),
       body: FutureBuilder(
