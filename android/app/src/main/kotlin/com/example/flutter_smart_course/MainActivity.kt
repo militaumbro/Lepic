@@ -1,4 +1,4 @@
-package com.example.flutter_smart_course
+package com.lepic
 
 import androidx.annotation.NonNull;
 import io.flutter.embedding.android.FlutterActivity

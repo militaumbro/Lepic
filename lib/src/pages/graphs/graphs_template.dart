@@ -146,7 +146,7 @@ class MyBarChartState extends State<MyBarChart> {
                       BarChartRodData(
                         colors: (current_x == widget.currentIndex)
                             ? [Colors.red]
-                            : [Colors.blue],
+                            : [Colors.yellow],
                         y: valor,
                         width: barWidth,
                         borderRadius: const BorderRadius.only(
@@ -555,11 +555,12 @@ class BarChartSample2State extends State<BarChartSample2> {
   }
 }
 
+
 class BarChartSample1 extends StatefulWidget {
   final List<Color> availableColors = [
     Colors.purpleAccent,
     Colors.yellow,
-    Colors.lightBlue,
+    Colors.yellow,
     Colors.orange,
     Colors.pink,
     Colors.redAccent,
