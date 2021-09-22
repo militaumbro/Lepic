@@ -13,19 +13,22 @@ class MyBarChart extends StatefulWidget {
   final int currentIndex;
   final int maxSize;
   MyBarChart(
-      {this.values,
+      {Key key,
+      this.values,
       @required this.scale,
       @required this.title,
       @required this.measure,
       @required this.interval,
       this.currentIndex,
-      @required this.maxSize});
+      @required this.maxSize})
+      : super(key: key);
   @override
   State<StatefulWidget> createState() => MyBarChartState();
 }
 
 class MyBarChartState extends State<MyBarChart> {
   static const double barWidth = 27;
+  GlobalKey _globalKey = new GlobalKey();
 
   @override
   void initState() {
@@ -36,7 +39,9 @@ class MyBarChartState extends State<MyBarChart> {
   @override
   Widget build(BuildContext context) {
     int current_x = -1;
-    return AspectRatio(
+    return RepaintBoundary(
+      key: _globalKey,
+      child: AspectRatio(
       aspectRatio: 0.8,
       child: Card(
         elevation: 4,
@@ -284,6 +289,7 @@ class MyBarChartState extends State<MyBarChart> {
           ),
         ),
       ),
+    ),
     );
   }
 }

@@ -235,6 +235,7 @@ Widget audioCard(context,
 Widget textCard(context,
     {HiveText text,
     Function(BuildContext, HiveText) onTextTap,
+    Function(BuildContext, HiveText) onLongPress,
     Function(BuildContext, HiveText) onDelete,
     bool enableDescription}) {
   var description;
@@ -259,6 +260,11 @@ Widget textCard(context,
           child: Icon(Icons.file_copy),
         ),
         context: context,
+        onLongPress: onLongPress != null
+            ? () {
+                onLongPress(context, text);
+              }
+            : null,
         onDelete: onDelete != null
             ? () {
                 onDelete(context, text);

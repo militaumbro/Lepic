@@ -68,6 +68,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
     zScore = widget.reading.readingData.zScore != null
         ? widget.reading.readingData.zScore.toStringAsFixed(3)
         : "---";
+    var numReadings = widget.readings.length;
   }
 
   @override
@@ -79,12 +80,16 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
 
     return Scaffold(
       //exportar relatorio final
-      // floatingActionButton: FloatingActionButton(onPressed: () {}),
+      // floatingActionButton: FloatingActionButton(
+      //     child: Icon(Icons.file_upload, size: 32), 
+      //     onPressed: () {
+
+      //     }),
       appBar: AppBar(
         shape: appBarBottomShape,
         centerTitle: true,
         flexibleSpace: gradientAppBar(context),
-        title: AutoSizeText(widget.reader.name??"Gráficos"),
+        title: AutoSizeText(widget.reader.name ?? "Gráficos"),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(20),
           child: TabBar(

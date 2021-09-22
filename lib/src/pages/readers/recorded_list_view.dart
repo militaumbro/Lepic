@@ -136,14 +136,8 @@ class _RecordListViewState extends State<RecordListView> {
                       return FutureBuilder(
                           future: textDB.getText(reading.textId),
                           builder: (context, snapshot) {
-                            if (snapshot.hasData) {
-                              return readingCard(
-                                  reading, readings, snapshot.data);
-                            } else
-                              return SpinKitFoldingCube(
-                                color: Theme.of(context).colorScheme.primary,
-                                size: 50.0,
-                              );
+                            return readingCard(
+                                reading, readings, snapshot.data);
                           });
                     })
                     .toList()
@@ -353,26 +347,30 @@ class _RecordListViewState extends State<RecordListView> {
             : () {},
         child: Column(
           children: [
-            if (text != null)
-              ListTile(
-                title: Text(
-                  text.name,
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-                ),
-                subtitle: Text("Nº de palavras: " + text.wordCount.toString(),
-                    style: TextStyle(
-                      fontSize: 12,
-                    )),
-                trailing: Text(
-                    "${_getWeekDay(currentReading.data.weekday)} às ${currentReading.data.hour}:$minutes,\n  ${currentReading.data.day}/${currentReading.data.month}/${currentReading.data.year}",
-                    style:
-                        TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+            ListTile(
+              leading:
+                  (text != null) ? null : Icon(Icons.error, color: Colors.red),
+              title: Text(
+                (text != null) ? text.name : "Texto Apagado",
+                style: TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: (text != null) ? Colors.black : Colors.red),
               ),
-            if (text != null)
-              Divider(
-                color: Colors.red[300],
-                thickness: 1.5,
-              ),
+              subtitle: (text != null)
+                  ? Text("Nº de palavras: " + text.wordCount.toString(),
+                      style: TextStyle(
+                        fontSize: 12,
+                      ))
+                  : null,
+              trailing: Text(
+                  "${_getWeekDay(currentReading.data.weekday)} às ${currentReading.data.hour}:$minutes,\n  ${currentReading.data.day}/${currentReading.data.month}/${currentReading.data.year}",
+                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+            ),
+            Divider(
+              color: Colors.red[300],
+              thickness: 1.5,
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
@@ -402,6 +400,36 @@ class _RecordListViewState extends State<RecordListView> {
             ),
             Row(
               children: [
+                IconButton(
+                  onPressed: () {
+                    deleteDialog(context,
+                        title: "Apagando Leitura",
+                        text:
+                            "Ao apagar esta leitura, se perderão todos os dados relacionados a ela. Tem certeza que deseja apaga-la?",
+                        onDelete: () {
+                      try {
+                        Navigator.of(context).pop();
+                        HiveReading reading = currentReading;
+                        widget.reader.readings = HiveReadingsList(
+                            list: widget.reader.readings.list..remove(reading));
+
+                        Provider.of<ReadersDatabase>(context, listen: false)
+                            .addReader(widget.reader)
+                            .then((value) {
+                          successDialog(context, "Leitura Apagada com sucesso");
+                        });
+                        setState(() {});
+                      } catch (e) {
+                        errorDialog(context,
+                            title: "Erro", text: "Erro inesperado");
+                      }
+                    });
+                  },
+                  icon: Icon(
+                    Icons.delete,
+                    color: Colors.grey[600],
+                  ),
+                ),
                 Expanded(child: Container()),
                 TextButton(
                     child: Row(
@@ -434,4 +462,6 @@ class _RecordListViewState extends State<RecordListView> {
       ),
     );
   }
+
+  void onDelete() {}
 }

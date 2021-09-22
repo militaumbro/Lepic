@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
 import 'package:flutter_smart_course/src/model/text_database.dart';
+import 'package:flutter_smart_course/src/pages/reading/edit_text_page.dart';
 import 'package:flutter_smart_course/src/pages/reading/recording_page.dart';
 import 'package:flutter_smart_course/src/pages/reading/reading_data_page.dart';
 
@@ -68,6 +69,7 @@ class _TextChoosePageState extends State<TextChoosePage> {
                                   context,
                                   onDelete: onTextDelete,
                                   onTextTap: onTextTap,
+                                  onLongPress: onLongPress,
                                   text: textList[index],
                                   enableDescription: true,
                                 );
@@ -78,6 +80,7 @@ class _TextChoosePageState extends State<TextChoosePage> {
                                       context,
                                       onDelete: onTextDelete,
                                       onTextTap: onTextTap,
+                                      onLongPress: onLongPress,
                                       text: textList[index],
                                       enableDescription: true,
                                     ),
@@ -123,6 +126,19 @@ class _TextChoosePageState extends State<TextChoosePage> {
           child: ChooseReaderPage(
             audio: widget.audio,
             recorded: widget.recorded,
+            text: text,
+          ),
+        ),
+      ),
+    );
+  }
+
+  onLongPress(context, text) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => ShowUp(
+          child: EditTextPage(
+            refresh: _refresh,
             text: text,
           ),
         ),

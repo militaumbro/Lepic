@@ -14,7 +14,7 @@ import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
 import 'package:flutter_smart_course/src/model/text_database.dart';
 import 'package:flutter_smart_course/src/pages/reading/error_controller.dart';
 import 'package:flutter_smart_course/src/pages/reading/recorder_view.dart';
-import 'package:flutter_smart_course/src/pages/readingHistory/recorded_list_view.dart';
+import 'package:flutter_smart_course/src/pages/readers/recorded_list_view.dart';
 import 'package:flutter_smart_course/utils/base_scaffold.dart';
 import 'package:flutter_smart_course/utils/showup.dart';
 import 'package:path_provider/path_provider.dart';

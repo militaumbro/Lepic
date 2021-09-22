@@ -4,7 +4,6 @@ import 'package:flutter_smart_course/src/pages/new_data/new_data_page.dart';
 import 'package:flutter_smart_course/src/pages/quiz/choose_quiz_page.dart';
 import 'package:flutter_smart_course/src/pages/readers/readers_page.dart';
 import 'package:flutter_smart_course/src/pages/reading/text_choose_page.dart';
-import 'package:flutter_smart_course/src/pages/readingHistory/reading_history_page.dart';
 import 'package:flutter_smart_course/utils/no_glow_behavior.dart';
 import 'package:flutter_smart_course/utils/showup.dart';
 import 'package:flutter/cupertino.dart';

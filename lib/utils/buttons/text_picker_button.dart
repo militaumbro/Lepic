@@ -33,7 +33,7 @@ class TextPickerButtonState extends State<TextPickerButton> {
   bool isMultiPick = true;
   FileType fileType;
   String contents;
-  RegExp wordPattern = RegExp(r"[^\w|ç|Á-ü|\n]+");
+  RegExp wordPattern = RegExp(r"[^\w|ç|Á-ü|\n|-]+");
   TextDatabase textDB;
   TextEditingController wordCountController, nameController;
 
@@ -81,11 +81,11 @@ class TextPickerButtonState extends State<TextPickerButton> {
           String name = fileName.substring(0, fileName.indexOf('.'));
           // inputDialog(context, name: name, count: textList.length);
           var wordCount = textList.length;
-            int trash = 0;
-            textList.forEach((element) {
-              if (element.contains("\n\n") || element == "\n") trash++;
-            });
-            wordCount -= trash;
+          int trash = 0;
+          textList.forEach((element) {
+            if (element.contains("\n\n") || element == "\n") trash++;
+          });
+          wordCount -= trash;
           textDB
               .addText(HiveText(
                   id: id,
@@ -117,7 +117,15 @@ class TextPickerButtonState extends State<TextPickerButton> {
             var wordCount = textList.length;
             int trash = 0;
             textList.forEach((element) {
-              if (element.contains("\n\n") || element == "\n"|| element.isEmpty || element == ""|| element==" ") trash++;
+              if (element.contains("\n\n") ||
+                  element == "\n" ||
+                  element.isEmpty ||
+                  element == "" ||
+                  element == " " ||
+                  element.contains(" -") ||
+                  element.contains("- ") ||
+                  element == "-" ||
+                  element == "\n-") trash++;
             });
             wordCount -= trash;
             print(wordCount);
