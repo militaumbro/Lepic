@@ -84,7 +84,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
         shape: appBarBottomShape,
         centerTitle: true,
         flexibleSpace: gradientAppBar(context),
-        title: AutoSizeText("Gráficos"),
+        title: AutoSizeText(widget.reader.name??"Gráficos"),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(20),
           child: TabBar(
@@ -224,6 +224,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                                   controller: graphTabController,
                                   children: [
                                     MyBarChart(
+                                      maxSize: 5,
                                       currentIndex: currentIndex,
                                       scale: 200,
                                       interval: 50,
@@ -237,6 +238,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                                       ],
                                     ),
                                     MyBarChart(
+                                      maxSize: 5,
                                       currentIndex: currentIndex,
                                       scale: 200,
                                       interval: 50,
@@ -250,6 +252,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                                       ],
                                     ),
                                     MyBarChart(
+                                      maxSize: 5,
                                       currentIndex: currentIndex,
                                       scale: 100,
                                       interval: 25,

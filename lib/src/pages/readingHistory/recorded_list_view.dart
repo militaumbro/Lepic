@@ -46,10 +46,12 @@ class _RecordListViewState extends State<RecordListView> {
   Map groups;
   // AudioDatabase audioDatabase;
   List<HiveReading> readings;
+  var textDB;
   @override
   void initState() {
     super.initState();
     // records = [];
+
     audioPlayer = AudioPlayer();
     // readings = widget.reader.readings;
 
@@ -78,8 +80,47 @@ class _RecordListViewState extends State<RecordListView> {
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   List<HiveReading> readingsList = readings;
+  //   return baseScaffold(
+  //     context: context,
+  //     title: "Leituras de ${widget.reader.name}",
+  //     bottom: Text(
+  //       "Clique em uma leitura para ouví-la novamente",
+  //       style: TextStyle(color: Colors.white70, fontSize: 13),
+  //     ),
+  //     body: FutureBuilder(
+  //       future: listAdvancedTextCard(groups),
+  //       builder: (BuildContext context, AsyncSnapshot snapshot) {
+  //         if (snapshot.connectionState == ConnectionState.done &&
+  //             snapshot.data != null) {
+  //           List widgets = snapshot.data;
+  //           if (widgets.isEmpty)
+  //             return Center(
+  //                 child: Text("Nenhuma leitura encontrada para este leitor."));
+  //           return ListView(
+  //             children: [...widgets],
+  //           );
+  //         }
+  //         return SpinKitFoldingCube(
+  //           color: Theme.of(context).colorScheme.primary,
+  //           size: 50.0,
+  //         );
+  //       },
+  //     ),
+  //   );
+
+  //   //   return Container();
+  //   // }),
+  // }
+  @override
   Widget build(BuildContext context) {
-    List<HiveReading> readingsList = readings;
+    textDB = Provider.of<TextDatabase>(context);
     return baseScaffold(
       context: context,
       title: "Leituras de ${widget.reader.name}",
@@ -87,25 +128,32 @@ class _RecordListViewState extends State<RecordListView> {
         "Clique em uma leitura para ouví-la novamente",
         style: TextStyle(color: Colors.white70, fontSize: 13),
       ),
-      body: FutureBuilder(
-        future: listAdvancedTextCard(groups),
-        builder: (BuildContext context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.done &&
-              snapshot.data != null) {
-            List widgets = snapshot.data;
-            if (widgets.isEmpty)
-              return Center(
-                  child: Text("Nenhuma leitura encontrada para este leitor."));
-            return ListView(
-              children: [...widgets],
-            );
-          }
-          return SpinKitFoldingCube(
-            color: Theme.of(context).colorScheme.primary,
-            size: 50.0,
-          );
-        },
-      ),
+      body: (readings != null && readings.isNotEmpty)
+          ? ListView(
+              children: [
+                ...readings
+                    .map((reading) {
+                      return FutureBuilder(
+                          future: textDB.getText(reading.textId),
+                          builder: (context, snapshot) {
+                            if (snapshot.hasData) {
+                              return readingCard(
+                                  reading, readings, snapshot.data);
+                            } else
+                              return SpinKitFoldingCube(
+                                color: Theme.of(context).colorScheme.primary,
+                                size: 50.0,
+                              );
+                          });
+                    })
+                    .toList()
+                    .reversed
+                    .toList()
+              ],
+            )
+          : Center(
+              child: Text("Nenhuma leitura encontrada para este leitor."),
+            ),
     );
 
     //   return Container();
@@ -186,58 +234,57 @@ class _RecordListViewState extends State<RecordListView> {
     }
   }
 
-  Future<List> listAdvancedTextCard(Map groups) async {
-    var list = [];
-    var textDB = Provider.of<TextDatabase>(context);
-    for (var entry in groups.entries) {
-      print(entry.key);
-      List readings = entry.value;
-      var text = await textDB.getText(entry.key);
+  // Future<List> listAdvancedTextCard(Map groups) async {
+  //   var list = [];
+  //   var textDB = Provider.of<TextDatabase>(context);
+  //   for (var entry in groups.entries) {
+  //     List readings = entry.value;
+  //     var text = await textDB.getText(entry.key);
 
-      list.add(ExpansionTile(
-        title: Stack(
-          children: [
-            (text != null)
-                ? textCard(context, text: text, enableDescription: false)
-                : ListTile(
-                    leading: Icon(
-                      Icons.error,
-                      size: 35,
-                      color: Colors.red,
-                    ),
-                    title: Text("Texto apagado",
-                        style: TextStyle(color: Colors.red)),
-                  ),
-            (text != null)
-                ? Positioned(
-                    top: 10,
-                    left: 45,
-                    child: ShowUp(
-                      child: CircleAvatar(
-                        radius: 10,
-                        backgroundColor: Colors.red[300],
-                        child: Text(
-                          readings.length.toString(),
-                          style: TextStyle(color: Colors.white, fontSize: 11),
-                        ),
-                      ),
-                    ),
-                  )
-                : Container(),
-          ],
-        ),
-        children: [
-          ...readings
-              .map((reading) => readingCard(reading, readings, text))
-              .toList()
-              .reversed
-              .toList()
-        ],
-      ));
-    }
+  //     list.add(ExpansionTile(
+  //       title: Stack(
+  //         children: [
+  //           (text != null)
+  //               ? textCard(context, text: text, enableDescription: false)
+  //               : ListTile(
+  //                   leading: Icon(
+  //                     Icons.error,
+  //                     size: 35,
+  //                     color: Colors.red,
+  //                   ),
+  //                   title: Text("Texto apagado",
+  //                       style: TextStyle(color: Colors.red)),
+  //                 ),
+  //           (text != null)
+  //               ? Positioned(
+  //                   top: 10,
+  //                   left: 45,
+  //                   child: ShowUp(
+  //                     child: CircleAvatar(
+  //                       radius: 10,
+  //                       backgroundColor: Colors.red[300],
+  //                       child: Text(
+  //                         readings.length.toString(),
+  //                         style: TextStyle(color: Colors.white, fontSize: 11),
+  //                       ),
+  //                     ),
+  //                   ),
+  //                 )
+  //               : Container(),
+  //         ],
+  //       ),
+  //       children: [
+  //         ...readings
+  //             .map((reading) => readingCard(reading, readings, text))
+  //             .toList()
+  //             .reversed
+  //             .toList()
+  //       ],
+  //     ));
+  //   }
 
-    return list;
-  }
+  //   return list;
+  // }
 
   Widget readingCard(
       HiveReading currentReading, List<HiveReading> readings, HiveText text) {
@@ -266,98 +313,124 @@ class _RecordListViewState extends State<RecordListView> {
         ? currentReading.readingData.duration.toString()
         : "---";
     // zScore = currentReading.readingData.zScore != null ? currentReading.readingData.zScore.toStringAsFixed(3) : "---";
-    return InkWell(
-      onTap: (text != null)
-          ? () {
-              var id = randomId();
-              HiveReading reading = currentReading;
-              String minutes;
-              if ((reading.data.minute / 10) < 0)
-                minutes = "0" + reading.data.minute.toString();
-              else
-                minutes = reading.data.minute.toString();
-              var audio = HiveAudio(
-                path: reading.uri,
-                name: widget.reader.name +
-                    "${reading.data.hour}:$minutes, ${reading.data.day}/${reading.data.month}/${reading.data.year}",
-                id: id,
-              );
-              Navigator.of(context).pop();
-              Navigator.of(context).push(
-                MaterialPageRoute(
-                  builder: (context) => RecordingPage(
-                    text: text,
-                    reader: widget.reader,
-                    recorded: true,
-                    audio: audio,
-                    recordedErrorController:
-                        reading.readingData.errorController,
-                    reading: reading,
-                  ),
-                ),
-              );
-            }
-          : () {},
-      child: Column(
-        children: [
-          Divider(
-            color: Colors.orange[300].withAlpha(100),
-            thickness: 1.5,
-          ),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 22.0),
-              child: Text(
-                  "${_getWeekDay(currentReading.data.weekday)} as ${currentReading.data.hour}:$minutes,  ${currentReading.data.day}/${currentReading.data.month}/${currentReading.data.year}",
-                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-            ),
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              MiniInfoBox(
-                text: "Ppm",
-                value: ppm,
-              ),
-              MiniInfoBox(
-                text: "Pcpm",
-                value: pcpm,
-              ),
-              MiniInfoBox(
-                text: "Acertos",
-                value: percentage,
-                ext: "%",
-              ),
-              MiniInfoBox(
-                text: "Duração",
-                value: duration,
-                ext: "s",
-              ),
-            ],
-          ),
-          ListTile(
-            leading: Icon(Icons.graphic_eq_rounded),
-            title: Text("Gráfico dessa leitura"),
-            trailing: IconButton(
-                icon: Icon(Icons.arrow_forward),
-                onPressed: () {
-                  // Navigator.of(context).pop();
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return GraphsPage(
-                          reading: currentReading,
-                          reader: widget.reader,
-                          readings: readings,
-                          text: text,
-                        );
-                      },
+    return Card(
+      shape: const RoundedRectangleBorder(
+        borderRadius: const BorderRadius.all(
+          Radius.circular(12),
+        ),
+      ),
+      child: InkWell(
+        onTap: (text != null)
+            ? () {
+                var id = randomId();
+                HiveReading reading = currentReading;
+                String minutes;
+                if ((reading.data.minute / 10) < 0)
+                  minutes = "0" + reading.data.minute.toString();
+                else
+                  minutes = reading.data.minute.toString();
+                var audio = HiveAudio(
+                  path: reading.uri,
+                  name: widget.reader.name +
+                      "${reading.data.hour}:$minutes, ${reading.data.day}/${reading.data.month}/${reading.data.year}",
+                  id: id,
+                );
+                Navigator.of(context).pop();
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => RecordingPage(
+                      text: text,
+                      reader: widget.reader,
+                      recorded: true,
+                      audio: audio,
+                      recordedErrorController:
+                          reading.readingData.errorController,
+                      reading: reading,
                     ),
-                  );
-                }),
-          ),
-        ],
+                  ),
+                );
+              }
+            : () {},
+        child: Column(
+          children: [
+            if (text != null)
+              ListTile(
+                title: Text(
+                  text.name,
+                  style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                ),
+                subtitle: Text("Nº de palavras: " + text.wordCount.toString(),
+                    style: TextStyle(
+                      fontSize: 12,
+                    )),
+                trailing: Text(
+                    "${_getWeekDay(currentReading.data.weekday)} às ${currentReading.data.hour}:$minutes,\n  ${currentReading.data.day}/${currentReading.data.month}/${currentReading.data.year}",
+                    style:
+                        TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+              ),
+            if (text != null)
+              Divider(
+                color: Colors.red[300],
+                thickness: 1.5,
+              ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                MiniInfoBox(
+                  icon: Icon(Icons.mic, size: 20, color: Colors.red),
+                  text: "Ppm",
+                  value: ppm,
+                ),
+                MiniInfoBox(
+                  icon: Icon(Icons.alarm_on, size: 20, color: Colors.red),
+                  text: "Pcpm",
+                  value: pcpm,
+                ),
+                MiniInfoBox(
+                  icon: Icon(Icons.check, size: 20, color: Colors.red),
+                  text: "Acertos",
+                  value: percentage,
+                  ext: "%",
+                ),
+                MiniInfoBox(
+                  icon: Icon(Icons.timer, size: 20, color: Colors.red),
+                  text: "Duração",
+                  value: duration,
+                  ext: "s",
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                Expanded(child: Container()),
+                TextButton(
+                    child: Row(
+                      children: [
+                        Text("Analisar"),
+                        SizedBox(width: 4),
+                        Icon(Icons.arrow_forward),
+                        SizedBox(width: 8),
+                      ],
+                    ),
+                    onPressed: () {
+                      // Navigator.of(context).pop();
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return GraphsPage(
+                              reading: currentReading,
+                              reader: widget.reader,
+                              readings: readings,
+                              text: text,
+                            );
+                          },
+                        ),
+                      );
+                    }),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

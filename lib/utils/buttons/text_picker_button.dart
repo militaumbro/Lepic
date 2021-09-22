@@ -80,14 +80,19 @@ class TextPickerButtonState extends State<TextPickerButton> {
           int id = randomId();
           String name = fileName.substring(0, fileName.indexOf('.'));
           // inputDialog(context, name: name, count: textList.length);
+          var wordCount = textList.length;
+            int trash = 0;
+            textList.forEach((element) {
+              if (element.contains("\n\n") || element == "\n") trash++;
+            });
+            wordCount -= trash;
           textDB
               .addText(HiveText(
                   id: id,
                   text: textList,
                   originalText: data,
                   name: nameController.text ?? name,
-                  wordCount:
-                      int.parse(wordCountController.text) ?? textList.length,
+                  wordCount: wordCount,
                   path: path))
               .then((value) {
             successDialog(context, "Seu texto foi carregado com sucesso.");
@@ -110,6 +115,11 @@ class TextPickerButtonState extends State<TextPickerButton> {
             print(textList);
 
             var wordCount = textList.length;
+            int trash = 0;
+            textList.forEach((element) {
+              if (element.contains("\n\n") || element == "\n"|| element.isEmpty || element == ""|| element==" ") trash++;
+            });
+            wordCount -= trash;
             print(wordCount);
             int id = randomId();
             String name = fileNam.substring(0, fileNam.indexOf('.'));

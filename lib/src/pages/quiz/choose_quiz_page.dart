@@ -152,7 +152,7 @@ class _ChooseQuizPageState extends State<ChooseQuizPage> {
                   child: GraphsPage(
                     reader: widget.reader,
                     readings: widget.reader.readings.list
-                        .where((reading) => reading.textId == widget.text.id)
+                        // .where((reading) => reading.textId == widget.text.id)
                         .toList(),
                     reading: widget.reading,
                     text: widget.text,

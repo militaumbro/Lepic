@@ -87,8 +87,8 @@ class _QuizState extends State<Quiz> with TickerProviderStateMixin {
                       child: GraphsPage(
                         reader: widget.reader,
                         readings: widget.reader.readings.list
-                            .where(
-                                (reading) => reading.textId == widget.text.id)
+                            // .where(
+                            //     (reading) => reading.textId == widget.text.id)
                             .toList(),
                         reading: widget.reading,
                         text: widget.text,

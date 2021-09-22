@@ -11,13 +11,15 @@ class MyBarChart extends StatefulWidget {
   final String measure;
   final double interval;
   final int currentIndex;
+  final int maxSize;
   MyBarChart(
       {this.values,
       @required this.scale,
       @required this.title,
       @required this.measure,
       @required this.interval,
-      this.currentIndex});
+      this.currentIndex,
+      @required this.maxSize});
   @override
   State<StatefulWidget> createState() => MyBarChartState();
 }
@@ -554,7 +556,6 @@ class BarChartSample2State extends State<BarChartSample2> {
     );
   }
 }
-
 
 class BarChartSample1 extends StatefulWidget {
   final List<Color> availableColors = [
