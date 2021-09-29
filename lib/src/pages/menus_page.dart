@@ -296,10 +296,11 @@ class MenuCard extends StatelessWidget {
               ),
             ),
           ),
-          title: Text(
-            title,
-            style: theme.textTheme.bodyText1,
-          ),
+          title: Text(title,
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+              )),
           subtitle: Text(
             subtitle ?? "Subtítulo",
             style: theme.textTheme.caption,

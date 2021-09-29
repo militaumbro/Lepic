@@ -12,6 +12,7 @@ class MyBarChart extends StatefulWidget {
   final double interval;
   final int currentIndex;
   final int maxSize;
+  final List<String> indexes;
   MyBarChart(
       {Key key,
       this.values,
@@ -20,7 +21,8 @@ class MyBarChart extends StatefulWidget {
       @required this.measure,
       @required this.interval,
       this.currentIndex,
-      @required this.maxSize})
+      @required this.maxSize,
+      @required this.indexes})
       : super(key: key);
   @override
   State<StatefulWidget> createState() => MyBarChartState();
@@ -42,254 +44,254 @@ class MyBarChartState extends State<MyBarChart> {
     return RepaintBoundary(
       key: _globalKey,
       child: AspectRatio(
-      aspectRatio: 0.8,
-      child: Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-        color: const Color(0xff020227),
-        child: Padding(
-          padding: const EdgeInsets.only(top: 16.0),
-          child: BarChart(
-            BarChartData(
-              axisTitleData: FlAxisTitleData(
-                  topTitle: AxisTitle(
-                      margin: 30,
-                      titleText: widget.title ?? "Palavras por Minuto",
-                      showTitle: true,
-                      textStyle: TextStyle(color: Colors.white))),
-              alignment: BarChartAlignment.center,
-              maxY: widget.scale ?? 200,
-              minY: 0,
-              groupsSpace: 30,
-              barTouchData: BarTouchData(
-                touchTooltipData: BarTouchTooltipData(
-                  tooltipBgColor: Colors.grey[200],
+        aspectRatio: 0.8,
+        child: Card(
+          elevation: 4,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
+          color: const Color(0xff020227),
+          child: Padding(
+            padding: const EdgeInsets.only(top: 16.0),
+            child: BarChart(
+              BarChartData(
+                axisTitleData: FlAxisTitleData(
+                    topTitle: AxisTitle(
+                        margin: 30,
+                        titleText: widget.title ?? "Palavras por Minuto",
+                        showTitle: true,
+                        textStyle: TextStyle(color: Colors.white))),
+                alignment: BarChartAlignment.center,
+                maxY: widget.scale ?? 200,
+                minY: 0,
+                groupsSpace: 30,
+                barTouchData: BarTouchData(
+                  touchTooltipData: BarTouchTooltipData(
+                    tooltipBgColor: Colors.grey[200],
+                  ),
+                  enabled: true,
                 ),
-                enabled: true,
-              ),
-              titlesData: FlTitlesData(
-                show: true,
-                bottomTitles: SideTitles(
-                  showTitles: true,
-                  getTextStyles: (value) =>
-                      const TextStyle(color: Colors.white, fontSize: 10),
-                  margin: 10,
-                  rotateAngle: 0,
-                  getTitles: (double value) {
-                    switch (value.toInt()) {
-                      case 0:
-                        return '1ª';
-                      case 1:
-                        return '2ª';
-                      case 2:
-                        return '3ª';
-                      case 3:
-                        return '4ª';
-                      case 4:
-                        return '5ª';
-                      case 5:
-                        return '6ª';
-                      case 6:
-                        return '7ª';
-                      default:
-                        return '';
-                    }
-                  },
+                titlesData: FlTitlesData(
+                  show: true,
+                  bottomTitles: SideTitles(
+                    showTitles: true,
+                    getTextStyles: (value) =>
+                        const TextStyle(color: Colors.white, fontSize: 10),
+                    margin: 10,
+                    rotateAngle: 0,
+                    getTitles: (double value) {
+                      switch (value.toInt()) {
+                        case 0:
+                          return widget.indexes.asMap()[0];
+                        case 1:
+                          return widget.indexes.asMap()[1];
+                        case 2:
+                          return widget.indexes.asMap()[2];
+                        case 3:
+                          return widget.indexes.asMap()[3];
+                        case 4:
+                          return widget.indexes.asMap()[4];
+                        case 5:
+                          return widget.indexes.asMap()[5];
+                        case 6:
+                          return widget.indexes.asMap()[6];
+                        default:
+                          return '';
+                      }
+                    },
+                  ),
+                  leftTitles: SideTitles(
+                    showTitles: true,
+                    getTextStyles: (value) =>
+                        const TextStyle(color: Colors.white, fontSize: 10),
+                    rotateAngle: 30,
+                    getTitles: (double value) {
+                      if (value == 0) {
+                        return '0';
+                      }
+                      return '${value.toInt()}';
+                    },
+                    interval: widget.interval ?? 50,
+                    margin: 8,
+                    reservedSize: 30,
+                  ),
+                  rightTitles: SideTitles(
+                    showTitles: true,
+                    getTextStyles: (value) =>
+                        const TextStyle(color: Colors.white, fontSize: 10),
+                    rotateAngle: 0,
+                    getTitles: (double value) {
+                      if (value >= (widget.scale - 1)) {
+                        return widget.measure ?? 'ppm';
+                      }
+                      return '';
+                    },
+                    interval: widget.interval ?? 50,
+                    margin: 0,
+                    reservedSize: 30,
+                  ),
                 ),
-                leftTitles: SideTitles(
-                  showTitles: true,
-                  getTextStyles: (value) =>
-                      const TextStyle(color: Colors.white, fontSize: 10),
-                  rotateAngle: 30,
-                  getTitles: (double value) {
+                gridData: FlGridData(
+                  show: true,
+                  checkToShowHorizontalLine: (value) => value % 25 == 0,
+                  getDrawingHorizontalLine: (value) {
                     if (value == 0) {
-                      return '0';
+                      return FlLine(
+                          color: const Color(0xff363753), strokeWidth: 3);
                     }
-                    return '${value.toInt()}';
-                  },
-                  interval: widget.interval ?? 50,
-                  margin: 8,
-                  reservedSize: 30,
-                ),
-                rightTitles: SideTitles(
-                  showTitles: true,
-                  getTextStyles: (value) =>
-                      const TextStyle(color: Colors.white, fontSize: 10),
-                  rotateAngle: 0,
-                  getTitles: (double value) {
-                    if (value >= (widget.scale - 1)) {
-                      return widget.measure ?? 'ppm';
-                    }
-                    return '';
-                  },
-                  interval: widget.interval ?? 50,
-                  margin: 0,
-                  reservedSize: 30,
-                ),
-              ),
-              gridData: FlGridData(
-                show: true,
-                checkToShowHorizontalLine: (value) => value % 25 == 0,
-                getDrawingHorizontalLine: (value) {
-                  if (value == 0) {
                     return FlLine(
-                        color: const Color(0xff363753), strokeWidth: 3);
-                  }
-                  return FlLine(
-                    color: const Color(0xff2a2747),
-                    strokeWidth: 0.8,
-                  );
-                },
-              ),
-              borderData: FlBorderData(
-                show: false,
-              ),
-              barGroups: [
-                ...widget.values.map((valor) {
-                  current_x += 1;
-                  return BarChartGroupData(
-                    x: current_x,
-                    barRods: [
-                      BarChartRodData(
-                        colors: (current_x == widget.currentIndex)
-                            ? [Colors.red]
-                            : [Colors.yellow],
-                        y: valor,
-                        width: barWidth,
-                        borderRadius: const BorderRadius.only(
-                            topLeft: Radius.circular(6),
-                            topRight: Radius.circular(6)),
-                        rodStackItems: [
-                          // BarChartRodStackItem(0, 20, const Color(0xff2bdb90)),
-                          // BarChartRodStackItem(2, 50, const Color(0xffffdd80)),
-                          // BarChartRodStackItem(
-                          //     5, 70.5, const Color(0xffff4d94)),
-                          // BarChartRodStackItem(
-                          //     7.5, 15.5, const Color(0xff19bfff)),
-                        ],
-                      ),
-                    ],
-                  );
-                })
+                      color: const Color(0xff2a2747),
+                      strokeWidth: 0.8,
+                    );
+                  },
+                ),
+                borderData: FlBorderData(
+                  show: false,
+                ),
+                barGroups: [
+                  ...widget.values.map((valor) {
+                    current_x += 1;
+                    return BarChartGroupData(
+                      x: current_x,
+                      barRods: [
+                        BarChartRodData(
+                          colors: (current_x == widget.currentIndex)
+                              ? [Colors.red]
+                              : [Colors.yellow],
+                          y: valor,
+                          width: barWidth,
+                          borderRadius: const BorderRadius.only(
+                              topLeft: Radius.circular(6),
+                              topRight: Radius.circular(6)),
+                          rodStackItems: [
+                            // BarChartRodStackItem(0, 20, const Color(0xff2bdb90)),
+                            // BarChartRodStackItem(2, 50, const Color(0xffffdd80)),
+                            // BarChartRodStackItem(
+                            //     5, 70.5, const Color(0xffff4d94)),
+                            // BarChartRodStackItem(
+                            //     7.5, 15.5, const Color(0xff19bfff)),
+                          ],
+                        ),
+                      ],
+                    );
+                  })
 
-                // BarChartGroupData(
-                //   x: 1,
-                //   barRods: [
-                //     BarChartRodData(
-                //       y: -14,
-                //       width: barWidth,
-                //       borderRadius: const BorderRadius.only(
-                //           bottomLeft: Radius.circular(6),
-                //           bottomRight: Radius.circular(6)),
-                //       rodStackItems: [
-                //         // BarChartRodStackItem(0, -1.8, const Color(0xff2bdb90)),
-                //         // BarChartRodStackItem(
-                //         //     -1.8, -4.5, const Color(0xffffdd80)),
-                //         // BarChartRodStackItem(
-                //         //     -4.5, -7.5, const Color(0xffff4d94)),
-                //         // BarChartRodStackItem(
-                //         //     -7.5, -14, const Color(0xff19bfff)),
-                //       ],
-                //     ),
-                //   ],
-                // ),
-                // BarChartGroupData(
-                //   x: 1,
-                //   barRods: [
-                //     BarChartRodData(
-                //       y: 78,
-                //       width: barWidth,
-                //       borderRadius: const BorderRadius.only(
-                //           topLeft: Radius.circular(6),
-                //           topRight: Radius.circular(6)),
-                //       rodStackItems: [
-                //         // BarChartRodStackItem(0, 1.5, const Color(0xff2bdb90)),
-                //         // BarChartRodStackItem(1.5, 3.5, const Color(0xffffdd80)),
-                //         // BarChartRodStackItem(3.5, 7, const Color(0xffff4d94)),
-                //         // BarChartRodStackItem(7, 13, const Color(0xff19bfff)),
-                //       ],
-                //     ),
-                //   ],
-                // ),
-                // BarChartGroupData(
-                //   x: 2,
-                //   barRods: [
-                //     BarChartRodData(
-                //       y: 84,
-                //       width: barWidth,
-                //       borderRadius: const BorderRadius.only(
-                //           topLeft: Radius.circular(6),
-                //           topRight: Radius.circular(6)),
-                //       rodStackItems: [
-                //         // BarChartRodStackItem(0, 1.5, const Color(0xff2bdb90)),
-                //         // BarChartRodStackItem(1.5, 3, const Color(0xffffdd80)),
-                //         // BarChartRodStackItem(3, 7, const Color(0xffff4d94)),
-                //         // BarChartRodStackItem(7, 13.5, const Color(0xff19bfff)),
-                //       ],
-                //     ),
-                //   ],
-                // ),
-                // BarChartGroupData(
-                //   x: 4,
-                //   barRods: [
-                //     BarChartRodData(
-                //       y: -18,
-                //       width: barWidth,
-                //       borderRadius: const BorderRadius.only(
-                //           bottomLeft: Radius.circular(6),
-                //           bottomRight: Radius.circular(6)),
-                //       rodStackItems: [
-                //         BarChartRodStackItem(0, -2, const Color(0xff2bdb90)),
-                //         BarChartRodStackItem(-2, -4, const Color(0xffffdd80)),
-                //         BarChartRodStackItem(-4, -9, const Color(0xffff4d94)),
-                //         BarChartRodStackItem(-9, -18, const Color(0xff19bfff)),
-                //       ],
-                //     ),
-                //   ],
-                // ),
-                // BarChartGroupData(
-                //   x: 5,
-                //   barRods: [
-                //     BarChartRodData(
-                //       y: -17,
-                //       width: barWidth,
-                //       borderRadius: const BorderRadius.only(
-                //           bottomLeft: Radius.circular(6),
-                //           bottomRight: Radius.circular(6)),
-                //       rodStackItems: [
-                //         BarChartRodStackItem(0, -1.2, const Color(0xff2bdb90)),
-                //         BarChartRodStackItem(
-                //             -1.2, -2.7, const Color(0xffffdd80)),
-                //         BarChartRodStackItem(-2.7, -7, const Color(0xffff4d94)),
-                //         BarChartRodStackItem(-7, -17, const Color(0xff19bfff)),
-                //       ],
-                //     ),
-                //   ],
-                // ),
-                // BarChartGroupData(
-                //   x: 3,
-                //   barRods: [
-                //     BarChartRodData(
-                //       y: 92,
-                //       width: barWidth,
-                //       borderRadius: const BorderRadius.only(
-                //           topLeft: Radius.circular(6),
-                //           topRight: Radius.circular(6)),
-                //       rodStackItems: [
-                //         // BarChartRodStackItem(0, 1.2, const Color(0xff2bdb90)),
-                //         // BarChartRodStackItem(1.2, 6, const Color(0xffffdd80)),
-                //         // BarChartRodStackItem(6, 11, const Color(0xffff4d94)),
-                //         // BarChartRodStackItem(11, 17, const Color(0xff19bfff)),
-                //       ],
-                //     ),
-                //   ],
-                // ),
-              ],
+                  // BarChartGroupData(
+                  //   x: 1,
+                  //   barRods: [
+                  //     BarChartRodData(
+                  //       y: -14,
+                  //       width: barWidth,
+                  //       borderRadius: const BorderRadius.only(
+                  //           bottomLeft: Radius.circular(6),
+                  //           bottomRight: Radius.circular(6)),
+                  //       rodStackItems: [
+                  //         // BarChartRodStackItem(0, -1.8, const Color(0xff2bdb90)),
+                  //         // BarChartRodStackItem(
+                  //         //     -1.8, -4.5, const Color(0xffffdd80)),
+                  //         // BarChartRodStackItem(
+                  //         //     -4.5, -7.5, const Color(0xffff4d94)),
+                  //         // BarChartRodStackItem(
+                  //         //     -7.5, -14, const Color(0xff19bfff)),
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
+                  // BarChartGroupData(
+                  //   x: 1,
+                  //   barRods: [
+                  //     BarChartRodData(
+                  //       y: 78,
+                  //       width: barWidth,
+                  //       borderRadius: const BorderRadius.only(
+                  //           topLeft: Radius.circular(6),
+                  //           topRight: Radius.circular(6)),
+                  //       rodStackItems: [
+                  //         // BarChartRodStackItem(0, 1.5, const Color(0xff2bdb90)),
+                  //         // BarChartRodStackItem(1.5, 3.5, const Color(0xffffdd80)),
+                  //         // BarChartRodStackItem(3.5, 7, const Color(0xffff4d94)),
+                  //         // BarChartRodStackItem(7, 13, const Color(0xff19bfff)),
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
+                  // BarChartGroupData(
+                  //   x: 2,
+                  //   barRods: [
+                  //     BarChartRodData(
+                  //       y: 84,
+                  //       width: barWidth,
+                  //       borderRadius: const BorderRadius.only(
+                  //           topLeft: Radius.circular(6),
+                  //           topRight: Radius.circular(6)),
+                  //       rodStackItems: [
+                  //         // BarChartRodStackItem(0, 1.5, const Color(0xff2bdb90)),
+                  //         // BarChartRodStackItem(1.5, 3, const Color(0xffffdd80)),
+                  //         // BarChartRodStackItem(3, 7, const Color(0xffff4d94)),
+                  //         // BarChartRodStackItem(7, 13.5, const Color(0xff19bfff)),
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
+                  // BarChartGroupData(
+                  //   x: 4,
+                  //   barRods: [
+                  //     BarChartRodData(
+                  //       y: -18,
+                  //       width: barWidth,
+                  //       borderRadius: const BorderRadius.only(
+                  //           bottomLeft: Radius.circular(6),
+                  //           bottomRight: Radius.circular(6)),
+                  //       rodStackItems: [
+                  //         BarChartRodStackItem(0, -2, const Color(0xff2bdb90)),
+                  //         BarChartRodStackItem(-2, -4, const Color(0xffffdd80)),
+                  //         BarChartRodStackItem(-4, -9, const Color(0xffff4d94)),
+                  //         BarChartRodStackItem(-9, -18, const Color(0xff19bfff)),
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
+                  // BarChartGroupData(
+                  //   x: 5,
+                  //   barRods: [
+                  //     BarChartRodData(
+                  //       y: -17,
+                  //       width: barWidth,
+                  //       borderRadius: const BorderRadius.only(
+                  //           bottomLeft: Radius.circular(6),
+                  //           bottomRight: Radius.circular(6)),
+                  //       rodStackItems: [
+                  //         BarChartRodStackItem(0, -1.2, const Color(0xff2bdb90)),
+                  //         BarChartRodStackItem(
+                  //             -1.2, -2.7, const Color(0xffffdd80)),
+                  //         BarChartRodStackItem(-2.7, -7, const Color(0xffff4d94)),
+                  //         BarChartRodStackItem(-7, -17, const Color(0xff19bfff)),
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
+                  // BarChartGroupData(
+                  //   x: 3,
+                  //   barRods: [
+                  //     BarChartRodData(
+                  //       y: 92,
+                  //       width: barWidth,
+                  //       borderRadius: const BorderRadius.only(
+                  //           topLeft: Radius.circular(6),
+                  //           topRight: Radius.circular(6)),
+                  //       rodStackItems: [
+                  //         // BarChartRodStackItem(0, 1.2, const Color(0xff2bdb90)),
+                  //         // BarChartRodStackItem(1.2, 6, const Color(0xffffdd80)),
+                  //         // BarChartRodStackItem(6, 11, const Color(0xffff4d94)),
+                  //         // BarChartRodStackItem(11, 17, const Color(0xff19bfff)),
+                  //       ],
+                  //     ),
+                  //   ],
+                  // ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    ),
     );
   }
 }

@@ -14,6 +14,7 @@ import 'package:flutter_smart_course/utils/base_scaffold.dart';
 import 'package:flutter_smart_course/utils/calculator.dart';
 import 'package:flutter_smart_course/utils/cards.dart';
 import 'package:flutter_smart_course/utils/dialogs.dart';
+
 import 'package:flutter_smart_course/utils/info_box.dart';
 import 'package:flutter_smart_course/utils/showup.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -200,34 +201,6 @@ class _RecordListViewState extends State<RecordListView> {
     }
   }
 
-  String _getWeekDay(int weekDay) {
-    switch (weekDay) {
-      case 1:
-        return "Segunda-feira";
-
-      case 2:
-        return "Terça-feira";
-
-      case 3:
-        return "Quarta-feira";
-
-      case 4:
-        return "Quinta-feira";
-
-      case 5:
-        return "Sexta-feira";
-
-      case 6:
-        return "Sábado";
-
-      case 7:
-        return "Domingo";
-
-      default:
-        return "";
-    }
-  }
-
   // Future<List> listAdvancedTextCard(Map groups) async {
   //   var list = [];
   //   var textDB = Provider.of<TextDatabase>(context);
@@ -288,12 +261,11 @@ class _RecordListViewState extends State<RecordListView> {
     String pcpm;
     String percentage;
     String duration;
-
-    if ((currentReading.data.minute / 10) < 0)
+    if ((currentReading.data.minute / 10) < 1) {
       minutes = "0" + currentReading.data.minute.toString();
-    else
+    } else {
       minutes = currentReading.data.minute.toString();
-
+    }
     percentage = currentReading.readingData.percentage != null
         ? (currentReading.readingData.percentage * 100).toStringAsFixed(1)
         : "---";
@@ -307,159 +279,180 @@ class _RecordListViewState extends State<RecordListView> {
         ? currentReading.readingData.duration.toString()
         : "---";
     // zScore = currentReading.readingData.zScore != null ? currentReading.readingData.zScore.toStringAsFixed(3) : "---";
-    return Card(
-      shape: const RoundedRectangleBorder(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(12),
-        ),
-      ),
-      child: InkWell(
-        onTap: (text != null)
-            ? () {
-                var id = randomId();
-                HiveReading reading = currentReading;
-                String minutes;
-                if ((reading.data.minute / 10) < 0)
-                  minutes = "0" + reading.data.minute.toString();
-                else
-                  minutes = reading.data.minute.toString();
-                var audio = HiveAudio(
-                  path: reading.uri,
-                  name: widget.reader.name +
-                      "${reading.data.hour}:$minutes, ${reading.data.day}/${reading.data.month}/${reading.data.year}",
-                  id: id,
-                );
-                Navigator.of(context).pop();
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => RecordingPage(
-                      text: text,
-                      reader: widget.reader,
-                      recorded: true,
-                      audio: audio,
-                      recordedErrorController:
-                          reading.readingData.errorController,
-                      reading: reading,
-                    ),
-                  ),
-                );
-              }
-            : () {},
-        child: Column(
-          children: [
-            ListTile(
-              leading:
-                  (text != null) ? null : Icon(Icons.error, color: Colors.red),
-              title: Text(
-                (text != null) ? text.name : "Texto Apagado",
-                style: TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: (text != null) ? Colors.black : Colors.red),
-              ),
-              subtitle: (text != null)
-                  ? Text("Nº de palavras: " + text.wordCount.toString(),
-                      style: TextStyle(
-                        fontSize: 12,
-                      ))
-                  : null,
-              trailing: Text(
-                  "${_getWeekDay(currentReading.data.weekday)} às ${currentReading.data.hour}:$minutes,\n  ${currentReading.data.day}/${currentReading.data.month}/${currentReading.data.year}",
-                  style: TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+    return Stack(
+      children: [
+        Card(
+          shape: const RoundedRectangleBorder(
+            borderRadius: const BorderRadius.all(
+              Radius.circular(12),
             ),
-            Divider(
-              color: Colors.red[300],
-              thickness: 1.5,
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                MiniInfoBox(
-                  icon: Icon(Icons.mic, size: 20, color: Colors.red),
-                  text: "Ppm",
-                  value: ppm,
-                ),
-                MiniInfoBox(
-                  icon: Icon(Icons.alarm_on, size: 20, color: Colors.red),
-                  text: "Pcpm",
-                  value: pcpm,
-                ),
-                MiniInfoBox(
-                  icon: Icon(Icons.check, size: 20, color: Colors.red),
-                  text: "Acertos",
-                  value: percentage,
-                  ext: "%",
-                ),
-                MiniInfoBox(
-                  icon: Icon(Icons.timer, size: 20, color: Colors.red),
-                  text: "Duração",
-                  value: duration,
-                  ext: "s",
-                ),
-              ],
-            ),
-            Row(
-              children: [
-                IconButton(
-                  onPressed: () {
-                    deleteDialog(context,
-                        title: "Apagando Leitura",
-                        text:
-                            "Ao apagar esta leitura, se perderão todos os dados relacionados a ela. Tem certeza que deseja apaga-la?",
-                        onDelete: () {
-                      try {
-                        Navigator.of(context).pop();
-                        HiveReading reading = currentReading;
-                        widget.reader.readings = HiveReadingsList(
-                            list: widget.reader.readings.list..remove(reading));
-
-                        Provider.of<ReadersDatabase>(context, listen: false)
-                            .addReader(widget.reader)
-                            .then((value) {
-                          successDialog(context, "Leitura Apagada com sucesso");
-                        });
-                        setState(() {});
-                      } catch (e) {
-                        errorDialog(context,
-                            title: "Erro", text: "Erro inesperado");
-                      }
-                    });
-                  },
-                  icon: Icon(
-                    Icons.delete,
-                    color: Colors.grey[600],
-                  ),
-                ),
-                Expanded(child: Container()),
-                TextButton(
-                    child: Row(
-                      children: [
-                        Text("Analisar"),
-                        SizedBox(width: 4),
-                        Icon(Icons.arrow_forward),
-                        SizedBox(width: 8),
-                      ],
-                    ),
-                    onPressed: () {
-                      // Navigator.of(context).pop();
-                      Navigator.of(context).push(
-                        MaterialPageRoute(
-                          builder: (context) {
-                            return GraphsPage(
-                              reading: currentReading,
-                              reader: widget.reader,
-                              readings: readings,
-                              text: text,
-                            );
-                          },
+          ),
+          child: InkWell(
+            onTap: (text != null)
+                ? () {
+                    var id = randomId();
+                    HiveReading reading = currentReading;
+                    String minutes;
+                    if ((reading.data.minute / 10) < 1)
+                      minutes = "0" + reading.data.minute.toString();
+                    else
+                      minutes = reading.data.minute.toString();
+                    var audio = HiveAudio(
+                      path: reading.uri,
+                      name: widget.reader.name +
+                          "${reading.data.hour}:$minutes, ${reading.data.day}/${reading.data.month}/${reading.data.year}",
+                      id: id,
+                    );
+                    Navigator.of(context).pop();
+                    Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (context) => RecordingPage(
+                          text: text,
+                          reader: widget.reader,
+                          recorded: true,
+                          audio: audio,
+                          recordedErrorController:
+                              reading.readingData.errorController,
+                          reading: reading,
                         ),
-                      );
-                    }),
+                      ),
+                    );
+                  }
+                : () {},
+            child: Column(
+              children: [
+                ListTile(
+                  leading: (text != null)
+                      ? null
+                      : Icon(Icons.error, color: Colors.red),
+                  title: Text(
+                    (text != null) ? text.name : "Texto Apagado",
+                    style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: (text != null) ? Colors.black : Colors.red),
+                  ),
+                  subtitle: (text != null)
+                      ? Text("Nº de palavras: " + text.wordCount.toString(),
+                          style: TextStyle(
+                            fontSize: 12,
+                          ))
+                      : null,
+                  trailing: Text(
+                      "${getWeekDay(currentReading.data.weekday)} às ${currentReading.data.hour}:$minutes,\n  ${currentReading.data.day}/${currentReading.data.month}/${currentReading.data.year}",
+                      style:
+                          TextStyle(fontSize: 13, fontWeight: FontWeight.w500)),
+                ),
+                Divider(
+                  color: Colors.red[300],
+                  thickness: 1.5,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    MiniInfoBox(
+                      icon: Icon(Icons.mic, size: 20, color: Colors.red),
+                      text: "Ppm",
+                      value: ppm,
+                    ),
+                    MiniInfoBox(
+                      icon: Icon(Icons.alarm_on, size: 20, color: Colors.red),
+                      text: "Pcpm",
+                      value: pcpm,
+                    ),
+                    MiniInfoBox(
+                      icon: Icon(Icons.check, size: 20, color: Colors.red),
+                      text: "Acertos",
+                      value: percentage,
+                      ext: "%",
+                    ),
+                    MiniInfoBox(
+                      icon: Icon(Icons.timer, size: 20, color: Colors.red),
+                      text: "Duração",
+                      value: duration,
+                      ext: "s",
+                    ),
+                  ],
+                ),
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        deleteDialog(context,
+                            title: "Apagando Leitura",
+                            text:
+                                "Ao apagar esta leitura, se perderão todos os dados relacionados a ela. Tem certeza que deseja apaga-la?",
+                            onDelete: () {
+                          try {
+                            Navigator.of(context).pop();
+                            HiveReading reading = currentReading;
+                            widget.reader.readings = HiveReadingsList(
+                                list: widget.reader.readings.list
+                                  ..remove(reading));
+
+                            Provider.of<ReadersDatabase>(context, listen: false)
+                                .addReader(widget.reader)
+                                .then((value) {
+                              successDialog(
+                                  context, "Leitura Apagada com sucesso");
+                            });
+                            setState(() {});
+                          } catch (e) {
+                            errorDialog(context,
+                                title: "Erro", text: "Erro inesperado");
+                          }
+                        });
+                      },
+                      icon: Icon(
+                        Icons.delete,
+                        color: Colors.grey[600],
+                      ),
+                    ),
+                    Expanded(child: Container()),
+                    TextButton(
+                        child: Row(
+                          children: [
+                            Text("Analisar"),
+                            SizedBox(width: 4),
+                            Icon(Icons.arrow_forward),
+                            SizedBox(width: 8),
+                          ],
+                        ),
+                        onPressed: () {
+                          // Navigator.of(context).pop();
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) {
+                                return GraphsPage(
+                                  reading: currentReading,
+                                  reader: widget.reader,
+                                  readings: readings,
+                                  text: text,
+                                );
+                              },
+                            ),
+                          );
+                        }),
+                  ],
+                ),
               ],
             ),
-          ],
+          ),
         ),
-      ),
+        Positioned(
+          right: 10,
+          top: 50,
+          child: CircleAvatar(
+            backgroundColor: Colors.orange,
+            radius: 12,
+            child: Text(
+              (readings.indexOf(currentReading) + 1).toString() + "ª",
+              style:
+                  TextStyle(color: Colors.white, fontWeight: FontWeight.w900),
+            ),
+          ),
+        ),
+      ],
     );
   }
 

@@ -1,7 +1,10 @@
+import 'dart:io';
 import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_smart_course/src/model/audio_database.dart';
 import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
 import 'package:flutter_smart_course/src/model/reader_database.dart';
@@ -12,7 +15,10 @@ import 'package:flutter_smart_course/utils/dialogs.dart';
 import 'package:flutter_smart_course/utils/info_box.dart';
 import 'package:flutter_smart_course/utils/showup.dart';
 import 'package:flutter_smart_course/utils/utils.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:esys_flutter_share/esys_flutter_share.dart';
+import 'package:pdf/widgets.dart' as pw;
 
 import 'graphs_template.dart';
 
@@ -44,6 +50,9 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
   int currentIndex;
   int quizAcertos;
   bool hasQuiz;
+  int numReadings;
+  List<HiveReading> bars;
+  List<String> indexes;
 
   @override
   void initState() {
@@ -52,7 +61,6 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
       quizAcertos = getAcertos();
     }
     super.initState();
-    currentIndex = widget.readings.indexOf(widget.reading);
     percentage = widget.reading.readingData.percentage != null
         ? (widget.reading.readingData.percentage * 100).toStringAsFixed(1)
         : "---";
@@ -68,7 +76,43 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
     zScore = widget.reading.readingData.zScore != null
         ? widget.reading.readingData.zScore.toStringAsFixed(3)
         : "---";
-    var numReadings = widget.readings.length;
+    numReadings = widget.readings.length;
+
+    setBars();
+  }
+
+  void setBars() {
+    var index = widget.readings.indexOf(widget.reading);
+    bars = [];
+    bars = widget.readings.sublist(index);
+    if (widget.readings.length >= 5) {
+      if (bars.length > 5)
+        bars = bars.sublist(0, 5);
+      else {
+        var value = 1;
+        print("Ja tem:");
+        bars.forEach((reading) {
+          print(reading.readingData.ppm);
+        });
+        print("Vai ter:");
+        while (bars.length < 5) {
+          print(widget.readings.asMap()[index - value].readingData.ppm);
+          bars.add(widget.readings.asMap()[index - value]);
+          value++;
+        }
+      }
+    } else {
+      bars = widget.readings;
+    }
+    bars.sort((a, b) => a.data.compareTo(b.data));
+
+    indexes = [];
+    bars.forEach((bar) {
+      indexes.add((widget.readings.indexOf(bar) + 1).toString() + "ª");
+      print((widget.readings.indexOf(bar) + 1).toString() + "ª");
+    });
+
+    currentIndex = bars.indexOf(widget.reading);
   }
 
   @override
@@ -79,12 +123,64 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      //exportar relatorio final
-      // floatingActionButton: FloatingActionButton(
-      //     child: Icon(Icons.file_upload, size: 32), 
-      //     onPressed: () {
+      // exportar relatorio final
+      floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.share, size: 32),
+          onPressed: () async {
+            final pdf = pw.Document();
+            var reader = widget.reader;
+            var reading = widget.reading;
+            var text = widget.text;
+            String quiz = (reading.quizz != null)
+                ? 'Para investigar a compreensão do texto lido, foi respondido um questionário contendo ${reading.quizz.questions.length} questões, com acertos de $quizAcertos questões.'
+                : '';
 
-      //     }),
+            int minutes = reading.duration ~/ 60;
+            String doubleDigitsMinutes;
+            if ((reading.data.minute / 10) < 1)
+              doubleDigitsMinutes = "0" + reading.data.minute.toString();
+            else
+              doubleDigitsMinutes = reading.data.minute.toString();
+            String minutesText = minutes != 0 ? '$minutes minutos e ' : '';
+            int seconds = reading.duration % 60;
+            String schooling = (reader.school.schooling != null)
+                ? ', estudante do ${reader.school.schooling}'
+                : '';
+            String day =
+                "${getWeekDay(reading.data.weekday)} às ${reading.data.hour}:$doubleDigitsMinutes, dia ${reading.data.day}/${reading.data.month}/${reading.data.year},";
+
+            pdf.addPage(
+              pw.Page(
+                build: (pw.Context context) => pw.Center(
+                  child: pw.Text('RELATÓRIO DE AVALIAÇÃO DA LEITURA\n\n${reader.name}' +
+                      schooling +
+                      ', na(o) ' +
+                      day +
+                      ' leu o texto ${text.name}, contendo ${text.wordCount} palavras. O texto foi lido em ' +
+                      minutesText +
+                      '$seconds segundos. A velocidade de leitura foi de ${reading.readingData.ppm} palavras por minuto e a acurácia de ${reading.readingData.pcpm} palavras corretas por minuto. Foram lidas ${(reading.readingData.percentage*100).toStringAsFixed(3)}% das palavras corretamente com ${reading.readingData.errorCount} erros.' +
+                      quiz +
+                      '\n\n${getWeekDay(DateTime.now().weekday)}, dia ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}'),
+                ),
+              ),
+            );
+            final output = await getTemporaryDirectory();
+            var path = '${output.path}/export.pdf';
+            final file = File(path);
+
+            await file.writeAsBytes(await pdf.save()).then((value) async {
+              print(path);
+              var bytes = await file.readAsBytes();
+              // share()
+              Share.file('Relatorio ${reader.name}',
+                  'Relatorio ${reader.name}.pdf', bytes, 'application/pdf');
+              // Share.shareFiles(
+              //   [path],
+              //   text: "Teste",
+              //   subject: "Relatório teste",
+              // );
+            });
+          }),
       appBar: AppBar(
         shape: appBarBottomShape,
         centerTitle: true,
@@ -236,11 +332,12 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                                       title: 'Palavras por minuto',
                                       measure: 'ppm',
                                       values: [
-                                        ...widget.readings
+                                        ...bars
                                             .map((reading) =>
                                                 reading.readingData.ppm)
                                             .toList()
                                       ],
+                                      indexes: indexes,
                                     ),
                                     MyBarChart(
                                       maxSize: 5,
@@ -250,11 +347,12 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                                       title: 'Corretas por minuto',
                                       measure: 'pcpm',
                                       values: [
-                                        ...widget.readings
+                                        ...bars
                                             .map((reading) =>
                                                 reading.readingData.pcpm)
                                             .toList()
                                       ],
+                                      indexes: indexes,
                                     ),
                                     MyBarChart(
                                       maxSize: 5,
@@ -264,13 +362,14 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                                       title: 'Acerto',
                                       measure: '%',
                                       values: [
-                                        ...widget.readings
+                                        ...bars
                                             .map((reading) =>
                                                 reading.readingData.percentage
                                                     .toDouble() *
                                                 100)
                                             .toList()
                                       ],
+                                      indexes: indexes,
                                     ),
 
                                     // BarChartSample1(
@@ -293,60 +392,76 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                 children: [
                   TextButton(
                     onPressed: () {
-                      try {
-                        HiveReading reading = widget.reading;
-                        widget.reader.readings = HiveReadingsList(
-                            list: widget.reader.readings.list..remove(reading));
+                      deleteDialog(context,
+                          title: "Apagando Leitura",
+                          text:
+                              "Ao apagar esta leitura, se perderão todos os dados relacionados a ela. Tem certeza que deseja apaga-la?",
+                          onDelete: () {
+                        try {
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
+                          HiveReading reading = widget.reading;
+                          widget.reader.readings = HiveReadingsList(
+                              list: widget.reader.readings.list
+                                ..remove(reading));
 
-                        Provider.of<ReadersDatabase>(context, listen: false)
-                            .addReader(widget.reader)
-                            .then((value) {
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop();
-                          successDialog(context, "Leitura Apagada com sucesso");
-                        });
-                      } catch (e) {
-                        errorDialog(context,
-                            title: "Erro", text: "Erro inesperado");
-                      }
+                          Provider.of<ReadersDatabase>(context, listen: false)
+                              .addReader(widget.reader)
+                              .then((value) {
+                            successDialog(
+                                context, "Leitura Apagada com sucesso");
+                          });
+                          setState(() {});
+                        } catch (e) {
+                          errorDialog(context,
+                              title: "Erro", text: "Erro inesperado");
+                        }
+                      });
                     },
                     child: Text("Apagar Leitura"),
                   ),
                   (widget.text != null)
                       ? TextButton(
                           onPressed: () {
-                            var id = randomId();
-                            HiveReading reading = widget.reading;
-                            String minutes;
-                            if ((reading.data.minute / 10) < 0)
-                              minutes = "0" + reading.data.minute.toString();
-                            else
-                              minutes = reading.data.minute.toString();
-                            var audio = HiveAudio(
-                              path: reading.uri,
-                              name: widget.reader.name +
-                                  "${reading.data.hour}:$minutes, ${reading.data.day}/${reading.data.month}/${reading.data.year}",
-                              id: id,
-                            );
-                            widget.reader.readings.list.remove(reading);
-                            Provider.of<ReadersDatabase>(context, listen: false)
-                                .addReader(widget.reader);
-                            Provider.of<AudioDatabase>(context, listen: false)
-                                .addAudio(audio)
-                                .then((value) => successDialog(context,
-                                    "A leitura antiga foi apagada e o áudio foi adicionado a database do aplicativo, caso queira gravar mais tarde acesse a página de \"Áudios\" no menu principal.",
-                                    delay: 4));
-                            Navigator.of(context).pop();
-                            Navigator.of(context).push(
-                              MaterialPageRoute(
-                                builder: (context) => RecordingPage(
-                                  text: widget.text,
-                                  reader: widget.reader,
-                                  recorded: true,
-                                  audio: audio,
+                            deleteDialog(context,
+                                title: "Regravando Leitura",
+                                text:
+                                    "Ao regravar esta leitura, o áudio será salvo e você será redirecionado para a página de leitura com o áudio desta leitura e os erros anotados SERÃO perdidos. Deseja regravar esta leitura? ",
+                                onDelete: () {
+                              var id = randomId();
+                              HiveReading reading = widget.reading;
+                              String minutes;
+                              if ((reading.data.minute / 10) < 1)
+                                minutes = "0" + reading.data.minute.toString();
+                              else
+                                minutes = reading.data.minute.toString();
+                              var audio = HiveAudio(
+                                path: reading.uri,
+                                name: widget.reader.name +
+                                    "${reading.data.hour}:$minutes, ${reading.data.day}/${reading.data.month}/${reading.data.year}",
+                                id: id,
+                              );
+                              widget.reader.readings.list.remove(reading);
+                              Provider.of<ReadersDatabase>(context,
+                                      listen: false)
+                                  .addReader(widget.reader);
+                              Provider.of<AudioDatabase>(context, listen: false)
+                                  .addAudio(audio)
+                                  .then((value) => successDialog(context,
+                                      "A leitura antiga foi apagada e o áudio foi adicionado a database do aplicativo, caso queira gravar mais tarde acesse a página de \"Áudios\" no menu principal.",
+                                      delay: 4));
+                              Navigator.of(context).pop();
+                              Navigator.of(context).pushReplacement(
+                                MaterialPageRoute(
+                                  builder: (context) => RecordingPage(
+                                    text: widget.text,
+                                    reader: widget.reader,
+                                    recorded: true,
+                                    audio: audio,
+                                  ),
                                 ),
-                              ),
-                            );
+                              );
+                            });
                           },
                           child: Text("Regravar Leitura"))
                       : Container(),
