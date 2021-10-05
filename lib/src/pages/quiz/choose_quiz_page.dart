@@ -113,7 +113,11 @@ class _ChooseQuizPageState extends State<ChooseQuizPage> {
   }
 
   onQuizzDelete(context, HiveQuizz quizz) {
-    deleteDialog(context, title: "Apagando Quizz", onDelete: () {
+    deleteDialog(context,
+        title: "Apagando Questionário",
+        text:
+            "Esta ação é irreversível, uma vez removido todas as leituras que utilizam este questionário não terão mais acesso aos dados do questionário realizado.\nOS DADOS ATRELADOS A ESTE QUESTIONÁRIO SERÃO PERDIDOS\n\nTem certeza que deseja remover?",
+        onDelete: () {
       quizzDatabase.deleteQuizz(quizz);
       _refresh();
       Navigator.of(context).pop();

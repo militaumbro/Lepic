@@ -4,6 +4,7 @@ import 'package:flutter_smart_course/src/pages/new_data/new_data_page.dart';
 import 'package:flutter_smart_course/src/pages/quiz/choose_quiz_page.dart';
 import 'package:flutter_smart_course/src/pages/readers/readers_page.dart';
 import 'package:flutter_smart_course/src/pages/reading/text_choose_page.dart';
+import 'package:flutter_smart_course/src/pages/tutorial_page.dart';
 import 'package:flutter_smart_course/utils/no_glow_behavior.dart';
 import 'package:flutter_smart_course/utils/showup.dart';
 import 'package:flutter/cupertino.dart';
@@ -11,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'audio/audio_list_page.dart';
 
@@ -27,6 +29,16 @@ class MenusPageState extends State<MenusPage> {
     super.initState();
   }
 
+  void tutorial(context) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool firstTime = prefs.getBool('first_time');
+    if (firstTime != null && firstTime) {
+      // First time
+      prefs.setBool('first_time', false);
+      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>TutorialPage()));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +46,6 @@ class MenusPageState extends State<MenusPage> {
         children: [
           _getAppBar(context),
           SizedBox(height: 8),
-          SizedBox(height: 0),
           Expanded(child: _buildBody(context))
         ],
       ),

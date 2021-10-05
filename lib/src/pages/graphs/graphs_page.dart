@@ -158,12 +158,13 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                       day +
                       ' leu o texto ${text.name}, contendo ${text.wordCount} palavras. O texto foi lido em ' +
                       minutesText +
-                      '$seconds segundos. A velocidade de leitura foi de ${reading.readingData.ppm} palavras por minuto e a acurácia de ${reading.readingData.pcpm} palavras corretas por minuto. Foram lidas ${(reading.readingData.percentage*100).toStringAsFixed(3)}% das palavras corretamente com ${reading.readingData.errorCount} erros.' +
+                      '$seconds segundos. A velocidade de leitura foi de ${reading.readingData.ppm.toStringAsFixed(1)} palavras por minuto e a acurácia de ${reading.readingData.pcpm.toStringAsFixed(1)} palavras corretas por minuto. Foram lidas ${(reading.readingData.percentage * 100).toStringAsFixed(1)}% das palavras corretamente com ${reading.readingData.errorCount} erros.' +
                       quiz +
                       '\n\n${getWeekDay(DateTime.now().weekday)}, dia ${DateTime.now().day}/${DateTime.now().month}/${DateTime.now().year}'),
                 ),
               ),
             );
+
             final output = await getTemporaryDirectory();
             var path = '${output.path}/export.pdf';
             final file = File(path);

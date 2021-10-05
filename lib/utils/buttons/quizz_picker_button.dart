@@ -57,7 +57,10 @@ class QuizzPickerButtonState extends State<QuizzPickerButton> {
       print("Unsupported operation" + e.toString());
     }
     if (!mounted) return;
+    refresh();
+  }
 
+  refresh() {
     setState(() {
       isLoadingPath = false;
       fileName = path != null
@@ -65,20 +68,17 @@ class QuizzPickerButtonState extends State<QuizzPickerButton> {
           : paths != null
               ? paths.keys.toString()
               : '...';
-      // if (path != null) {
-      //   File(path).readAsString(encoding: latin1).then((String data) {
-      //     data.allMatches("Q:").forEach((question) {
-      //       print(question.toString());
-      //     });
-      //   });
-      // } else
+
       if (path != null) {
         File(path).readAsString(encoding: latin1).then((String data) {
           var split = data.split("Qend");
 
           split.forEach((question) {
-            var hiveQuestion =
-                HiveQuizzQuestion(id: randomId(), order: order, answers: [],);
+            var hiveQuestion = HiveQuizzQuestion(
+              id: randomId(),
+              order: order,
+              answers: [],
+            );
             order = order + 1;
             var lines = question.split("\n");
             lines.forEach((line) {
@@ -86,14 +86,16 @@ class QuizzPickerButtonState extends State<QuizzPickerButton> {
                 var trimmedLine = line.trim();
 
                 //se nao for uma linha vazia, continue
+
                 if (!(trimmedLine.isEmpty ||
                     trimmedLine == null ||
                     trimmedLine.startsWith("\n") ||
                     trimmedLine.startsWith("\r") ||
                     trimmedLine.startsWith("\w"))) {
-                  if (line.startsWith("Q:"))
+                  if (line.startsWith("Q:")) {
                     hiveQuestion.question = line.substring(4);
-                  else {
+                    print('alo');
+                  } else {
                     if (line.contains("| r") || line.contains("|r")) {
                       var lineToAdd = line.split("|")[0];
                       hiveQuestion.answers.add(lineToAdd);
@@ -110,24 +112,19 @@ class QuizzPickerButtonState extends State<QuizzPickerButton> {
             });
             hiveQuizz.questions.add(hiveQuestion);
           });
+
           hiveQuizz.questions
               .removeWhere((question) => question.question == null);
+          namePromptDialog(context, hiveQuizz, fileName);
         });
-
-        namePromptDialog(context, hiveQuizz);
-
-        // for (var question in hiveQuizz.questions) {
-        //   if (question.question == null || question.answers.length <= 0)
-        //     hiveQuizz.questions.remove(question);
-        // }
-
-        // print(hiveQuizz.questions);
       }
     });
   }
 
-  namePromptDialog(context, HiveQuizz hiveQuizz) {
-    TextEditingController textEditingController = TextEditingController();
+  namePromptDialog(context, HiveQuizz hiveQuizz, String fileName) {
+    TextEditingController textEditingController =
+        TextEditingController(text: fileName);
+
     showDialog(
       context: context,
       barrierColor: Theme.of(context).colorScheme.primary.withOpacity(0.8),
@@ -170,12 +167,15 @@ class QuizzPickerButtonState extends State<QuizzPickerButton> {
                 ),
               ),
               onPressed: () {
-                Provider.of<QuizzDatabase>(context, listen: false)
-                    .addQuizz(hiveQuizz..name = textEditingController.text)
-                    .then((value) {
-                  Navigator.of(context).pop();
-                  successDialog(context,
-                      "Seu(s) questionário(s) foi(foram) carregado(s) com sucesso.");
+                Timer(Duration(seconds: 3), () {
+                  hiveQuizz.name = textEditingController.text;
+                  Provider.of<QuizzDatabase>(context, listen: false)
+                      .addQuizz(hiveQuizz)
+                      .then((value) {
+                    Navigator.of(context).pop();
+                    successDialog(context,
+                        "Seu(s) questionário(s) foi(foram) carregado(s) com sucesso.");
+                  });
                 });
               },
             ),

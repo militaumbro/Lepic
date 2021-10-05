@@ -31,11 +31,14 @@ class MyBarChart extends StatefulWidget {
 class MyBarChartState extends State<MyBarChart> {
   static const double barWidth = 27;
   GlobalKey _globalKey = new GlobalKey();
+  List<double> values;
 
   @override
   void initState() {
     super.initState();
-    widget.values.map((element) => double.parse(element.toStringAsFixed(2)));
+    values = widget.values
+        .map((element) => double.parse(element.toStringAsFixed(2)))
+        .toList();
   }
 
   @override
@@ -144,10 +147,10 @@ class MyBarChartState extends State<MyBarChart> {
                   },
                 ),
                 borderData: FlBorderData(
-                  show: false,
+                  show: false ,
                 ),
                 barGroups: [
-                  ...widget.values.map((valor) {
+                  ...values.map((valor) {
                     current_x += 1;
                     return BarChartGroupData(
                       x: current_x,
