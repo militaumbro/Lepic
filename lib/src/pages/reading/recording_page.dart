@@ -263,7 +263,7 @@ class _RecordingPageState extends State<RecordingPage>
               width: 2,
             ),
           ),
-          title: Text("Relatorio Intermediário"),
+          title: Text("Erros Cometidos"),
           content: SingleChildScrollView(
             child: Column(
               children: [

@@ -4,7 +4,7 @@ import 'package:flutter_smart_course/src/pages/new_data/new_data_page.dart';
 import 'package:flutter_smart_course/src/pages/quiz/choose_quiz_page.dart';
 import 'package:flutter_smart_course/src/pages/readers/readers_page.dart';
 import 'package:flutter_smart_course/src/pages/reading/text_choose_page.dart';
-import 'package:flutter_smart_course/src/pages/tutorial_page.dart';
+import 'package:flutter_smart_course/src/pages/tutorial/tutorial_page.dart';
 import 'package:flutter_smart_course/utils/no_glow_behavior.dart';
 import 'package:flutter_smart_course/utils/showup.dart';
 import 'package:flutter/cupertino.dart';
@@ -35,7 +35,8 @@ class MenusPageState extends State<MenusPage> {
     if (firstTime != null && firstTime) {
       // First time
       prefs.setBool('first_time', false);
-      Navigator.of(context).push(MaterialPageRoute(builder: (context)=>TutorialPage()));
+      Navigator.of(context)
+          .push(MaterialPageRoute(builder: (context) => TutorialPage()));
     }
   }
 
@@ -73,45 +74,66 @@ class MenusPageState extends State<MenusPage> {
         ),
       ),
       child: SafeArea(
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Spacer(),
-            // SizedBox(height: 8),
-            Center(
-              child: Text(
-                "Lepic",
-                style: appBarTheme.textTheme.headline4.copyWith(
-                    fontWeight: FontWeight
-                        .bold), /* GoogleFonts.quicksandTextTheme()
-                    .headline5
-                    .copyWith(fontWeight: FontWeight.bold), */
+        child: Stack(
+          children: [
+            Positioned(
+              top: 8,
+              right: 16,
+              child: Tooltip(
+                message: "Ajuda",
+                child: IconButton(
+                    icon: Icon(
+                      Icons.help,
+                      color: Colors.white,
+                    ),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => TutorialPage()));
+                    }),
               ),
             ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-              ),
-            ),
-            // Spacer(),
-            // SizedBox(height: 4),
-            Spacer(),
-            Row(children: [
-              Padding(
-                padding: const EdgeInsets.fromLTRB(25, 0, 30, 16),
-                child: Container(
-                    height: 65,
-                    width: 60,
-                    child: Image.asset('assets/logo.png')),
-              ),
-              Expanded(
-                child: AutoSizeText(
-                  "O seu app para medir a velocidade de Leitura",
-                  style: appBarTheme.textTheme.subtitle1,
+            Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: <Widget>[
+                Spacer(),
+                // SizedBox(height: 8),
+                Center(
+                  child: Text(
+                    "Lepic",
+                    style: appBarTheme.textTheme.headline4.copyWith(
+                        fontWeight: FontWeight
+                            .bold), /* GoogleFonts.quicksandTextTheme()
+                        .headline5
+                        .copyWith(fontWeight: FontWeight.bold), */
+                  ),
                 ),
-              ),
-            ]),
+
+                Center(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 16),
+                  ),
+                ),
+                // Spacer(),
+                // SizedBox(height: 4),
+                Spacer(),
+                Row(children: [
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(25, 0, 30, 16),
+                    child: Container(
+                        height: 65,
+                        width: 60,
+                        child: Image.asset('assets/logo.png')),
+                  ),
+                  Expanded(
+                    child: AutoSizeText(
+                      "O seu app para medir a velocidade de Leitura",
+                      style: appBarTheme.textTheme.subtitle1,
+                    ),
+                  ),
+                ]),
+              ],
+            ),
           ],
         ),
       ),
@@ -154,6 +176,12 @@ class MenusPageState extends State<MenusPage> {
               },
             ),
           ),
+          // TextButton(
+          //     onPressed: () {
+          //       Navigator.of(context).push(
+          //           MaterialPageRoute(builder: (context) => TutorialPage()));
+          //     },
+          //     child: Text("Tutorial kkkj")),
           // ShowUp(
           //   delay: showUpDelay += 100,
           //   child: MenuCard(

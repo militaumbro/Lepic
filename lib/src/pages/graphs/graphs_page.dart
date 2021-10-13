@@ -576,8 +576,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
   Widget getCorrectAnswer(HiveQuizzQuestion question) {
     return isCorrect(question)
         ? Container()
-        : Text(
-            "  Correta: ${question.answers.asMap()[question.correctAnswer]}\n",
+        : Text("  R: ${question.answers.asMap()[question.correctAnswer]}\n",
             style: TextStyle(color: Colors.green));
   }
 

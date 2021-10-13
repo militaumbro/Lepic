@@ -112,7 +112,7 @@ class _RecorderViewState extends State<RecorderView> {
           ),
           child: Container(
             height: 50,
-            width: 50,
+            width: 70,
             child: Column(
               children: [
                 Expanded(
@@ -218,7 +218,7 @@ class _RecorderViewState extends State<RecorderView> {
       await _startRecording();
       _recordingState = RecordingState.Recording;
       _recordIcon = Icons.stop;
-      _recordText = 'Gravando';
+      _recordText = 'Terminar';
     } else {
       Scaffold.of(context).hideCurrentSnackBar();
       Scaffold.of(context).showSnackBar(SnackBar(
