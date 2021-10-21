@@ -18,8 +18,6 @@ class _TutorialImportQuizState extends State<TutorialImportQuiz>
   TabController tabController;
   var links = {
     "FormatoQuiz": "https://i.imgur.com/tENl1Qz.png",
-    "AudioScreen": "https://i.imgur.com/lnOk5t2.png",
-    "AudioPlayer": "https://i.imgur.com/651fS4d.png",
   };
   @override
   void initState() {
@@ -72,10 +70,10 @@ class _TutorialImportQuizState extends State<TutorialImportQuiz>
             children: [
               Center(
                 child: Container(
-                    height: screenSize.height * 0.7,
-                    width: screenSize.width * 0.7,
+                    height: screenSize.height * 0.65,
+                    width: screenSize.width * 0.9,
                     padding: EdgeInsets.all(0),
-                    child: Image.network(links['FormatoQuiz'])),
+                    child: Image.asset('assets/FormatoQuiz.png')),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),

@@ -102,9 +102,9 @@ class _TutorialQuizzGraphState extends State<TutorialQuizzGraph>
               Center(
                 child: Container(
                     height: screenSize.height * 0.7,
-                    width: screenSize.width * 0.7,
+                    width: screenSize.width * 0.95,
                     padding: EdgeInsets.all(8),
-                    child: Image.network(links['Quiz'])),
+                    child: Image.asset('assets/Quiz.png')),
               ),
               Padding(
                 padding: const EdgeInsets.all(24),
@@ -122,9 +122,9 @@ class _TutorialQuizzGraphState extends State<TutorialQuizzGraph>
               Center(
                 child: Container(
                     height: screenSize.height * 0.7,
-                    width: screenSize.width * 0.7,
+                    width: screenSize.width * 0.95,
                     padding: EdgeInsets.all(8),
-                    child: Image.network(links['DentroQuiz'])),
+                    child: Image.asset('assets/Quiz2.png')),
               ),
               Padding(
                 padding: const EdgeInsets.all(24),
@@ -142,9 +142,9 @@ class _TutorialQuizzGraphState extends State<TutorialQuizzGraph>
               Center(
                 child: Container(
                     height: screenSize.height * 0.7,
-                    width: screenSize.width * 0.7,
+                    width: screenSize.width * 0.95,
                     padding: EdgeInsets.all(8),
-                    child: Image.network(links['FimQuiz'])),
+                    child: Image.asset('assets/Quiz3.png')),
               ),
               Padding(
                 padding: const EdgeInsets.all(24),
@@ -162,9 +162,9 @@ class _TutorialQuizzGraphState extends State<TutorialQuizzGraph>
               Center(
                 child: Container(
                     height: screenSize.height * 0.7,
-                    width: screenSize.width * 0.7,
+                    width: screenSize.width * 0.95,
                     padding: EdgeInsets.all(8),
-                    child: Image.network(links['Grafico'])),
+                    child: Image.asset('assets/Quiz4.png')),
               ),
               Padding(
                 padding: const EdgeInsets.all(24),
@@ -182,9 +182,9 @@ class _TutorialQuizzGraphState extends State<TutorialQuizzGraph>
               Center(
                 child: Container(
                     height: screenSize.height * 0.7,
-                    width: screenSize.width * 0.7,
+                    width: screenSize.width * 0.95,
                     padding: EdgeInsets.all(8),
-                    child: Image.network(links['ResultQuiz'])),
+                    child: Image.asset('assets/Quiz5.png')),
               ),
               Padding(
                 padding: const EdgeInsets.all(24),

@@ -86,9 +86,9 @@ class _TutorialAudioState extends State<TutorialAudio>
               Center(
                 child: Container(
                     height: screenSize.height * 0.7,
-                    width: screenSize.width * 0.7,
+                    width: screenSize.width * 0.95,
                     padding: EdgeInsets.all(8),
-                    child: Image.network(links['Audio'])),
+                    child: Image.asset('assets/audio.jpg')),
               ),
               Padding(
                 padding: const EdgeInsets.all(24),
@@ -106,9 +106,9 @@ class _TutorialAudioState extends State<TutorialAudio>
               Center(
                 child: Container(
                     height: screenSize.height * 0.7,
-                    width: screenSize.width * 0.7,
+                    width: screenSize.width * 0.95,
                     padding: EdgeInsets.all(8),
-                    child: Image.network(links['AudioScreen'])),
+                    child: Image.asset('assets/audio2.png')),
               ),
               Padding(
                 padding: const EdgeInsets.all(24),
@@ -126,9 +126,9 @@ class _TutorialAudioState extends State<TutorialAudio>
               Center(
                 child: Container(
                     height: screenSize.height * 0.7,
-                    width: screenSize.width * 0.7,
+                    width: screenSize.width * 0.95,
                     padding: EdgeInsets.all(8),
-                    child: Image.network(links['AudioPlayer'])),
+                    child: Image.asset('assets/audio3.png')),
               ),
               Padding(
                 padding: const EdgeInsets.all(24),

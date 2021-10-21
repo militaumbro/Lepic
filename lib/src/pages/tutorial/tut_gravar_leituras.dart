@@ -103,9 +103,9 @@ class _TutorialGravarLeiturasState extends State<TutorialGravarLeituras>
               Center(
                 child: Container(
                     height: screenSize.height * 0.7,
-                    width: screenSize.width * 0.7,
+                    width: screenSize.width * 0.95,
                     padding: EdgeInsets.all(8),
-                    child: Image.network(links['GravarLeituras'])),
+                    child: Image.asset('assets/gravarLeituras.jpg')),
               ),
               Padding(
                 padding: const EdgeInsets.all(24),
@@ -123,9 +123,9 @@ class _TutorialGravarLeiturasState extends State<TutorialGravarLeituras>
               Center(
                 child: Container(
                     height: screenSize.height * 0.7,
-                    width: screenSize.width * 0.7,
+                    width: screenSize.width * 0.95,
                     padding: EdgeInsets.all(8),
-                    child: Image.network(links['Textos'])),
+                    child: Image.asset('assets/gravarLeituras2.png')),
               ),
               Padding(
                 padding: const EdgeInsets.all(24),
@@ -143,9 +143,9 @@ class _TutorialGravarLeiturasState extends State<TutorialGravarLeituras>
               Center(
                 child: Container(
                     height: screenSize.height * 0.7,
-                    width: screenSize.width * 0.7,
+                    width: screenSize.width * 0.95,
                     padding: EdgeInsets.all(8),
-                    child: Image.network(links['Leitores'])),
+                    child: Image.asset('assets/gravarLeituras3.png')),
               ),
               Padding(
                 padding: const EdgeInsets.all(24),
@@ -164,9 +164,9 @@ class _TutorialGravarLeiturasState extends State<TutorialGravarLeituras>
               Center(
                 child: Container(
                     height: screenSize.height * 0.7,
-                    width: screenSize.width * 0.7,
+                    width: screenSize.width * 0.95,
                     padding: EdgeInsets.all(8),
-                    child: Image.network(links['Gravação1'])),
+                    child: Image.asset('assets/gravarLeituras4.png')),
               ),
               Padding(
                 padding: const EdgeInsets.all(24),
@@ -184,9 +184,9 @@ class _TutorialGravarLeiturasState extends State<TutorialGravarLeituras>
               Center(
                 child: Container(
                     height: screenSize.height * 0.7,
-                    width: screenSize.width * 0.7,
+                    width: screenSize.width * 0.95,
                     padding: EdgeInsets.all(8),
-                    child: Image.network(links['Gravação2'])),
+                    child: Image.asset('assets/gravarLeituras5.png')),
               ),
               Padding(
                 padding: const EdgeInsets.all(24),

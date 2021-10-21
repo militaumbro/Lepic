@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
 import 'package:flutter_smart_course/src/pages/tutorial/tut_import_quiz.dart';
 import 'package:flutter_smart_course/src/pages/tutorial/tut_quizz_graphs.dart';
 import 'package:flutter_smart_course/src/pages/tutorial/tut_registrar_leitores.dart';
 import 'package:flutter_smart_course/src/pages/tutorial/tut_gravar_leituras.dart';
-import 'package:flutter_smart_course/src/pages/tutorial/tut_import.dart';
 import 'package:flutter_smart_course/src/pages/tutorial/tut_audio.dart';
 import 'package:flutter_smart_course/utils/base_scaffold.dart';
-import 'package:flutter_smart_course/utils/cards.dart';
 import 'package:flutter_smart_course/utils/showup.dart';
 
 class TutorialPage extends StatefulWidget {
@@ -18,12 +15,12 @@ class TutorialPage extends StatefulWidget {
 }
 
 class _TutorialPageState extends State<TutorialPage> {
-  var links = {
-    'Audio': "https://i.imgur.com/OI957FR.jpg",
-    'Leitores': 'https://i.imgur.com/EMmc3oL.jpg',
-    "GravarLeituras": 'https://i.imgur.com/rgN5ahQ.jpg',
-    "Import": "https://i.imgur.com/bB9hatR.jpg",
-  };
+  // var links = {
+  //   'Audio': "https://i.imgur.com/OI957FR.jpg",
+  //   'Leitores': 'https://i.imgur.com/EMmc3oL.jpg',
+  //   "GravarLeituras": 'https://i.imgur.com/rgN5ahQ.jpg',
+  //   "Import": "https://i.imgur.com/bB9hatR.jpg",
+  // };
   @override
   Widget build(BuildContext context) {
     var screenSize = MediaQuery.of(context).size;
@@ -113,13 +110,6 @@ class _TutorialPageState extends State<TutorialPage> {
                 ],
               ),
             ),
-            // Center(
-            //   child: Container(
-            //       height: screenSize.height * 0.7,
-            //       width: screenSize.width * 0.7,
-            //       padding: EdgeInsets.all(8),
-            //       child: Image.network(links['GravarLeituras'])),
-            // ),
           ],
         ),
       ),

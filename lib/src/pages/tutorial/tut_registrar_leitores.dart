@@ -21,7 +21,6 @@ class _TutorialLeitoresState extends State<TutorialLeitores>
     "PaginaLeitores": "https://i.imgur.com/3G2MrAR.png",
     "EditarLeitor": "https://i.imgur.com/mmA1vmK.png",
     "LeiturasGravadas": 'https://i.imgur.com/yXNDG3J.png',
-    // "ReverGraficos": "https://i.imgur.com/bB9hatR.jpg",
   };
   @override
   void initState() {
@@ -95,9 +94,9 @@ class _TutorialLeitoresState extends State<TutorialLeitores>
               Center(
                 child: Container(
                     height: screenSize.height * 0.7,
-                    width: screenSize.width * 0.7,
+                    width: screenSize.width * 0.95,
                     padding: EdgeInsets.all(8),
-                    child: Image.network(links['Leitores'])),
+                    child: Image.asset('assets/Leitores.jpg')),
               ),
               Padding(
                 padding: const EdgeInsets.all(24),
@@ -115,9 +114,9 @@ class _TutorialLeitoresState extends State<TutorialLeitores>
               Center(
                 child: Container(
                     height: screenSize.height * 0.7,
-                    width: screenSize.width * 0.7,
+                    width: screenSize.width * 0.95,
                     padding: EdgeInsets.all(8),
-                    child: Image.network(links['PaginaLeitores'])),
+                    child: Image.asset('assets/Leitores2.png')),
               ),
               Padding(
                 padding: const EdgeInsets.all(24),
@@ -135,9 +134,9 @@ class _TutorialLeitoresState extends State<TutorialLeitores>
               Center(
                 child: Container(
                     height: screenSize.height * 0.7,
-                    width: screenSize.width * 0.7,
+                    width: screenSize.width * 0.95,
                     padding: EdgeInsets.all(8),
-                    child: Image.network(links['EditarLeitor'])),
+                    child: Image.asset('assets/Leitores3.png')),
               ),
               Padding(
                 padding: const EdgeInsets.all(24),
@@ -156,9 +155,9 @@ class _TutorialLeitoresState extends State<TutorialLeitores>
               Center(
                 child: Container(
                     height: screenSize.height * 0.7,
-                    width: screenSize.width * 0.7,
+                    width: screenSize.width * 0.95,
                     padding: EdgeInsets.all(8),
-                    child: Image.network(links['LeiturasGravadas'])),
+                    child: Image.asset('assets/Leitores4.png')),
               ),
               Padding(
                 padding: const EdgeInsets.all(24),
