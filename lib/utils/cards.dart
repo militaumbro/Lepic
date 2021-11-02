@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -297,6 +298,7 @@ Widget readerCard(context,
       : reader.age != 0
           ? "${reader.age} anos "
           : "";
+  bool hasPhoto = reader.photoUrl != null;
   return ShowUp(
     child: InkWell(
       borderRadius: const BorderRadius.all(
@@ -320,15 +322,42 @@ Widget readerCard(context,
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ListTile(
-              leading: CircleAvatar(
-                radius: 30,
-                backgroundColor: Colors.orange[400],
-                foregroundColor: Colors.white,
-                child: Icon(
-                  Icons.person,
-                  size: 30,
-                ),
-              ),
+              leading: hasPhoto
+                  ? SizedBox(
+                      height: 60,
+                      width: 60,
+                      child: Card(
+                        shape: const RoundedRectangleBorder(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(30)),
+                        ),
+                        color: hasPhoto
+                            ? Theme.of(context).colorScheme.primary
+                            : Theme.of(context).cardTheme.color,
+                        clipBehavior: Clip.antiAlias,
+                        child: Positioned.fill(
+                          child: Hero(
+                            tag: reader.photoUrl,
+                            child: Image.file(
+                              File(reader.photoUrl.toString()),
+                              fit: BoxFit.cover,
+                              cacheWidth: 200,
+                              alignment: Alignment.center,
+                              // cacheHeight: 200,
+                            ),
+                          ),
+                        ),
+                      ),
+                    )
+                  : CircleAvatar(
+                      radius: 30,
+                      backgroundColor: Colors.orange[400],
+                      foregroundColor: Colors.white,
+                      child: Icon(
+                        Icons.person,
+                        size: 30,
+                      ),
+                    ),
               title: Text(
                 reader.name ?? "Título",
                 style: TextStyle(fontSize: 18),

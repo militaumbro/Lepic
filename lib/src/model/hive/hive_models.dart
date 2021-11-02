@@ -91,6 +91,7 @@ class HiveReader {
     this.registerData,
     this.school,
     this.readings,
+    this.photoUrl,
   });
 }
 
