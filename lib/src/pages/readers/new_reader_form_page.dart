@@ -2,12 +2,14 @@ import 'dart:io';
 import 'dart:math';
 
 import 'package:auto_size_text/auto_size_text.dart';
+import 'package:path/path.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
 import 'package:flutter_smart_course/src/model/reader_database.dart';
 import 'package:flutter_smart_course/utils/base_scaffold.dart';
 import 'package:flutter_smart_course/utils/calculator.dart';
 import 'package:flutter_smart_course/utils/dialogs.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
 
 import 'package:flutter_smart_course/utils/utils.dart';
@@ -24,7 +26,7 @@ class NewReaderForm extends StatefulWidget {
 
 class _NewReaderFormState extends State<NewReaderForm> {
   final _formKey = GlobalKey<FormState>();
-  var photoUrl;
+  Uri photoUrl;
 
   List<String> schoolingList;
   TextEditingController name;
@@ -209,6 +211,7 @@ class _NewReaderFormState extends State<NewReaderForm> {
                   child: Column(
                     children: [
                       myTextFormField(
+                        context,
                         controller: name,
                         hintText: "Nome do Leitor",
                       ),
@@ -237,22 +240,26 @@ class _NewReaderFormState extends State<NewReaderForm> {
                         ),
                       ),
                       myTextFormField(
+                        context,
                         controller: studantYear,
                         hintText: "Turma",
                         required: false,
                       ),
                       myTextFormField(
+                        context,
                         controller: schoolCategory,
                         hintText:
                             "Categoria da Escola (Publico, Particular, etc...)",
                         required: false,
                       ),
                       myTextFormField(
+                        context,
                         controller: schoolName,
                         hintText: "Nome da Escola",
                         required: false,
                       ),
                       myTextFormField(
+                        context,
                         readOnly: true,
                         controller: birthDate,
                         hintText: "Data de Nascimento",
@@ -271,6 +278,7 @@ class _NewReaderFormState extends State<NewReaderForm> {
                         ),
                       ),
                       myTextFormField(
+                        context,
                         controller: observation,
                         hintText: "Observação sobre o Leitor",
                         required: false,
@@ -318,7 +326,7 @@ class _NewReaderFormState extends State<NewReaderForm> {
     );
   }
 
-  Widget myTextFormField(
+  Widget myTextFormField(context,
       {TextEditingController controller,
       String hintText,
       bool readOnly = false,
@@ -354,13 +362,23 @@ class _NewReaderFormState extends State<NewReaderForm> {
     if (widget.refresh != null) widget.refresh();
   }
 
-  _saveReader(context) {
+  _saveReader(context) async {
     int id;
+    File image, localImage;
+    var fileName;
     if (_formKey.currentState.validate()) {
       if (hasReaders)
         id = widget.reader.id;
       else {
         id = randomId();
+      }
+
+      String path = (await getApplicationDocumentsDirectory()).path;
+
+      if (photoUrl != null) if (photoUrl.path != null) {
+        fileName = basename(photoUrl.path);
+        image = File(photoUrl.path);
+        localImage = await image.copy('$path/$fileName');
       }
       Provider.of<ReadersDatabase>(context, listen: false).addReader(HiveReader(
         id: id,
@@ -377,7 +395,11 @@ class _NewReaderFormState extends State<NewReaderForm> {
         observation: observation.text.trim() ?? "",
         readings:
             hasReaders ? widget.reader.readings : HiveReadingsList(list: []),
-        photoUrl: photoUrl,
+        photoUrl: (photoUrl != null)
+            ? photoUrl.path != null
+                ? Uri.parse(localImage.path)
+                : null
+            : null,
       ));
       Navigator.of(context).pop();
       if (widget.refresh != null) widget.refresh();

@@ -53,6 +53,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
   int numReadings;
   List<HiveReading> bars;
   List<String> indexes;
+  int expectedValueBySchooling;
 
   @override
   void initState() {
@@ -79,6 +80,68 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
     numReadings = widget.readings.length;
 
     setBars();
+    var schoolingList = [
+      '1º ano Fundamental',
+      '2º ano Fundamental',
+      '3º ano Fundamental',
+      '4º ano Fundamental',
+      '5º ano Fundamental',
+      '6º ano Fundamental',
+      '7º ano Fundamental',
+      '8º ano Fundamental',
+      '9º ano Fundamental',
+      '1º ano Ensino Médio',
+      '2º ano Ensino Médio',
+      '3º ano Ensino Médio',
+      'Ensino Superior',
+    ];
+
+    if (widget.reader.school != null) if (widget.reader.school.schooling !=
+        null)
+      switch (widget.reader.school.schooling) {
+        case '1º ano Fundamental':
+          //Meninos do primeiro ano não conseguem ler com fluencia.
+          expectedValueBySchooling = null;
+          break;
+        case '2º ano Fundamental':
+          expectedValueBySchooling = 43;
+          break;
+        case '3º ano Fundamental':
+          expectedValueBySchooling = 71;
+          break;
+        case '4º ano Fundamental':
+          expectedValueBySchooling = 79;
+          break;
+        case '5º ano Fundamental':
+          expectedValueBySchooling = 98;
+          break;
+        case '6º ano Fundamental':
+          expectedValueBySchooling = 113;
+          break;
+        case '7º ano Fundamental':
+          expectedValueBySchooling = 120;
+          break;
+        case '8º ano Fundamental':
+          expectedValueBySchooling = 120;
+          break;
+        case '9º ano Fundamental':
+          expectedValueBySchooling = 128;
+          break;
+        case '1º ano Ensino Médio':
+          expectedValueBySchooling = 128;
+          break;
+        case '2º ano Ensino Médio':
+          expectedValueBySchooling = 128;
+          break;
+        case '3º ano Ensino Médio':
+          expectedValueBySchooling = 128;
+          break;
+        case 'Ensino Superior':
+          expectedValueBySchooling = 128;
+          break;
+
+        default:
+      }
   }
 
   void setBars() {
@@ -188,38 +251,48 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
         flexibleSpace: gradientAppBar(context),
         title: AutoSizeText(widget.reader.name ?? "Gráficos"),
         bottom: PreferredSize(
-          preferredSize: Size.fromHeight(20),
-          child: TabBar(
-            indicator: CircleTabIndicator(
-                color: Theme.of(context).colorScheme.secondary, radius: 4),
-            indicatorSize: TabBarIndicatorSize.tab,
-            isScrollable: true,
-            controller: pageTabController,
-            labelStyle: Theme.of(context)
-                .primaryTextTheme
-                .bodyText1
-                .copyWith(fontWeight: FontWeight.bold),
-            unselectedLabelStyle: Theme.of(context)
-                .primaryTextTheme
-                .bodyText1
-                .copyWith(fontWeight: FontWeight.normal),
-            unselectedLabelColor: Colors.white.withOpacity(0.6),
-            tabs: [
-              Tab(
-                child: Text(
-                  "Gráfico",
-                  style:
-                      TextStyle(color: Theme.of(context).colorScheme.onPrimary),
-                ),
+          preferredSize: Size.fromHeight(36),
+          child: Column(
+            children: [
+              Text(
+                (currentIndex + 1).toString() +
+                    "ª leitura, " +
+                    widget.text.name,
+                style: TextStyle(color: Colors.white70, fontSize: 13),
               ),
-              if (hasQuiz)
-                Tab(
-                  child: Text(
-                    "Quiz",
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.onPrimary),
+              TabBar(
+                indicator: CircleTabIndicator(
+                    color: Theme.of(context).colorScheme.secondary, radius: 4),
+                indicatorSize: TabBarIndicatorSize.tab,
+                isScrollable: true,
+                controller: pageTabController,
+                labelStyle: Theme.of(context)
+                    .primaryTextTheme
+                    .bodyText1
+                    .copyWith(fontWeight: FontWeight.bold),
+                unselectedLabelStyle: Theme.of(context)
+                    .primaryTextTheme
+                    .bodyText1
+                    .copyWith(fontWeight: FontWeight.normal),
+                unselectedLabelColor: Colors.white.withOpacity(0.6),
+                tabs: [
+                  Tab(
+                    child: Text(
+                      "Gráfico",
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.onPrimary),
+                    ),
                   ),
-                )
+                  if (hasQuiz)
+                    Tab(
+                      child: Text(
+                        "Quiz",
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.onPrimary),
+                      ),
+                    )
+                ],
+              ),
             ],
           ),
         ),
@@ -228,6 +301,10 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
         SingleChildScrollView(
           child: Column(
             children: [
+              // Text(
+
+              //   style: TextStyle(color: Colors.black, fontSize: 13),
+              // ),
               ShowUp(
                 child: SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -326,6 +403,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                                   controller: graphTabController,
                                   children: [
                                     MyBarChart(
+                                      expectedValueBySchooling: expectedValueBySchooling,
                                       maxSize: 5,
                                       currentIndex: currentIndex,
                                       scale: 200,
@@ -341,6 +419,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                                       indexes: indexes,
                                     ),
                                     MyBarChart(
+                                      expectedValueBySchooling: expectedValueBySchooling,
                                       maxSize: 5,
                                       currentIndex: currentIndex,
                                       scale: 200,
@@ -356,6 +435,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                                       indexes: indexes,
                                     ),
                                     MyBarChart(
+                                      expectedValueBySchooling: expectedValueBySchooling,
                                       maxSize: 5,
                                       currentIndex: currentIndex,
                                       scale: 100,

@@ -1,3 +1,4 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
 import 'package:flutter_smart_course/src/model/reader_database.dart';
@@ -21,9 +22,11 @@ class ReadersPage extends StatefulWidget {
 class _ReadersPageState extends State<ReadersPage> {
   // List<HiveReader> readersList;
   Future<List<HiveReader>> futureReadersList;
+  int order = 0; // 0 nome, 1 escolaridade, 2 idade
 
   @override
   void initState() {
+    order = 0;
     super.initState();
     futureReadersList =
         Provider.of<ReadersDatabase>(context, listen: false).getReaderList();
@@ -38,8 +41,8 @@ class _ReadersPageState extends State<ReadersPage> {
 
   @override
   Widget build(BuildContext context) {
-    return baseScaffold(
-      fab: FloatingActionButton(
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
           backgroundColor: Theme.of(context).colorScheme.primary,
           child: Icon(
             Icons.add,
@@ -51,17 +54,146 @@ class _ReadersPageState extends State<ReadersPage> {
                       refresh: refresh,
                     ))));
           }),
-      context: context,
-      title: "Leitores",
-      bottom: Text(
-        "Selecione um leitor para acompanhar suas leituras",
-        style: TextStyle(color: Colors.white70, fontSize: 13),
+      appBar: AppBar(
+        title: Align(
+            alignment: Alignment(-0.25, 0), child: AutoSizeText("Leitores")),
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(35),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Text(
+                "Selecione um leitor para acompanhar suas leituras",
+                style: TextStyle(color: Colors.white70, fontSize: 13),
+              ),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text("Odernar por:  ", style: TextStyle(color: Colors.white)),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        order = 0;
+                      });
+                    },
+                    child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                              color: order == 0
+                                  ? Colors.white
+                                  : Colors.transparent,
+                            ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        height: 30,
+                        width: 80,
+                        child: Center(
+                          child: AutoSizeText("Nome",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: order == 0
+                                      ? FontWeight.bold
+                                      : FontWeight.normal)),
+                        )),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        order = 1;
+                      });
+                    },
+                    child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                              color: order == 1
+                                  ? Colors.white
+                                  : Colors.transparent,
+                            ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        height: 30,
+                        width: 90,
+                        child: Center(
+                          child: AutoSizeText("Escolaridade",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: order == 1
+                                      ? FontWeight.bold
+                                      : FontWeight.normal)),
+                        )),
+                  ),
+                  InkWell(
+                    onTap: () {
+                      setState(() {
+                        order = 2;
+                      });
+                    },
+                    child: Container(
+                        decoration: BoxDecoration(
+                            border: Border.all(
+                              color: order == 2
+                                  ? Colors.white
+                                  : Colors.transparent,
+                            ),
+                            borderRadius:
+                                BorderRadius.all(Radius.circular(20))),
+                        height: 30,
+                        width: 80,
+                        child: Center(
+                          child: AutoSizeText("Idade",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontWeight: order == 2
+                                      ? FontWeight.bold
+                                      : FontWeight.normal)),
+                        )),
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: 2,
+              )
+            ],
+          ),
+        ),
       ),
       body: FutureBuilder(
           future: futureReadersList,
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              List readersList = snapshot.data;
+              List<HiveReader> readersList = snapshot.data;
+              switch (order) {
+                case 0:
+                  readersList.sort((a, b) {
+                    var nameA = a.name.toLowerCase();
+                    var nameB = b.name.toLowerCase();
+                    return nameA.compareTo(nameB);
+                  });
+                  break;
+                case 1:
+                  readersList.sort((a, b) {
+                    if (a.school.schooling != null) if (b.school.schooling !=
+                        null)
+                      return a.school.schooling.compareTo(b.school.schooling);
+                    else
+                      return 1;
+                    else
+                      return -1;
+                  });
+                  break;
+                case 2:
+                  readersList.sort((a, b) {
+                    if (a.age != null) if (b.age != null)
+                      return a.age.compareTo(b.age);
+                    else
+                      return 1;
+                    else
+                      return -1;
+                  });
+                  break;
+                default:
+                  readersList.sort((a, b) => a.name.compareTo(b.name));
+              }
               return readersList.isEmpty
                   ? Center(
                       child:

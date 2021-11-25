@@ -13,6 +13,7 @@ class MyBarChart extends StatefulWidget {
   final int currentIndex;
   final int maxSize;
   final List<String> indexes;
+  final int expectedValueBySchooling;
   MyBarChart(
       {Key key,
       this.values,
@@ -22,7 +23,8 @@ class MyBarChart extends StatefulWidget {
       @required this.interval,
       this.currentIndex,
       @required this.maxSize,
-      @required this.indexes})
+      @required this.indexes,
+      this.expectedValueBySchooling = 121})
       : super(key: key);
   @override
   State<StatefulWidget> createState() => MyBarChartState();
@@ -125,20 +127,27 @@ class MyBarChartState extends State<MyBarChart> {
                       if (value >= (widget.scale - 1)) {
                         return widget.measure ?? 'ppm';
                       }
+                      if (value == widget.expectedValueBySchooling) return 'VE';
                       return '';
                     },
-                    interval: widget.interval ?? 50,
+                    interval: widget.expectedValueBySchooling ?? 100,
                     margin: 0,
                     reservedSize: 30,
                   ),
                 ),
                 gridData: FlGridData(
                   show: true,
-                  checkToShowHorizontalLine: (value) => value % 25 == 0,
+                  checkToShowHorizontalLine: (value) => (value % 25 == 0 ||
+                      value == widget.expectedValueBySchooling ||
+                      value == 1),
+                  horizontalInterval: 1,
                   getDrawingHorizontalLine: (value) {
-                    if (value == 0) {
+                    if (value == 1) {
                       return FlLine(
-                          color: const Color(0xff363753), strokeWidth: 3);
+                          color: const Color(0xff2a2747), strokeWidth: 0.8);
+                    }
+                    if (value == widget.expectedValueBySchooling) {
+                      return FlLine(color: Colors.green, strokeWidth: 3);
                     }
                     return FlLine(
                       color: const Color(0xff2a2747),
@@ -147,7 +156,7 @@ class MyBarChartState extends State<MyBarChart> {
                   },
                 ),
                 borderData: FlBorderData(
-                  show: false ,
+                  show: false,
                 ),
                 barGroups: [
                   ...values.map((valor) {
