@@ -13,7 +13,7 @@ class MyBarChart extends StatefulWidget {
   final int currentIndex;
   final int maxSize;
   final List<String> indexes;
-  final int expectedValueBySchooling;
+  final double expectedValueBySchooling;
   MyBarChart(
       {Key key,
       this.values,
@@ -24,7 +24,7 @@ class MyBarChart extends StatefulWidget {
       this.currentIndex,
       @required this.maxSize,
       @required this.indexes,
-      this.expectedValueBySchooling = 121})
+      this.expectedValueBySchooling})
       : super(key: key);
   @override
   State<StatefulWidget> createState() => MyBarChartState();
@@ -147,7 +147,7 @@ class MyBarChartState extends State<MyBarChart> {
                           color: const Color(0xff2a2747), strokeWidth: 0.8);
                     }
                     if (value == widget.expectedValueBySchooling) {
-                      return FlLine(color: Colors.green, strokeWidth: 3);
+                      return FlLine(color: Colors.green, strokeWidth: 2);
                     }
                     return FlLine(
                       color: const Color(0xff2a2747),
@@ -168,7 +168,7 @@ class MyBarChartState extends State<MyBarChart> {
                           colors: (current_x == widget.currentIndex)
                               ? [Colors.red]
                               : [Colors.yellow],
-                          y: valor,
+                          y: valor > widget.scale ? 200 : valor,
                           width: barWidth,
                           borderRadius: const BorderRadius.only(
                               topLeft: Radius.circular(6),

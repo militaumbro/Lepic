@@ -53,7 +53,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
   int numReadings;
   List<HiveReading> bars;
   List<String> indexes;
-  int expectedValueBySchooling;
+  double expectedValueBySchooling;
 
   @override
   void initState() {
@@ -155,7 +155,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
         var value = 1;
         // print("Ja tem:");
         // bars.forEach((reading) {
-          // print(reading.readingData.ppm);
+        // print(reading.readingData.ppm);
         // });
         // print("Vai ter:");
         while (bars.length < 5) {
@@ -350,7 +350,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
               ),
               Container(
                 // width: width * 0.95,
-                height: height * 0.60,
+                height: height * 0.65,
                 child: Padding(
                   padding: const EdgeInsets.all(12.0),
                   child: Card(
@@ -403,7 +403,8 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                                   controller: graphTabController,
                                   children: [
                                     MyBarChart(
-                                      expectedValueBySchooling: expectedValueBySchooling,
+                                      expectedValueBySchooling:
+                                          expectedValueBySchooling,
                                       maxSize: 5,
                                       currentIndex: currentIndex,
                                       scale: 200,
@@ -419,7 +420,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                                       indexes: indexes,
                                     ),
                                     MyBarChart(
-                                      expectedValueBySchooling: expectedValueBySchooling,
+                                      // expectedValueBySchooling: expectedValueBySchooling,
                                       maxSize: 5,
                                       currentIndex: currentIndex,
                                       scale: 200,
@@ -435,7 +436,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                                       indexes: indexes,
                                     ),
                                     MyBarChart(
-                                      expectedValueBySchooling: expectedValueBySchooling,
+                                      // expectedValueBySchooling: expectedValueBySchooling,
                                       maxSize: 5,
                                       currentIndex: currentIndex,
                                       scale: 100,
@@ -461,7 +462,37 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                                     // BarChartSample2(),
                                   ]),
                             ),
-                          )
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.fromLTRB(8, 2, 8, 4),
+                                child: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(width: 0.8),
+                                    color: Colors.green,
+                                  ),
+                                  height: 13,
+                                  width: 13,
+                                ),
+                              ),
+                              Text(
+                                "Valor esperado = " +
+                                    expectedValueBySchooling.toInt().toString(),
+                                style: TextStyle(fontSize: 14),
+                              )
+                            ],
+                          ),
+                          // Container(
+                          //   height: 0.8,
+                          //   width: 300,
+                          //   color: Colors.black,
+                          // ),
+                          // SizedBox(
+                          //   height: 4,
+                          // )
                         ],
                       )),
                 ),
