@@ -61,7 +61,8 @@ class _RecordListViewState extends State<RecordListView> {
             ? []
             : widget.reader.readings.list;
     if (readings != null) {
-      groups = groupBy(readings, (HiveReading reading) => reading.textId);
+      readings.sort((a, b) => a.data.compareTo(b.data));
+      // groups = groupBy(readings, (HiveReading reading) => reading.textId);
       // groups.forEach((key, value) {
       //   print(value.toString());
       // });
