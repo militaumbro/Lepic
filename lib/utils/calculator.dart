@@ -42,7 +42,7 @@ int calculateAge(DateTime birthDate) {
       age--;
     }
   }
-  print("idade:$age");
+  // print("idade:$age");
   return age;
 }
 

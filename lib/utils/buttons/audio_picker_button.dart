@@ -81,7 +81,7 @@ class AudioPickerButtonState extends State<AudioPickerButton> {
         );
       } else if (paths != null) {
         paths.forEach((key, value) {
-          print("key: $key, value: $value\n");
+          // print("key: $key, value: $value\n");
           audioDatabase.addAudio(
             HiveAudio(
               id: randomId(),

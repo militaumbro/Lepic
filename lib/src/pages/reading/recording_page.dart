@@ -321,9 +321,9 @@ class _RecordingPageState extends State<RecordingPage>
             currentText.wordCount, duration, widget.errorController.errorCount);
         percentage = getPercentage(
             currentText.wordCount, widget.errorController.errorCount);
-        print(widget.reader.readings.toString());
-        print(
-            "wordCount:${currentText.wordCount}, duration:$duration\nerrorCount:${widget.errorController.errorCount}\nppm:$ppm\npcpm:$pcpm ");
+        // print(widget.reader.readings.toString());
+        // print(
+        //     "wordCount:${currentText.wordCount}, duration:$duration\nerrorCount:${widget.errorController.errorCount}\nppm:$ppm\npcpm:$pcpm ");
         if (preMarkedErrors) {
           reading = widget.reading;
           reading.readingData = HiveReadingData(

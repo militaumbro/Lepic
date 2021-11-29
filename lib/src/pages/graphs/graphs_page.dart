@@ -153,13 +153,13 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
         bars = bars.sublist(0, 5);
       else {
         var value = 1;
-        print("Ja tem:");
-        bars.forEach((reading) {
-          print(reading.readingData.ppm);
-        });
-        print("Vai ter:");
+        // print("Ja tem:");
+        // bars.forEach((reading) {
+          // print(reading.readingData.ppm);
+        // });
+        // print("Vai ter:");
         while (bars.length < 5) {
-          print(widget.readings.asMap()[index - value].readingData.ppm);
+          // print(widget.readings.asMap()[index - value].readingData.ppm);
           bars.add(widget.readings.asMap()[index - value]);
           value++;
         }
@@ -172,7 +172,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
     indexes = [];
     bars.forEach((bar) {
       indexes.add((widget.readings.indexOf(bar) + 1).toString() + "ª");
-      print((widget.readings.indexOf(bar) + 1).toString() + "ª");
+      // print((widget.readings.indexOf(bar) + 1).toString() + "ª");
     });
 
     currentIndex = bars.indexOf(widget.reading);
@@ -233,7 +233,7 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
             final file = File(path);
 
             await file.writeAsBytes(await pdf.save()).then((value) async {
-              print(path);
+              // print(path);
               var bytes = await file.readAsBytes();
               // share()
               Share.file('Relatorio ${reader.name}',
@@ -665,8 +665,8 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
     widget.reading.quizz.selectedAnswers.forEach((selectedAnswer) {
       var acertou =
           selectedAnswer.answerIndex == selectedAnswer.question.correctAnswer;
-      print(
-          "Pergunta : ${selectedAnswer.question.order}, Selecionado: ${selectedAnswer.answerIndex}, Correto: ${selectedAnswer.question.correctAnswer}, Acertou?: $acertou");
+      // print(
+      //     "Pergunta : ${selectedAnswer.question.order}, Selecionado: ${selectedAnswer.answerIndex}, Correto: ${selectedAnswer.question.correctAnswer}, Acertou?: $acertou");
       if (acertou) {
         acertos += 1;
 

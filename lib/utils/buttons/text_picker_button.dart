@@ -67,15 +67,15 @@ class TextPickerButtonState extends State<TextPickerButton> {
         File(path).readAsString(encoding: latin1).then((String data) {
           // contents = data;
           var preProcess = data.replaceAll(" \n ", "\n ");
-          print(preProcess);
+          // print(preProcess);
           var textList = preProcess
               .replaceAll(
                 wordPattern,
                 " ",
               )
               .split(' ');
-          print(textList);
-          print(textList.where((element) => !element.contains("\n")).length);
+          // print(textList);
+          // print(textList.where((element) => !element.contains("\n")).length);
 
           int id = randomId();
           String name = fileName.substring(0, fileName.indexOf('.'));
@@ -105,14 +105,14 @@ class TextPickerButtonState extends State<TextPickerButton> {
           File(value).readAsString(encoding: latin1).then((String data) {
             var fileNam = value.split('/').last;
             var preProcess = data.replaceAll(" \n ", "\n ");
-            print(preProcess);
+            // print(preProcess);
             var textList = preProcess
                 .replaceAll(
                   wordPattern,
                   " ",
                 )
                 .split(' ');
-            print(textList);
+            // print(textList);
 
             var wordCount = textList.length;
             int trash = 0;
@@ -128,7 +128,7 @@ class TextPickerButtonState extends State<TextPickerButton> {
                   element == "\n-") trash++;
             });
             wordCount -= trash;
-            print(wordCount);
+            // print(wordCount);
             int id = randomId();
             String name = fileNam.substring(0, fileNam.indexOf('.'));
             // inputDialog(context, name: name, count: wordCount);

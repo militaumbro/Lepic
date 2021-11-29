@@ -41,10 +41,10 @@ class _QuizState extends State<Quiz> with TickerProviderStateMixin {
     tabController = TabController(length: lenght, vsync: this);
     super.initState();
     selectedList = [];
-    print("Respostas:");
-    widget.hiveQuizz.questions.forEach((element) {
-      print(element.correctAnswer + 1);
-    });
+    // print("Respostas:");
+    // widget.hiveQuizz.questions.forEach((element) {
+    //   print(element.correctAnswer + 1);
+    // });
   }
 
   @override
@@ -201,8 +201,8 @@ class _QuizState extends State<Quiz> with TickerProviderStateMixin {
     //     .answers
     //     .indexOf(answer);
 
-    print("indexAnswer: $indexAnswer, resposta: $answer ,");
-    print("question: $indexQuestion, ${question.question}");
+    // print("indexAnswer: $indexAnswer, resposta: $answer ,");
+    // print("question: $indexQuestion, ${question.question}");
     if (selectedList.any((element) => element.question == question)) {
       setState(() {
         var foundAnswer =

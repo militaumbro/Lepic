@@ -62,23 +62,7 @@ class _RecordListViewState extends State<RecordListView> {
             : widget.reader.readings.list;
     if (readings != null) {
       readings.sort((a, b) => a.data.compareTo(b.data));
-      // groups = groupBy(readings, (HiveReading reading) => reading.textId);
-      // groups.forEach((key, value) {
-      //   print(value.toString());
-      // });
     }
-    // audioDatabase = Provider.of<AudioDatabase>(context, listen: false); --------------------
-    // readings = audioDatabase.getReadingList(); ---------------------------------------------
-
-    // getApplicationDocumentsDirectory().then((value) {
-    //   appDirectory = value;
-    //   appDirectory.list().listen((onData) {
-    //     // records.add(onData.path);
-    //   }).onDone(() {
-    //     // records = records.reversed.toList();
-    //     setState(() {});
-    //   });
-    // });
   }
 
   @override
@@ -86,40 +70,6 @@ class _RecordListViewState extends State<RecordListView> {
     super.didChangeDependencies();
   }
 
-  // @override
-  // Widget build(BuildContext context) {
-  //   List<HiveReading> readingsList = readings;
-  //   return baseScaffold(
-  //     context: context,
-  //     title: "Leituras de ${widget.reader.name}",
-  //     bottom: Text(
-  //       "Clique em uma leitura para ouví-la novamente",
-  //       style: TextStyle(color: Colors.white70, fontSize: 13),
-  //     ),
-  //     body: FutureBuilder(
-  //       future: listAdvancedTextCard(groups),
-  //       builder: (BuildContext context, AsyncSnapshot snapshot) {
-  //         if (snapshot.connectionState == ConnectionState.done &&
-  //             snapshot.data != null) {
-  //           List widgets = snapshot.data;
-  //           if (widgets.isEmpty)
-  //             return Center(
-  //                 child: Text("Nenhuma leitura encontrada para este leitor."));
-  //           return ListView(
-  //             children: [...widgets],
-  //           );
-  //         }
-  //         return SpinKitFoldingCube(
-  //           color: Theme.of(context).colorScheme.primary,
-  //           size: 50.0,
-  //         );
-  //       },
-  //     ),
-  //   );
-
-  //   //   return Container();
-  //   // }),
-  // }
   @override
   Widget build(BuildContext context) {
     textDB = Provider.of<TextDatabase>(context);
@@ -201,58 +151,6 @@ class _RecordListViewState extends State<RecordListView> {
       });
     }
   }
-
-  // Future<List> listAdvancedTextCard(Map groups) async {
-  //   var list = [];
-  //   var textDB = Provider.of<TextDatabase>(context);
-  //   for (var entry in groups.entries) {
-  //     List readings = entry.value;
-  //     var text = await textDB.getText(entry.key);
-
-  //     list.add(ExpansionTile(
-  //       title: Stack(
-  //         children: [
-  //           (text != null)
-  //               ? textCard(context, text: text, enableDescription: false)
-  //               : ListTile(
-  //                   leading: Icon(
-  //                     Icons.error,
-  //                     size: 35,
-  //                     color: Colors.red,
-  //                   ),
-  //                   title: Text("Texto apagado",
-  //                       style: TextStyle(color: Colors.red)),
-  //                 ),
-  //           (text != null)
-  //               ? Positioned(
-  //                   top: 10,
-  //                   left: 45,
-  //                   child: ShowUp(
-  //                     child: CircleAvatar(
-  //                       radius: 10,
-  //                       backgroundColor: Colors.red[300],
-  //                       child: Text(
-  //                         readings.length.toString(),
-  //                         style: TextStyle(color: Colors.white, fontSize: 11),
-  //                       ),
-  //                     ),
-  //                   ),
-  //                 )
-  //               : Container(),
-  //         ],
-  //       ),
-  //       children: [
-  //         ...readings
-  //             .map((reading) => readingCard(reading, readings, text))
-  //             .toList()
-  //             .reversed
-  //             .toList()
-  //       ],
-  //     ));
-  //   }
-
-  //   return list;
-  // }
 
   Widget readingCard(
       HiveReading currentReading, List<HiveReading> readings, HiveText text) {

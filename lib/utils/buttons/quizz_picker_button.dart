@@ -94,7 +94,7 @@ class QuizzPickerButtonState extends State<QuizzPickerButton> {
                     trimmedLine.startsWith("\w"))) {
                   if (line.startsWith("Q:")) {
                     hiveQuestion.question = line.substring(4);
-                    print('alo');
+                    // print('alo');
                   } else {
                     if (line.contains("| r") || line.contains("|r")) {
                       var lineToAdd = line.split("|")[0];
