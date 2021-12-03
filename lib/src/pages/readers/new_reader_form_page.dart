@@ -131,65 +131,60 @@ class _NewReaderFormState extends State<NewReaderForm> {
                             : theme.cardTheme.color,
                         clipBehavior: Clip.antiAlias,
                         child: (hasPhoto)
-                            ? Positioned.fill(
-                                child: InkWell(
-                                  onTap: () {
-                                    _showPicker(context);
-                                  },
-                                  child: Hero(
-                                    tag: photoUrl,
-                                    child: Image.file(
-                                      File(photoUrl),
-                                      fit: BoxFit.cover,
-                                      cacheWidth: 200,
-                                      alignment: Alignment.center,
-                                      // cacheHeight: 200,
-                                    ),
+                            ? InkWell(
+                                onTap: () {
+                                  _showPicker(context);
+                                },
+                                child: Hero(
+                                  tag: photoUrl,
+                                  child: Image.file(
+                                    File(photoUrl),
+                                    fit: BoxFit.cover,
+                                    cacheWidth: 200,
+                                    alignment: Alignment.center,
+                                    // cacheHeight: 200,
                                   ),
                                 ),
                               )
-                            : Positioned.fill(
-                                child: Material(
-                                  shape: const RoundedRectangleBorder(
-                                      borderRadius: border),
-                                  color: Colors.transparent,
-                                  child: InkWell(
-                                    borderRadius: border,
-                                    onTap: () {
-                                      _showPicker(context);
-                                    },
-                                    child: Padding(
-                                      padding: const EdgeInsets.all(8),
-                                      child: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: [
-                                          Container(
-                                            height: 40,
-                                            child: Center(
-                                              child: AutoSizeText(
-                                                'Foto de Perfil',
-                                                minFontSize: 10,
-                                                maxLines: 2,
-                                                style: textTheme.headline6
-                                                    .copyWith(
-                                                  shadows: hasPhoto
-                                                      ? [
-                                                          Shadow(
-                                                            color: Colors.black,
-                                                            offset:
-                                                                const Offset(
-                                                                    1.5, 1.5),
-                                                          )
-                                                        ]
-                                                      : null,
-                                                ),
+                            : Material(
+                                shape: const RoundedRectangleBorder(
+                                    borderRadius: border),
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: border,
+                                  onTap: () {
+                                    _showPicker(context);
+                                  },
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(8),
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          height: 40,
+                                          child: Center(
+                                            child: AutoSizeText(
+                                              'Foto de Perfil',
+                                              minFontSize: 10,
+                                              maxLines: 2,
+                                              style:
+                                                  textTheme.headline6.copyWith(
+                                                shadows: hasPhoto
+                                                    ? [
+                                                        Shadow(
+                                                          color: Colors.black,
+                                                          offset: const Offset(
+                                                              1.5, 1.5),
+                                                        )
+                                                      ]
+                                                    : null,
                                               ),
                                             ),
                                           ),
-                                          SizedBox(height: 8),
-                                        ],
-                                      ),
+                                        ),
+                                        SizedBox(height: 8),
+                                      ],
                                     ),
                                   ),
                                 ),
@@ -217,11 +212,6 @@ class _NewReaderFormState extends State<NewReaderForm> {
                         controller: name,
                         hintText: "Nome do Leitor",
                       ),
-                      // myTextFormField(
-                      //   controller: schooling,
-                      //   hintText: "Escolaridade",
-                      //   required: false,
-                      // ),
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 8),
                         child: DropdownButton<String>(

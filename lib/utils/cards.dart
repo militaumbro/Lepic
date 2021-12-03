@@ -335,16 +335,14 @@ Widget readerCard(context,
                             ? Theme.of(context).colorScheme.primary
                             : Theme.of(context).cardTheme.color,
                         clipBehavior: Clip.antiAlias,
-                        child: Positioned.fill(
-                          child: Hero(
-                            tag: reader.photoUrl,
-                            child: Image.file(
-                              File(reader.photoUrl),
-                              fit: BoxFit.cover,
-                              cacheWidth: 200,
-                              alignment: Alignment.center,
-                              // cacheHeight: 200,
-                            ),
+                        child: Hero(
+                          tag: reader.photoUrl,
+                          child: Image.file(
+                            File(reader.photoUrl),
+                            fit: BoxFit.cover,
+                            cacheWidth: 200,
+                            alignment: Alignment.center,
+                            // cacheHeight: 200,
                           ),
                         ),
                       ),
