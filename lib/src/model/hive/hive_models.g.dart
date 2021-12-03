@@ -129,7 +129,8 @@ class HiveReaderAdapter extends TypeAdapter<HiveReader> {
       registerData: fields[2] as DateTime,
       school: fields[7] as HiveSchoolInfo,
       readings: fields[6] as HiveReadingsList,
-    )..photoUrl = fields[8] as Uri;
+      photoUrl: fields[8] as String,
+    );
   }
 
   @override

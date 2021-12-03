@@ -339,7 +339,7 @@ Widget readerCard(context,
                           child: Hero(
                             tag: reader.photoUrl,
                             child: Image.file(
-                              File(reader.photoUrl.toString()),
+                              File(reader.photoUrl),
                               fit: BoxFit.cover,
                               cacheWidth: 200,
                               alignment: Alignment.center,

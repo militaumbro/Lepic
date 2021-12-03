@@ -80,7 +80,7 @@ class HiveReader {
   @HiveField(7)
   HiveSchoolInfo school;
   @HiveField(8)
-  Uri photoUrl;
+  String photoUrl;
 
   HiveReader({
     this.id,
@@ -225,6 +225,7 @@ class ErrorController {
     errorList.add(error);
   }
 }
+
 @HiveType(typeId: 12)
 class ReadingError {
   @HiveField(0)

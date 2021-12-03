@@ -26,7 +26,7 @@ class NewReaderForm extends StatefulWidget {
 
 class _NewReaderFormState extends State<NewReaderForm> {
   final _formKey = GlobalKey<FormState>();
-  Uri photoUrl;
+  String photoUrl;
 
   List<String> schoolingList;
   TextEditingController name;
@@ -91,7 +91,9 @@ class _NewReaderFormState extends State<NewReaderForm> {
 
     if (hasReaders) {
       selectedDate = widget.reader.birthDate;
+
       photoUrl = widget.reader.photoUrl;
+      print(photoUrl);
     } else {
       selectedDate = DateTime.now();
     }
@@ -137,7 +139,7 @@ class _NewReaderFormState extends State<NewReaderForm> {
                                   child: Hero(
                                     tag: photoUrl,
                                     child: Image.file(
-                                      File(photoUrl.toString()),
+                                      File(photoUrl),
                                       fit: BoxFit.cover,
                                       cacheWidth: 200,
                                       alignment: Alignment.center,
@@ -375,9 +377,9 @@ class _NewReaderFormState extends State<NewReaderForm> {
 
       String path = (await getApplicationDocumentsDirectory()).path;
 
-      if (photoUrl != null) if (photoUrl.path != null) {
-        fileName = basename(photoUrl.path);
-        image = File(photoUrl.path);
+      if (photoUrl != null) {
+        fileName = basename(photoUrl);
+        image = File(photoUrl);
         localImage = await image.copy('$path/$fileName');
       }
       Provider.of<ReadersDatabase>(context, listen: false).addReader(HiveReader(
@@ -395,9 +397,9 @@ class _NewReaderFormState extends State<NewReaderForm> {
         observation: observation.text.trim() ?? "",
         readings:
             hasReaders ? widget.reader.readings : HiveReadingsList(list: []),
-        photoUrl: (photoUrl != null)
-            ? photoUrl.path != null
-                ? Uri.parse(localImage.path)
+        photoUrl: (localImage != null)
+            ? localImage.path != null
+                ? localImage.path
                 : null
             : null,
       ));
@@ -446,8 +448,8 @@ class _NewReaderFormState extends State<NewReaderForm> {
     );
 
     setState(() {
-      photoUrl = Uri.parse(pickedFile.path);
-      if (hasReaders) widget.reader.photoUrl = photoUrl;
+      photoUrl = pickedFile.path;
+      if (hasReaders) widget.reader.photoUrl = pickedFile.path;
     });
   }
 }
