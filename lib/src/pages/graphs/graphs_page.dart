@@ -479,20 +479,11 @@ class _GraphsPageState extends State<GraphsPage> with TickerProviderStateMixin {
                                 ),
                               ),
                               Text(
-                                "Valor esperado = " +
-                                    expectedValueBySchooling.toInt().toString(),
+                                "Meta (Alves,et al.,2021)",
                                 style: TextStyle(fontSize: 14),
                               )
                             ],
                           ),
-                          // Container(
-                          //   height: 0.8,
-                          //   width: 300,
-                          //   color: Colors.black,
-                          // ),
-                          // SizedBox(
-                          //   height: 4,
-                          // )
                         ],
                       )),
                 ),

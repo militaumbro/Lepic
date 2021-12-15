@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 
-class InfoBox extends StatelessWidget {
+class InfoBox extends StatelessWidget { 
   final String value, text, ext;
   final double width;
   final Icon icon;

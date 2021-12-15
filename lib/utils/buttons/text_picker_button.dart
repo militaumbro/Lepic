@@ -33,7 +33,7 @@ class TextPickerButtonState extends State<TextPickerButton> {
   bool isMultiPick = true;
   FileType fileType;
   String contents;
-  RegExp wordPattern = RegExp(r"[^\w|ç|Á-ü|\n|-]+");
+  RegExp wordPattern = RegExp(r"[^\w|ç|Á-ü|\n|-]+"); // jamais mexer, a não ser que alguem reclame
   TextDatabase textDB;
   TextEditingController wordCountController, nameController;
 

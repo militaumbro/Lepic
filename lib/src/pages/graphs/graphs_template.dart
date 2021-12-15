@@ -127,7 +127,7 @@ class MyBarChartState extends State<MyBarChart> {
                       if (value >= (widget.scale - 1)) {
                         return widget.measure ?? 'ppm';
                       }
-                      if (value == widget.expectedValueBySchooling) return 'VE';
+                      if (value == widget.expectedValueBySchooling) return '';
                       return '';
                     },
                     interval: widget.expectedValueBySchooling ?? 100,

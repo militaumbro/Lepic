@@ -3,13 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
 import 'package:flutter_smart_course/src/model/reader_database.dart';
 import 'package:flutter_smart_course/src/pages/graphs/graphs_page.dart';
-import 'package:flutter_smart_course/utils/base_scaffold.dart';
 import 'package:flutter_smart_course/utils/cards.dart';
 import 'package:flutter_smart_course/utils/showup.dart';
 import 'package:flutter_smart_course/utils/utils.dart';
 import 'package:provider/provider.dart';
-
-import 'awnser.dart';
 
 class Quiz extends StatefulWidget {
   final HiveQuizz hiveQuizz;
