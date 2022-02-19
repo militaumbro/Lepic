@@ -1,5 +1,4 @@
 # Lepic
-Lepic app
 
 A avaliação da fluência de leitura tem sido estudada no Brasil e internacionalmente, sendo pautada como instrumento importante ao longo do desenvolvimento escolar. Um dos aspectos mais relevantes dessa avaliação é a análise da velocidade de leitura (cálculo do número de palavras lidas por minuto e o número de palavras lidas corretamente por minuto). Entretanto, tal análise demanda gasto de muito tempo por parte do avaliador, tornando essa rotina complicada, principalmente em ambiente escolar, onde os professores precisam averiguar a velocidade de leitura em muitos escolares ao mesmo tempo e periodicamente. Infelizmente, este é um procedimento que não é usualmente realizado nas escolas brasileiras, embora altamente recomendado pelos documentos oficiais de governos e sociedades científicas de localidades como os Estados Unidos, Reino Unido e Austrália. Recentemente, alguns documentos brasileiros do Ministério da Educação também trazem a atenção à leitura fluente, o que motivou o Lepic a desenvolver metodologias práticas e com fácil visualização dos resultados, tornando um método acessível aos professores e demais interessados no tema. Por exemplo, o monitoramento da fluência de leitura está previsto no Plano Nacional de Alfabetização, mas nenhum instrumento foi disponibilizado para os professores.
 
@@ -13,7 +12,6 @@ computação. Ao conhecer estas propriedades, a equipe de desenvolvimento pode
 projetar e desenvolver sistemas com maior qualidade de uso
 
  A versão atual do Lepic para computadores escrito na linguagem Java, consegue resolver parte do problema proposto, contudo o programa e o seu desenvolvimento não aderem a conceitos muito presentes em aplicações móveis que facilitam o uso e melhoram a experiência do usuário com o programa:
-
 
 ### Usabilidade de software
   * Prevenção de erros
@@ -30,18 +28,20 @@ projetar e desenvolver sistemas com maior qualidade de uso
   * Orientação a Objetos
   * Reusabilidade
   * Injeção de Dependência
-  * Modelo Model View Controller (MVC)
   * Abstração
 
 
-Durante o POC I o projeto do Lepic visa criar um software de qualidade que seja focado para o acompanhamento de vários leitores, contudo focando em análises 1 para 1 entre usuário e leitor sendo capaz de:
-Exibir um menu com diversas funcionalidades
-Importar e salvar textos para leitura
-Gravar sessões de leitura 
-Gravar e reproduzir áudios
-Carregar textos do banco de dados
-Salvar erros cometidos pelo leitor, a serem marcados pelo usuário do aplicativo
-Exibir Gráficos com medidas de velocidade de leitura e palavras corretas por minuto
-Questionários a serem respondidos pelo leitor
-Utilizar conceitos de usabilidade de software para que os usuários saibam como usar o aplicativo sem precisar de ajuda.
+Durante o projeto do Lepic visa criar um software de qualidade que seja focado para o acompanhamento de vários leitores, contudo focando em análises 1 para 1 entre usuário e leitor. Diversas reuniões foram e ainda serão feitas para fazer o levantamento de requisitos (presentes em um modelo do Trello: https://trello.com/invite/b/toOfZjsn/ebd653d1150d009426023a7bbc459bee/lepic), criando um aplicativo multidisciplinar que é capaz de:
+
+ * Exibir um menu com diversas funcionalidades
+ * Importar e salvar textos para leitura
+ * Gravar sessões de leitura 
+ * Gravar e reproduzir áudios
+ * Carregar textos do banco de dados
+ * Salvar erros cometidos pelo leitor, a serem marcados pelo usuário do aplicativo
+ * Exibir Gráficos com medidas de velocidade de leitura e palavras corretas por minuto
+ * Questionários a serem respondidos pelo leitor
+ * Utilizar conceitos de usabilidade de software para que os usuários saibam como usar o aplicativo sem precisar de ajuda.
+ * Detectar silêncios no inicio e final dos audios gravados e cortá-los 
+ * Exportar os resultados como um arquivo PDF através da função de share
 
