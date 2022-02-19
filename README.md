@@ -15,23 +15,23 @@ projetar e desenvolver sistemas com maior qualidade de uso(12)
  A versão atual do Lepic para computadores escrito na linguagem Java, consegue resolver parte do problema proposto, contudo o programa e o seu desenvolvimento não aderem a conceitos muito presentes em aplicações móveis que facilitam o uso e melhoram a experiência do usuário com o programa(12-14):
 
 
- Usabilidade de software
-  Prevenção de erros
-  Tratamento de erros
-  Projeto independente da resolução do aparelho
-  Intuitividade 
-  Praticidade
-  Apresentação / Design de interface
-  Consistência na apresentação
-  Feedback ao usuário
+ ###Usabilidade de software
+  * Prevenção de erros
+  * Tratamento de erros
+  * Projeto independente da resolução do aparelho
+  * Intuitividade 
+  * Praticidade
+  * Apresentação / Design de interface
+  * Consistência na apresentação
+  * Feedback ao usuário
 
- Qualidade de Software 
-  Testes automatizados
-  Orientação a Objetos
-  Reusabilidade
-  Injeção de Dependência
-  Modelo Model View Controller (MVC)
-  Abstração
+ ###Qualidade de Software 
+  * Testes automatizados
+  * Orientação a Objetos
+  * Reusabilidade
+  * Injeção de Dependência
+  * Modelo Model View Controller (MVC)
+  * Abstração
 
 
 Durante o POC I o projeto do Lepic visa criar um software de qualidade que seja focado para o acompanhamento de vários leitores, contudo focando em análises 1 para 1 entre usuário e leitor sendo capaz de:
