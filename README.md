@@ -44,3 +44,5 @@ Durante o projeto do Lepic visa criar um software de qualidade que seja focado p
  * Utilizar conceitos de usabilidade de software para que os usuários saibam como usar o aplicativo sem precisar de ajuda.
  * Detectar silêncios no inicio e final dos audios gravados e cortá-los 
  * Exportar os resultados como um arquivo PDF através da função de share
+
+Link da playstore: https://play.google.com/store/apps/details?id=com.lepic&hl=pt_BR&gl=US
