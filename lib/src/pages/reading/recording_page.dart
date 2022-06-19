@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_smart_course/src/model/audio_database.dart';
@@ -402,7 +403,7 @@ class Word extends StatefulWidget {
     @required this.text,
     @required this.errorController,
     @required this.index,
-    @required this.error,
+    @required this.error, 
   }) : super(key: key);
 
   @override

@@ -1,18 +1,12 @@
-import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_smart_course/src/model/hive/hive_models.dart';
 import 'package:flutter_smart_course/src/model/text_database.dart';
 import 'package:flutter_smart_course/src/pages/reading/edit_text_page.dart';
-import 'package:flutter_smart_course/src/pages/reading/recording_page.dart';
-import 'package:flutter_smart_course/src/pages/reading/reading_data_page.dart';
-
-import 'package:flutter_smart_course/src/theme/color/light_color.dart';
 import 'package:flutter_smart_course/utils/buttons/text_picker_button.dart';
 import 'package:flutter_smart_course/utils/cards.dart';
 import 'package:flutter_smart_course/utils/base_scaffold.dart';
 import 'package:flutter_smart_course/utils/dialogs.dart';
 import 'package:flutter_smart_course/utils/showup.dart';
-import 'package:flutter_smart_course/utils/utils.dart';
 import 'package:provider/provider.dart';
 // import 'package:flutter_smart_course/utils/buttons/text_picker_button.dart';
 
